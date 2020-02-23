@@ -19,7 +19,7 @@
     <body class="app-body">
 
     <header>
-        <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top header-container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top header-container">
             <div class="container-fluid">
                 <a href="#" class="navbar-brand">
                     <i class="fab fa-pagelines" style="font-size: 40px; color: darkseagreen;"></i>
@@ -28,27 +28,30 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarResponsive">
+                <div class="collapse navbar-collapse navbar-container" id="navbarResponsive">
 
                     <ul class="navbar-nav ml-auto">
 
                         <li class="nav-item active">
-                            <a href="#" class="nav-link">Главная</a>
+                            <a href="#" class="nav-link nav-link-hover">Главная</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">Новости</a>
+                            <a href="#" class="nav-link nav-link-hover">Новости</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">Экспонаты</a>
+                            <a href="#" class="nav-link nav-link-hover">Экспонаты</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">Раздел</a>
+                            <a href="#" class="nav-link nav-link-hover">Раздел</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">О нас</a>
+                            <a href="#" class="nav-link nav-link-hover">О нас</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">Контакты</a>
+                            <a href="#" class="nav-link nav-link-hover">Контакты</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link nav-login-link"><i class="far fa-user" style="font-size: 18px;"></i></a>
                         </li>
 
                     </ul>
