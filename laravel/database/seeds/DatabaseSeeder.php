@@ -11,6 +11,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+         $this->call(UsersTableSeeder::class);
+         $this->call(MuseumCategoriesTableSeeder::class);
+         factory(\App\Models\MuseumPost::class, 100)->create();
     }
 }

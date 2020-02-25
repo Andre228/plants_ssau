@@ -16,7 +16,7 @@ class CreateMuseumPostsTable extends Migration
         Schema::create('museum_posts', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('category_id')->unsigned();
+            $table->integer('category_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('inventory_number');
 
@@ -40,7 +40,7 @@ class CreateMuseumPostsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('category_id')->references('id')->on('museum_categories');
+            $table->foreign('category_id')->references('id')->on('museum_categories')->onDelete('cascade')->onUpdate('cascade');;
             $table->index('is_published');
 
 

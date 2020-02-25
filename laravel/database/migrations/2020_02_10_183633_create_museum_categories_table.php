@@ -14,7 +14,7 @@ class CreateMuseumCategoriesTable extends Migration
     public function up()
     {
         Schema::create('museum_categories', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->integer('parent_id')->unsigned()->default(0);
 
             $table->string('slug')->unique();

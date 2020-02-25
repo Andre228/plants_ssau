@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class MuseumPost extends Model
 {
-    //
+    //protected $fillable = ['category_id'];
 }
