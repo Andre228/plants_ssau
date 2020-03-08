@@ -11,6 +11,56 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+Auth::routes();
+
+Route::get('/','Museum\WelcomeController@index')->name('welcome');
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+
+
+
+Route::group(['namespace' => 'Museum', 'prefix' => 'museum'], function (){
+    Route::resource('posts', 'PostController')->names('museum.posts');
 });
+
+
+
+//Admin dashboard controller
+$groupDataAdminDashboard = [
+    'namespace' => 'Museum',
+    'prefix' => 'museum',
+    'middleware' => 'auth'
+];
+Route::group($groupDataAdminDashboard, function (){
+
+    $methods = ['index'];
+    Route::resource('dashboard', 'AdminController')
+        ->only($methods)
+        ->names('museum.admin_dashboard');
+
+});
+
+//Admin controllers
+$groupDataAdmin = [
+    'namespace' => 'Museum\Admin',
+    'prefix' => 'admin/museum'
+];
+Route::group($groupDataAdmin, function (){
+
+    Route::get('/categories/{how}','CategoryController@index')->name('museum.admin.categories.index');
+
+
+    $methods = ['edit', 'store', 'update', 'create', 'destroy', 'show'];
+    Route::resource('categories', 'CategoryController')
+        ->only($methods)
+        ->names('museum.admin.categories');
+
+
+
+   // Route::get('categories/showall', 'CategoryController@showAll')->name('museum.admin.categories.showall');
+
+});
+
+//Route::get('/categories_admin', 'Museum\Admin\CategoryController@getAllCategories');

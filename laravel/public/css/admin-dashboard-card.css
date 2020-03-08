@@ -1,0 +1,71 @@
+/*.admin-dashboard-card {*/
+    /*cursor: pointer;*/
+    /*color: white;*/
+    /*background: linear-gradient(90deg, rgba(23,16,143,1) 0%, rgba(37,37,240,1) 36%, rgba(0,212,255,1) 83%);*/
+/*}*/
+
+/*.admin-dashboard-card:hover {*/
+    /*padding: 10px 10px;*/
+    /*box-shadow: 5px 3px 4px 2px darkgray;*/
+/*}*/
+
+
+
+/*.admin-dashboard-card {*/
+    /*border-radius:10px;*/
+    /*border: none;*/
+    /*background: #fff;*/
+
+    /*cursor: pointer;*/
+    /*color: white;*/
+    /*!*background: url("./svgs/users-solid.svg") no-repeat;*!*/
+    /*background:url(./svgs/users-solid.svg) center right no-repeat;*/
+    /*!*background: linear-gradient(90deg, rgba(23,16,143,1) 0%, rgba(37,37,240,1) 36%, rgba(0,212,255,1) 83%);*!*/
+
+/*}*/
+/*.admin-dashboard-card:hover {*/
+
+    /*transition: .3s;*/
+    /*box-shadow: 0 0 11px rgba(33,33,33,.3);*/
+    /*transform: scale(1.05, 1.05);*/
+/*}*/
+
+
+.card {
+    border: none;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    text-align: left;
+    position: relative;
+    background: #fff;
+    box-shadow: 12px 15px 20px 0px rgba(46,61,73,0.15);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+.card .fa {
+    position: relative;
+    font-size: 70px;
+}
+.wrimagecard-topimage_header {
+    padding: 20px;
+}
+a.card:hover, .admin-dashboard-card:hover {
+    box-shadow: 2px 4px 8px 0px rgba(46,61,73,0.2);
+}
+.admin-dashboard-card a {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.wrimagecard-topimage_title {
+    padding: 20px 24px;
+    height: 80px;
+    padding-bottom: 0.75rem;
+    position: relative;
+}
+.admin-dashboard-card a {
+    border-bottom: none;
+    text-decoration: none;
+    color: #525c65;
+    transition: color 0.3s ease;
+}
