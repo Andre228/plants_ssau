@@ -10,7 +10,10 @@ class WelcomeController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index() {
-        return view('layouts.app');
+    static public function index() {
+
+        $user = \Auth::user();
+
+        return view('layouts.app', compact('user'));
     }
 }

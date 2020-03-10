@@ -36,29 +36,6 @@
 
             <div class="col-md-12">
 
-                {{--<nav class="navbar navbar-expand-lg navbar-light bg-faded">--}}
-                    {{--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTableToggler" aria-controls="navbarTableToggler" aria-expanded="false" aria-label="Toggle navigation">--}}
-                        {{--<span class="navbar-toggler-icon"></span>--}}
-                    {{--</button>--}}
-                    {{--<div class="collapse navbar-collapse" id="navbarTableToggler">--}}
-                        {{--<ul class="navbar-nav mr-auto mt-2 mt-lg-0">--}}
-                            {{--<li  class="nav-item active">--}}
-                                {{--<a class="nav-link btn btn-primary" href="{{route('museum.admin.categories.create')}}" style="color: white; margin-bottom: 5px;"><i class="fas fa-plus" style="margin-right: 5px;"></i>Добавить</a>--}}
-                            {{--</li>--}}
-                            {{--<li class="nav-item">--}}
-                                {{--<a class="nav-link btn btn-secondary" href="{{route('museum.admin.categories.index', 'per-page')}}" style="color: white; margin-bottom: 5px;">Постранично</a>--}}
-                            {{--</li>--}}
-                            {{--<li class="nav-item">--}}
-                                {{--<a class="nav-link btn btn-secondary" href="{{route('museum.admin.categories.index', 'all')}}" style="color: white; margin-bottom: 5px;">Вывести все</a>--}}
-                            {{--</li>--}}
-                        {{--</ul>--}}
-                        {{--<form class="form-inline my-2 my-lg-0">--}}
-                            {{--<input class="form-control mr-sm-2" type="search" placeholder="Введите для поиска" aria-label="Search">--}}
-                            {{--<button class="nav-link btn btn-info" type="submit"  style="margin-top: 5px;">Поиск</button>--}}
-                        {{--</form>--}}
-                    {{--</div>--}}
-                {{--</nav>--}}
-
 
                 <nav class="navbar navbar-expand-lg navbar-light bg-faded">
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTableToggler" aria-controls="navbarTableToggler" aria-expanded="false" aria-label="Toggle navigation">

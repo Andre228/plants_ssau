@@ -10,6 +10,17 @@ use Illuminate\Support\Facades\Response;
 
 class CategoryController extends BaseAdminController
 {
+
+
+    protected $headers = Request::HEADER_X_FORWARDED_ALL;
+
+
+    public function __construct()
+    {
+        parent::__construct();
+
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -78,8 +89,15 @@ class CategoryController extends BaseAdminController
     public function edit($id)
     {
        $item =  MuseumCategory::find($id);
-        $categoryList = MuseumCategory::all();
-      // dd($item);
+       $categoryList = MuseumCategory::all();
+
+       if(empty($item)) {
+          return back(['msg' => 'Запись не найдена']);
+       }
+
+        if (empty($categoryList)) {
+            return back(['msg' => 'В списке нет ни одной категории']);
+        }
 
         return view('museum.admin.category.edit', compact('item', 'categoryList'));
        // return 'edit' . $id;
@@ -94,7 +112,23 @@ class CategoryController extends BaseAdminController
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $item = MuseumCategory::find($id);
+
+        if (empty($item)) {
+            return back(['msg' => 'Сохраняемая категория не существует'])->withInput();
+        }
+
+        $data = $request->all();
+        $result = $item->fill($data)->save();
+
+        if ($result) {
+            return redirect()->route('museum.admin.categories.edit', $item->id)
+                ->with(['success' => 'Успешно сохранено']);
+        } else {
+            return back()->withErrors(['msg' => 'Ошибка сохранения'])
+                ->withInput();
+        }
     }
 
     /**

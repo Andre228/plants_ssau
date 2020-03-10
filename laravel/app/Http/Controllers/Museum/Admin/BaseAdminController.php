@@ -8,4 +8,8 @@ use Illuminate\Http\Request;
 abstract class BaseAdminController extends BaseController
 {
 
+    public function __construct()
+    {
+
+    }
 }
