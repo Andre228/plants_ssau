@@ -72,10 +72,11 @@ class CategoryController extends BaseAdminController
      */
     public function store(Request $request)
     {
+
         $data = $request->input();
 
         if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['slug']);
+            $data['slug'] = Str::slug($data['title']);
         }
 
         $item = new MuseumCategory($data);
@@ -142,7 +143,7 @@ class CategoryController extends BaseAdminController
 
         $data = $request->all();
         if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['slug']);
+            $data['slug'] = Str::slug($data['title']);
         }
 
         $result = $item
