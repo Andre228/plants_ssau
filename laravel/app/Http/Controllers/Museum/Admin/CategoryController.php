@@ -168,9 +168,11 @@ class CategoryController extends BaseAdminController
     public function destroy($id)
     {
 
-        $result = MuseumCategory::destroy($id);
+        $category = MuseumCategory::find($id);
+        $result = $category->forceDelete();
 
-        if ($result > 0) {
+
+        if ($result) {
             return redirect()->route('museum.admin.categories.index', 'all')
                 ->with(['success' => 'Запись успешно удалена']);
         } else {
