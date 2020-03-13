@@ -80,7 +80,7 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <login-title-component :user="{{$user}}"></login-title-component><span class="caret"></span>
+                                    <login-title-component :user="{{ Auth::user() }}"></login-title-component><span class="caret"></span>
                                 </a>
 
 

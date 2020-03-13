@@ -33,16 +33,14 @@ class HomeController extends Controller
 
         $user = User::find($id);
         $data = $request->all();
-        $result = $user->fill($data)->save();
 
+            $result = $user->fill($data)->save();
 
-
-        if ($result) {
-            return response(['message' => 'Успешно сохранено', 'status' => 'OK', 'user' => $user]);
-        }
-        else {
-            return response(['message' => 'Ошибка сохранения, перепроверьте данные', 'status' => 'ERROR']);
-        }
+            if ($result) {
+                return response(['message' => 'Успешно сохранено', 'status' => 'OK', 'user' => $user]);
+            } else {
+                return response(['message' => 'Ошибка сохранения, перепроверьте данные', 'status' => 'ERROR']);
+            }
 
 
 

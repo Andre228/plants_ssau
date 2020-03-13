@@ -38,7 +38,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text" id="inputGroup-sizing-default-name"> {{name}} </span>
                                                 </div>
-                                                <input v-on:input="changeName" id="name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                                <input v-on:input="changeName" id="name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" maxlength="60">
                                             </div>
                                             <small id="nameHelp" class="form-text text-muted mb-3">Напишите тут, если хотите поменять имя профиля.</small>
                                         </div>
@@ -103,11 +103,9 @@
 
             update() {
 
-                console.log(this.userInfo.name );
-
-               this.disabled = true;
-               axios.patch(`/home/user-profile-save/${this.userInfo.id}`, {name: this.name, email: this.email})
-                    .then((response)=>  {
+                this.disabled = true;
+                axios.patch(`/home/user-profile-save/${this.userInfo.id}`, {name: this.name, email: this.email})
+                    .then((response) => {
                         if (response.data.status == 'OK') {
                             console.log(response.data);
                             this.responseMessages = response.data.message;

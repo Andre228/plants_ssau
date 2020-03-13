@@ -45,13 +45,13 @@
 
                         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                             <li class="nav-item active">
-                                <a class="nav-link nav-link-hover" href="{{route('museum.admin.categories.create')}}"><i class="fas fa-plus" style="margin-right: 5px;"></i>Добавить <span class="sr-only">(current)</span></a>
+                                <a class="nav-link nav-link-hover" href="{{ route('museum.admin.categories.create') }}"><i class="fas fa-plus" style="margin-right: 5px;"></i>Добавить <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link nav-link-hover" href="{{route('museum.admin.categories.index', 'per-page')}}">Постранично</a>
+                                <a class="nav-link nav-link-hover" href="{{ route('museum.admin.categories.index', 'per-page') }}">Постранично</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link nav-link-hover" href="{{route('museum.admin.categories.index', 'all')}}">Вывести все</a>
+                                <a class="nav-link nav-link-hover" href="{{ route('museum.admin.categories.index', 'all') }}">Вывести все</a>
                             </li>
                         </ul>
                         <form class="form-inline my-2 my-lg-0">

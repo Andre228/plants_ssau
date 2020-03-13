@@ -12,8 +12,6 @@ class WelcomeController extends Controller
      */
     static public function index() {
 
-        $user = \Auth::user();
-
-        return view('layouts.app', compact('user'));
+        return view('layouts.app');
     }
 }

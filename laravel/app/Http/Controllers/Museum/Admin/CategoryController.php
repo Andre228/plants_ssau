@@ -7,12 +7,13 @@ use App\Models\MuseumCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Str;
 
 class CategoryController extends BaseAdminController
 {
 
 
-    protected $headers = Request::HEADER_X_FORWARDED_ALL;
+//    protected $headers = Request::HEADER_X_FORWARDED_ALL;
 
 
     public function __construct()
@@ -55,7 +56,12 @@ class CategoryController extends BaseAdminController
      */
     public function create()
     {
-        //
+
+        $item = new MuseumCategory();
+        $categoryList = MuseumCategory::all();
+
+        return view('museum.admin.category.create', compact('item','categoryList'));
+
     }
 
     /**
@@ -66,7 +72,22 @@ class CategoryController extends BaseAdminController
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->input();
+
+        if (empty($data['slug'])) {
+            $data['slug'] = Str::slug($data['slug']);
+        }
+
+        $item = new MuseumCategory($data);
+        $item->save();
+
+        if ($item) {
+            return redirect()->route('museum.admin.categories.edit', $item->id)
+                ->with(['success' => 'Успешно сохранено']);
+        } else {
+          return back()->withErrors(['msg' => 'Ошибка сохранения'])
+              ->withInput();
+        }
     }
 
     /**
@@ -120,7 +141,13 @@ class CategoryController extends BaseAdminController
         }
 
         $data = $request->all();
-        $result = $item->fill($data)->save();
+        if (empty($data['slug'])) {
+            $data['slug'] = Str::slug($data['slug']);
+        }
+
+        $result = $item
+                  ->fill($data)
+                  ->save();
 
         if ($result) {
             return redirect()->route('museum.admin.categories.edit', $item->id)
@@ -139,7 +166,17 @@ class CategoryController extends BaseAdminController
      */
     public function destroy($id)
     {
-        //
+
+        $result = MuseumCategory::destroy($id);
+
+        if ($result > 0) {
+            return redirect()->route('museum.admin.categories.index', 'all')
+                ->with(['success' => 'Запись успешно удалена']);
+        } else {
+            return back()->withErrors(['msg' => 'Ошибка удаления'])
+                ->withInput();
+        }
+
     }
 
     public function getAllCategories() {
@@ -150,10 +187,20 @@ class CategoryController extends BaseAdminController
 
     }
 
-    public function showAll() {
+    public function showAll($how) {
 
-        $categoryList = MuseumCategory::all();
-
-        return view('museum.admin.category.index', compact('categoryList'));
+//        if($how == 'per-page') {
+//
+//            $categoryList = MuseumCategory::paginate(5);
+//
+//            return view('museum.admin.category.index', compact('categoryList'));
+//        }
+//
+//        if($how == 'all') {
+//
+//            $categoryList = MuseumCategory::all();
+//
+//            return view('museum.admin.category.index', compact('categoryList'));
+//        }
     }
 }

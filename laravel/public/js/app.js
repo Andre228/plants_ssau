@@ -2086,7 +2086,6 @@ __webpack_require__.r(__webpack_exports__);
     update: function update() {
       var _this = this;
 
-      console.log(this.userInfo.name);
       this.disabled = true;
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch("/home/user-profile-save/".concat(this.userInfo.id), {
         name: this.name,
@@ -38430,7 +38429,8 @@ var render = function() {
                                   type: "text",
                                   "aria-label": "Sizing example input",
                                   "aria-describedby":
-                                    "inputGroup-sizing-default"
+                                    "inputGroup-sizing-default",
+                                  maxlength: "60"
                                 },
                                 on: { input: _vm.changeName }
                               })

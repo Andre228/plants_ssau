@@ -22,7 +22,7 @@ Route::patch('/home/user-profile-save/{id}', 'HomeController@update')->name('use
 
 
 
-Route::group(['namespace' => 'Museum', 'prefix' => 'museum'], function (){
+Route::group(['namespace' => 'Museum', 'prefix' => 'museum'], function () {
     Route::resource('posts', 'PostController')->names('museum.posts');
 });
 
@@ -43,20 +43,25 @@ Route::group($groupDataAdminDashboard, function (){
 
 });
 
-//Admin controllers
+//Admin categories controllers
 $groupDataAdmin = [
     'namespace' => 'Museum\Admin',
     'prefix' => 'admin/museum'
 ];
 Route::group($groupDataAdmin, function (){
 
+
+    Route::get('/categories/create','CategoryController@create')->name('museum.admin.categories.create');
+    Route::post('/categories','CategoryController@store')->name('museum.admin.categories.store');
+    Route::get('/categories/{id}/edit','CategoryController@edit')->name('museum.admin.categories.edit');
+    Route::patch('/categories/{id}','CategoryController@update')->name('museum.admin.categories.update');
+    Route::delete('/categories/{id}','CategoryController@destroy')->name('museum.admin.categories.destroy');
     Route::get('/categories/{how}','CategoryController@index')->name('museum.admin.categories.index');
 
-
-    $methods = ['edit', 'store', 'update', 'create', 'destroy', 'show'];
-    Route::resource('categories', 'CategoryController')
-        ->only($methods)
-        ->names('museum.admin.categories');
+//    $methods = ['edit', 'store', 'update', 'destroy', 'show'];
+//    Route::resource('categories', 'CategoryController')
+//        ->only($methods)
+//        ->names('museum.admin.categories');
 
 
 
