@@ -9,4 +9,14 @@ class MuseumPost extends Model
 {
     //protected $fillable = ['category_id'];
     use SoftDeletes;
+
+    public function category()
+    {
+        return $this->belongsTo(MuseumCategory::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

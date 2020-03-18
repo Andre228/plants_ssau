@@ -27,7 +27,7 @@
 
                 <div class="col-sm-4">
                     <div class="card admin-dashboard-card">
-                        <a href="#">
+                        <a href="{{ route('museum.admin.posts.index') }}">
                             <div class="wrimagecard-topimage_header" style="background-color:  rgba(51, 105, 232, 0.1)">
                                 <center><i class = "fas fa-seedling" style=" font-size: 68px; color:#3369e8"></i></center>
                             </div>

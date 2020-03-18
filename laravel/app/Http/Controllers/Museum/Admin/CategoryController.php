@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Museum\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MuseumCategory;
+use App\Repositories\MuseumCategoryRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
@@ -15,10 +16,13 @@ class CategoryController extends BaseAdminController
 
 //    protected $headers = Request::HEADER_X_FORWARDED_ALL;
 
+    private $museumCategoryRepository;
+
 
     public function __construct()
     {
         parent::__construct();
+        $this->museumCategoryRepository = app(MuseumCategoryRepository::class);
 
     }
 
@@ -29,23 +33,8 @@ class CategoryController extends BaseAdminController
      */
     public function index($how)
     {
-
-        if($how == 'per-page') {
-
-            $categoryList = MuseumCategory::paginate(5);
-
-            return view('museum.admin.category.index', compact('categoryList'));
-        }
-
-        if($how == 'all') {
-
-            $categoryList = MuseumCategory::all();
-
-            return view('museum.admin.category.index', compact('categoryList'));
-        }
-        //$paginator = DB::table('museum_categories')->simplePaginate(15);
-
-
+        $categoryList = $this->museumCategoryRepository->getCategories($how);
+        return view('museum.admin.category.index', compact('categoryList'));
 
     }
 
@@ -58,7 +47,7 @@ class CategoryController extends BaseAdminController
     {
 
         $item = new MuseumCategory();
-        $categoryList = MuseumCategory::all();
+        $categoryList = $this->museumCategoryRepository->getForComboBox();
 
         return view('museum.admin.category.create', compact('item','categoryList'));
 
@@ -108,10 +97,10 @@ class CategoryController extends BaseAdminController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, MuseumCategoryRepository $museumCategoryRepository)
     {
-       $item =  MuseumCategory::find($id);
-       $categoryList = MuseumCategory::all();
+       $item =  $museumCategoryRepository->getEdit($id);
+       $categoryList = $museumCategoryRepository->getForComboBox();
 
        if(empty($item)) {
           return back(['msg' => 'Запись не найдена']);
@@ -122,7 +111,7 @@ class CategoryController extends BaseAdminController
         }
 
         return view('museum.admin.category.edit', compact('item', 'categoryList'));
-       // return 'edit' . $id;
+
     }
 
     /**

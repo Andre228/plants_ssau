@@ -46,9 +46,9 @@ Route::group($groupDataAdminDashboard, function (){
 //Admin categories controllers
 $groupDataAdmin = [
     'namespace' => 'Museum\Admin',
-    'prefix' => 'admin/museum'
+    'prefix' => '/admin/museum'
 ];
-Route::group($groupDataAdmin, function (){
+Route::group($groupDataAdmin, function () {
 
 
     Route::get('/categories/create','CategoryController@create')->name('museum.admin.categories.create');
@@ -58,14 +58,9 @@ Route::group($groupDataAdmin, function (){
     Route::delete('/categories/{id}','CategoryController@destroy')->name('museum.admin.categories.destroy');
     Route::get('/categories/{how}','CategoryController@index')->name('museum.admin.categories.index');
 
-//    $methods = ['edit', 'store', 'update', 'destroy', 'show'];
-//    Route::resource('categories', 'CategoryController')
-//        ->only($methods)
-//        ->names('museum.admin.categories');
 
-
-
-   // Route::get('categories/showall', 'CategoryController@showAll')->name('museum.admin.categories.showall');
+    Route::get('/posts','PostController@index')->name('museum.admin.posts.index');
+    Route::get('/posts/{id}/edit','PostController@edit')->name('museum.admin.posts.edit');
 
 });
 
