@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Museum\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MuseumCategory;
 use App\Models\MuseumPost;
+use App\Repositories\MuseumCategoryRepository;
 use App\Repositories\MuseumPostRepository;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,7 @@ class PostController extends BaseAdminController
 
 
     private $museumPostRepository;
+    private $museumCategoryRepository;
 
 
     public function __construct()
@@ -20,6 +22,7 @@ class PostController extends BaseAdminController
         parent::__construct();
 
         $this->museumPostRepository = app(MuseumPostRepository::class);
+        $this->museumCategoryRepository = app(MuseumCategoryRepository::class);
     }
 
     /**
@@ -75,8 +78,9 @@ class PostController extends BaseAdminController
      */
     public function edit($id)
     {
-        $item =  MuseumPost::find($id);
-        $categoryList = MuseumCategory::all();
+        $item = $this->museumPostRepository->getEdit($id);
+        $categoryList = $this->museumCategoryRepository->getForComboBox();
+
 
         return view('museum.admin.post.edit', compact('item', 'categoryList'));
     }
@@ -90,7 +94,39 @@ class PostController extends BaseAdminController
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $item = $this->museumPostRepository->getEdit($id);
+        $data = $request->all();
+
+
+        if (empty($item)) {
+            return back(['msg' => 'Сохраняемая категория не существует'])->withInput();
+        }
+
+       ;
+        if (empty($data['slug'])) {
+            $data['slug'] = Str::slug($data['title']);
+        }
+
+        $result = $item
+            ->fill($data)
+            ->save();
+
+
+        if ($result) {
+
+            return response(['message' => 'Успешно сохранено', 'status' => 'OK', 'is_published' => $data['is_published']]);
+//            return redirect()->route('museum.admin.posts.edit', $item->id)
+//                ->with(['success' => 'Успешно сохранено']);
+        } else {
+
+            return response(['message' => 'Ошибка сохранения, перепроверьте данные', 'status' => 'ERROR']);
+
+//            return back()->withErrors(['msg' => 'Ошибка сохранения'])
+//                ->withInput();
+        }
+
+
     }
 
     /**
@@ -101,6 +137,7 @@ class PostController extends BaseAdminController
      */
     public function destroy($id)
     {
-        //
+        return response(['message' => 'Успешно удалено', 'status' => 'OK']);
+        //dd($id);
     }
 }

@@ -10,6 +10,22 @@ class MuseumPost extends Model
     //protected $fillable = ['category_id'];
     use SoftDeletes;
 
+    protected $fillable = [
+        'title',
+        'slug',
+        'coordinates',
+        'inventory_number',
+        'excerpt',
+        'content_raw',
+        'content_html',
+        'is_published',
+        'published_at',
+        'author',
+        'collection_date',
+        'user_id',
+        'category_id'
+    ];
+
     public function category()
     {
         return $this->belongsTo(MuseumCategory::class);

@@ -2268,6 +2268,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _includes_PostEditMainColComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./includes/PostEditMainColComponent */ "./resources/js/components/admin/includes/PostEditMainColComponent.vue");
 /* harmony import */ var _includes_PostEditAddColComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./includes/PostEditAddColComponent */ "./resources/js/components/admin/includes/PostEditAddColComponent.vue");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _services_post_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/post-service */ "./resources/js/components/admin/services/post-service.js");
 //
 //
 //
@@ -2294,6 +2297,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2306,10 +2343,75 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       postInfo: this.post,
-      categoriesInfo: this.categorylist
+      categoriesInfo: this.categorylist,
+      responseMessages: '',
+      errors: '',
+      is_publishedAfterUpdate: false,
+      postServices: new _services_post_service__WEBPACK_IMPORTED_MODULE_3__["PostServices"]()
     };
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    this.$store.state.post.postObject = this.postInfo;
+    this.is_publishedAfterUpdate = this.postInfo.is_published; // this.$store.dispatch('setPostObject', this.postInfo);
+  },
+  methods: {
+    update: function update() {
+      var _this = this;
+
+      if (this.responseMessages || this.errors) {
+        this.clearResponseMessage();
+      }
+
+      var postId = this.$store.getters.getPostObject.id;
+      var _body = this.$store.getters.getPostObject;
+
+      if (!postId || !_body) {
+        this.errors = 'Указанный объект не найден';
+      }
+
+      this.postServices.update(postId, _body).then(function (response) {
+        if (response.data.status == 'OK') {
+          _this.is_publishedAfterUpdate = response.data.is_published;
+          _this.responseMessages = response.data.message;
+        }
+
+        if (response.data.status == 'ERROR') {
+          _this.errors = response.data.message;
+        }
+      })["catch"](function (error) {
+        return _this.errors = error;
+      });
+    },
+    destroy: function destroy() {
+      var _this2 = this;
+
+      if (this.responseMessages || this.errors) {
+        this.clearResponseMessage();
+      }
+
+      var postId = this.$store.getters.getPostObject.id;
+
+      if (postId) {
+        this.postServices.destroy(postId).then(function (response) {
+          if (response.data.status == 'OK') {
+            window.location.assign('/admin/museum/posts?success_deleted=Успешно удалено');
+          }
+
+          if (response.data.status == 'ERROR') {
+            _this2.errors = response.data.message;
+          }
+        })["catch"](function (error) {
+          return _this2.errors = error;
+        });
+      } else {
+        this.errors = 'Ошибка удаления экспоната, данный экспонат не существует';
+      }
+    },
+    clearResponseMessage: function clearResponseMessage() {
+      this.responseMessages = '';
+      this.errors = '';
+    }
+  }
 });
 
 /***/ }),
@@ -2517,6 +2619,11 @@ __webpack_require__.r(__webpack_exports__);
     return {
       postInfo: this.post
     };
+  },
+  methods: {
+    update: function update() {
+      this.$emit('update');
+    }
   }
 });
 
@@ -2612,16 +2719,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostEditMainColComponent",
-  props: ['post', 'categorylist'],
+  props: ['post', 'categorylist', 'is_publishedAfterUpdate'],
   data: function data() {
     return {
       postInfo: this.post,
-      categoriesInfo: this.categorylist
+      categoriesInfo: []
     };
   },
-  mounted: function mounted() {}
+  watch: {
+    is_publishedAfterUpdate: function is_publishedAfterUpdate(newVal, oldVal) {}
+  },
+  mounted: function mounted() {
+    this.categoriesInfo = this.categorylist;
+  },
+  methods: {
+    changeExcerpt: function changeExcerpt() {
+      this.$store.state.post.postObject.excerpt = event.target.value;
+    },
+    changeCategory: function changeCategory(event) {
+      var foundCategory = this.categoriesInfo.find(function (category) {
+        return category.id_title === event.target.value;
+      });
+      this.$store.state.post.postObject.category_id = foundCategory.id;
+    }
+  }
 });
 
 /***/ }),
@@ -39212,13 +39337,89 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "container" }, [
+      _vm.responseMessages
+        ? _c(
+            "div",
+            {
+              staticClass: "alert alert-success alert-dismissible",
+              attrs: { role: "alert" }
+            },
+            [
+              _vm._v(
+                "\n            " +
+                  _vm._s(_vm.responseMessages) +
+                  "\n            "
+              ),
+              _c(
+                "button",
+                {
+                  staticClass: "close",
+                  attrs: {
+                    type: "button",
+                    "data-dismiss": "alert",
+                    "aria-label": "Close"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.clearResponseMessage()
+                    }
+                  }
+                },
+                [
+                  _c("span", { attrs: { "aria-hidden": "true" } }, [
+                    _vm._v("×")
+                  ])
+                ]
+              )
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.errors
+        ? _c(
+            "div",
+            {
+              staticClass: "alert alert-danger alert-dismissible",
+              attrs: { role: "alert" }
+            },
+            [
+              _vm._v("\n            " + _vm._s(_vm.errors) + "\n            "),
+              _c(
+                "button",
+                {
+                  staticClass: "close",
+                  attrs: {
+                    type: "button",
+                    "data-dismiss": "alert",
+                    "aria-label": "Close"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.clearResponseMessage()
+                    }
+                  }
+                },
+                [
+                  _c("span", { attrs: { "aria-hidden": "true" } }, [
+                    _vm._v("×")
+                  ])
+                ]
+              )
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
       _c("div", { staticClass: "row justify-content-center" }, [
         _c(
           "div",
           { staticClass: "col-md-8" },
           [
             _c("post-edit-main-col-component", {
-              attrs: { post: _vm.postInfo, categorylist: _vm.categoriesInfo }
+              attrs: {
+                is_publishedAfterUpdate: _vm.is_publishedAfterUpdate,
+                post: _vm.postInfo,
+                categorylist: _vm.categoriesInfo
+              }
             })
           ],
           1
@@ -39228,10 +39429,44 @@ var render = function() {
           "div",
           { staticClass: "col-md-3" },
           [
-            _c("post-edit-add-col-component", { attrs: { post: _vm.postInfo } })
+            _c("post-edit-add-col-component", {
+              attrs: { post: _vm.postInfo },
+              on: { update: _vm.update }
+            })
           ],
           1
         )
+      ]),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
+      _c("div", { staticClass: "row justify-content-center" }, [
+        _c("div", { staticClass: "col-md-8" }, [
+          _c("div", { staticClass: "card card-block" }, [
+            _c("div", { staticClass: "card-body ml-auto" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-outline-danger",
+                  on: {
+                    click: function($event) {
+                      return _vm.destroy()
+                    }
+                  }
+                },
+                [
+                  _c("i", {
+                    staticClass: "fas fa-trash",
+                    staticStyle: { "margin-right": "5px" }
+                  }),
+                  _vm._v("Удалить")
+                ]
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-3" })
       ])
     ])
   ])
@@ -39499,7 +39734,12 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-primary",
-                  staticStyle: { "margin-left": "10px" }
+                  staticStyle: { "margin-left": "10px" },
+                  on: {
+                    click: function($event) {
+                      return _vm.update()
+                    }
+                  }
                 },
                 [_vm._v("Сохранить")]
               ),
@@ -39662,17 +39902,17 @@ var render = function() {
           {
             staticClass: "card-header",
             class: [
-              _vm.postInfo.is_published ? "alert-primary" : "alert-warning"
+              _vm.is_publishedAfterUpdate ? "alert-primary" : "alert-warning"
             ]
           },
           [
-            _vm.postInfo.is_published
+            _vm.is_publishedAfterUpdate
               ? _c("span", [
                   _vm._v("\n                    Опубликовано\n                ")
                 ])
               : _vm._e(),
             _vm._v(" "),
-            !_vm.postInfo.is_published
+            !_vm.is_publishedAfterUpdate
               ? _c("span", [
                   _vm._v("\n                    Черновик\n                ")
                 ])
@@ -39713,6 +39953,10 @@ var render = function() {
                     ],
                     staticClass: "form-control",
                     attrs: {
+                      input: function(e) {
+                        return (_vm.$store.state.post.postObject.title =
+                          e.target.value)
+                      },
                       name: "title",
                       id: "title",
                       type: "text",
@@ -39739,11 +39983,36 @@ var render = function() {
                   _c(
                     "textarea",
                     {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.postInfo.content_raw,
+                          expression: "postInfo.content_raw"
+                        }
+                      ],
                       staticClass: "form-control",
                       attrs: {
+                        input: function(e) {
+                          return (_vm.$store.state.post.postObject.content_raw =
+                            e.target.value)
+                        },
                         name: "content_raw",
                         id: "content_raw",
                         rows: "20"
+                      },
+                      domProps: { value: _vm.postInfo.content_raw },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.postInfo,
+                            "content_raw",
+                            $event.target.value
+                          )
+                        }
                       }
                     },
                     [_vm._v(_vm._s(_vm.postInfo.content_raw))]
@@ -39773,7 +40042,8 @@ var render = function() {
                         id: "category_id",
                         placeholder: "Выберете категорию",
                         required: ""
-                      }
+                      },
+                      on: { change: _vm.changeCategory }
                     },
                     _vm._l(_vm.categoriesInfo, function(categoryOption) {
                       return _c(
@@ -39788,7 +40058,7 @@ var render = function() {
                         [
                           _vm._v(
                             "\n                                    " +
-                              _vm._s(categoryOption.title) +
+                              _vm._s(categoryOption.id_title) +
                               "\n                                "
                           )
                         ]
@@ -39813,7 +40083,15 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
-                    attrs: { name: "slug", id: "slug", type: "text" },
+                    attrs: {
+                      input: function(e) {
+                        return (_vm.$store.state.post.postObject.slug =
+                          e.target.value)
+                      },
+                      name: "slug",
+                      id: "slug",
+                      type: "text"
+                    },
                     domProps: { value: _vm.postInfo.slug },
                     on: {
                       input: function($event) {
@@ -39834,8 +40112,32 @@ var render = function() {
                   _c(
                     "textarea",
                     {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.postInfo.excerpt,
+                          expression: "postInfo.excerpt"
+                        }
+                      ],
                       staticClass: "form-control",
-                      attrs: { name: "excerpt", id: "excerpt" }
+                      attrs: { name: "excerpt", id: "excerpt" },
+                      domProps: { value: _vm.postInfo.excerpt },
+                      on: {
+                        input: [
+                          function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.postInfo,
+                              "excerpt",
+                              $event.target.value
+                            )
+                          },
+                          _vm.changeExcerpt
+                        ]
+                      }
                     },
                     [_vm._v(_vm._s(_vm.postInfo.excerpt))]
                   )
@@ -39843,17 +40145,56 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", { staticClass: "form-check" }, [
                   _c("input", {
-                    attrs: { name: "is_published", type: "hidden", value: "0" }
-                  }),
-                  _vm._v(" "),
-                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.postInfo.is_published,
+                        expression: "postInfo.is_published"
+                      }
+                    ],
                     staticClass: "form-check-input",
                     attrs: {
+                      input: function(e) {
+                        return (_vm.$store.state.post.postObject.is_published =
+                          e.target.value)
+                      },
                       name: "is_published",
-                      type: "checkbox",
-                      value: "1"
+                      type: "checkbox"
                     },
-                    domProps: { checked: _vm.postInfo.is_published }
+                    domProps: {
+                      checked: Array.isArray(_vm.postInfo.is_published)
+                        ? _vm._i(_vm.postInfo.is_published, null) > -1
+                        : _vm.postInfo.is_published
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.postInfo.is_published,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.postInfo,
+                                "is_published",
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.postInfo,
+                                "is_published",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(_vm.postInfo, "is_published", $$c)
+                        }
+                      }
+                    }
                   }),
                   _vm._v(" "),
                   _c(
@@ -53998,6 +54339,127 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/admin/services/post-service.js":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/admin/services/post-service.js ***!
+  \****************************************************************/
+/*! exports provided: PostServices */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PostServices", function() { return PostServices; });
+/* harmony import */ var _request_services_request_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../request-services/request-service */ "./resources/js/components/request-services/request-service.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+var PostServices = /*#__PURE__*/function () {
+  function PostServices() {
+    _classCallCheck(this, PostServices);
+
+    this.requestService = new _request_services_request_service__WEBPACK_IMPORTED_MODULE_0__["RequestService"]();
+  }
+
+  _createClass(PostServices, [{
+    key: "update",
+    value: function update(postId, _body) {
+      var url = "/admin/museum/posts/".concat(postId);
+      return this.requestService.update(url, _body);
+    }
+  }, {
+    key: "destroy",
+    value: function destroy(postId) {
+      var url = "/admin/museum/posts/".concat(postId);
+      return this.requestService.destroy(url);
+    }
+  }]);
+
+  return PostServices;
+}();
+
+/***/ }),
+
+/***/ "./resources/js/components/request-services/request-service.js":
+/*!*********************************************************************!*\
+  !*** ./resources/js/components/request-services/request-service.js ***!
+  \*********************************************************************/
+/*! exports provided: RequestService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RequestService", function() { return RequestService; });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+var RequestService = /*#__PURE__*/function () {
+  function RequestService() {
+    _classCallCheck(this, RequestService);
+  }
+
+  _createClass(RequestService, [{
+    key: "update",
+    value: function update(url, _body) {
+      return Promise.resolve(axios__WEBPACK_IMPORTED_MODULE_0___default.a.patch(url, _body).then(function (response) {
+        return response;
+      }));
+    }
+  }, {
+    key: "destroy",
+    value: function destroy(url) {
+      return Promise.resolve(axios__WEBPACK_IMPORTED_MODULE_0___default.a["delete"](url).then(function (response) {
+        return response;
+      })["catch"]());
+    }
+  }]);
+
+  return RequestService;
+}();
+
+/***/ }),
+
+/***/ "./resources/js/components/store/admin/post.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/store/admin/post.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: {
+    postObject: {}
+  },
+  actions: {
+    setPostObject: function setPostObject(context, payload) {
+      context.commit('setPostObject', payload);
+    }
+  },
+  mutations: {
+    setPostObject: function setPostObject(state, payload) {
+      state.postObject = payload;
+    }
+  },
+  getters: {
+    getPostObject: function getPostObject(state) {
+      return state.postObject;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/components/store/store.js":
 /*!************************************************!*\
   !*** ./resources/js/components/store/store.js ***!
@@ -54010,10 +54472,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _admin_post__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./admin/post */ "./resources/js/components/store/admin/post.js");
+
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+  modules: {
+    post: _admin_post__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
   state: {
     name: ''
   },

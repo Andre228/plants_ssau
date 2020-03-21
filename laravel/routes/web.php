@@ -61,6 +61,8 @@ Route::group($groupDataAdmin, function () {
 
     Route::get('/posts','PostController@index')->name('museum.admin.posts.index');
     Route::get('/posts/{id}/edit','PostController@edit')->name('museum.admin.posts.edit');
+    Route::patch('/posts/{id}','PostController@update')->name('museum.admin.posts.update');
+    Route::delete('/posts/{id}','PostController@destroy')->name('museum.admin.posts.destroy');
 
 });
 

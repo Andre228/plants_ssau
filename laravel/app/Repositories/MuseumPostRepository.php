@@ -19,6 +19,29 @@ class MuseumPostRepository extends CoreRepository
         return Model::class;
     }
 
+    public function getEdit($id)
+    {
+        return $this->startConditions()->find($id);
+    }
+
+    public function getForComboBox()
+    {
+
+        $columns = implode(', ' ,[
+            'id',
+            'CONCAT (id, ". ", title) AS id_title'
+        ]);
+
+        $result = $this
+            ->startConditions()
+            ->selectRaw($columns)
+            ->toBase()
+            ->get();
+
+
+        return $result;
+    }
+
 
     public function getAllWithPaginate($howMuch = null)
     {

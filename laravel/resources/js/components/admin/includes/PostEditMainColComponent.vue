@@ -4,11 +4,11 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header" v-bind:class="[postInfo.is_published ? 'alert-primary' : 'alert-warning']">
-                    <span v-if="postInfo.is_published">
+                <div class="card-header" v-bind:class="[is_publishedAfterUpdate ? 'alert-primary' : 'alert-warning']">
+                    <span v-if="is_publishedAfterUpdate">
                         Опубликовано
                     </span>
-                    <span v-if="!postInfo.is_published">
+                    <span v-if="!is_publishedAfterUpdate">
                         Черновик
                     </span>
                 </div>
@@ -28,12 +28,12 @@
                         <div class="tab-pane active" id="maindata" role="tabpanel">
                             <div class="form-group">
                                 <label for="title">Заголовок</label>
-                                <input name="title" id="title" type="text" v-model="postInfo.title"
+                                <input :input="e => $store.state.post.postObject.title = e.target.value" name="title" id="title" type="text" v-model="postInfo.title"
                                        class="form-control" minlength="3" required/>
                             </div>
                             <div class="form-group">
                                 <label for="content_raw">Статья</label>
-                                <textarea name="content_raw" id="content_raw"
+                                <textarea :input="e => $store.state.post.postObject.content_raw = e.target.value" name="content_raw" id="content_raw" v-model="postInfo.content_raw"
                                           class="form-control" rows="20">{{postInfo.content_raw}}</textarea>
                             </div>
                         </div>
@@ -41,10 +41,12 @@
 
                             <div class="form-group">
                                 <label for="category_id">Категория</label>
-                                <select name="category_id" id="category_id" class="form-control" placeholder="Выберете категорию" required>
+                                <select @change="changeCategory" name="category_id" id="category_id" class="form-control" placeholder="Выберете категорию" required>
 
-                                    <option v-for="categoryOption in categoriesInfo" :key="categoryOption.id"  :selected="categoryOption.id === postInfo.category_id">
-                                        {{categoryOption.title}}
+                                    <option v-for="categoryOption in categoriesInfo"
+                                            :key="categoryOption.id"
+                                            :selected="categoryOption.id === postInfo.category_id">
+                                        {{categoryOption.id_title}}
                                     </option>
 
                                 </select>
@@ -52,20 +54,20 @@
 
                             <div class="form-group">
                                 <label for="slug">Индетификатор</label>
-                                <input name="slug" id="slug" v-model="postInfo.slug" type="text"
+                                <input :input="e => $store.state.post.postObject.slug = e.target.value" name="slug" id="slug" v-model="postInfo.slug" type="text"
                                        class="form-control">
                             </div>
 
                             <div class="form-group">
                                 <label for="excerpt">Выдержка</label>
-                                <textarea name="excerpt" id="excerpt"
+                                <textarea v-on:input="changeExcerpt" name="excerpt" id="excerpt" v-model="postInfo.excerpt"
                                           class="form-control">{{postInfo.excerpt}}</textarea>
                             </div>
 
                             <div class="form-check">
-                                <input name="is_published" type="hidden" value="0">
-
-                                <input name="is_published" type="checkbox" class="form-check-input" value="1" :checked="postInfo.is_published">
+                                <input :input="e => $store.state.post.postObject.is_published = e.target.value"
+                                        name="is_published" type="checkbox" class="form-check-input"
+                                        v-model="postInfo.is_published">
                                 <label class="form-check-label" for="is_published">Опубликовано</label>
                             </div>
 
@@ -82,17 +84,34 @@
 <script>
     export default {
         name: "PostEditMainColComponent",
-        props: ['post', 'categorylist'],
+        props: ['post', 'categorylist', 'is_publishedAfterUpdate'],
 
         data() {
             return {
                 postInfo: this.post,
-                categoriesInfo: this.categorylist
+                categoriesInfo: []
+            }
+        },
+
+        watch: {
+            is_publishedAfterUpdate: function(newVal, oldVal) {
             }
         },
 
         mounted() {
 
+            this.categoriesInfo = this.categorylist;
+        },
+
+        methods: {
+            changeExcerpt() {
+                this.$store.state.post.postObject.excerpt = event.target.value;
+            },
+
+            changeCategory(event) {
+                const foundCategory = this.categoriesInfo.find(category => category.id_title === event.target.value);
+                this.$store.state.post.postObject.category_id = foundCategory.id;
+            }
         }
     }
 </script>

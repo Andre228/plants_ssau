@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <button class="btn btn-primary" style="margin-left: 10px">Сохранить</button>
+                            <button class="btn btn-primary" style="margin-left: 10px" @click="update()">Сохранить</button>
                             <a :href="'/admin/museum/posts'" class="btn btn-light" style="margin-left: 15px">Назад</a>
                         </div>
                     </div>
@@ -63,6 +63,13 @@
         data() {
             return {
                 postInfo: this.post
+            }
+        },
+
+        methods: {
+
+            update() {
+                this.$emit('update');
             }
         }
     }
