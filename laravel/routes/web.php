@@ -59,6 +59,8 @@ Route::group($groupDataAdmin, function () {
     Route::get('/categories/{how}','CategoryController@index')->name('museum.admin.categories.index');
 
 
+    Route::get('/posts/create','PostController@create')->name('museum.admin.posts.create');
+    Route::post('/posts','PostController@store')->name('museum.admin.posts.store');
     Route::get('/posts','PostController@index')->name('museum.admin.posts.index');
     Route::get('/posts/{id}/edit','PostController@edit')->name('museum.admin.posts.edit');
     Route::patch('/posts/{id}','PostController@update')->name('museum.admin.posts.update');

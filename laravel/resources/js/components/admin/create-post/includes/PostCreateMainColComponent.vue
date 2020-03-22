@@ -4,11 +4,11 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header" v-bind:class="[is_publishedAfterUpdate ? 'alert-primary' : 'alert-warning']">
-                    <span v-if="is_publishedAfterUpdate">
+                <div class="card-header" v-bind:class="[changeColorIfPublished ? 'alert-primary' : 'alert-warning']">
+                    <span v-if="changeColorIfPublished">
                         Опубликовано
                     </span>
-                    <span v-if="!is_publishedAfterUpdate">
+                    <span v-if="!changeColorIfPublished">
                         Черновик
                     </span>
                 </div>
@@ -28,13 +28,13 @@
                         <div class="tab-pane active" id="maindata" role="tabpanel">
                             <div class="form-group">
                                 <label for="title">Заголовок</label>
-                                <input :input="e => $store.state.post.postObject.title = e.target.value" name="title" id="title" type="text" v-model="postInfo.title"
+                                <input :input="e => $store.state.post.postObject.title = e.target.value" name="title" id="title" type="text" v-model="$store.state.post.postObject.title"
                                        class="form-control" minlength="3" required/>
                             </div>
                             <div class="form-group">
                                 <label for="content_raw">Статья</label>
-                                <textarea :input="e => $store.state.post.postObject.content_raw = e.target.value" name="content_raw" id="content_raw" v-model="postInfo.content_raw"
-                                          class="form-control" rows="20">{{postInfo.content_raw}}</textarea>
+                                <textarea :input="e => $store.state.post.postObject.content_raw = e.target.value" name="content_raw" id="content_raw" v-model="$store.state.post.postObject.content_raw"
+                                          class="form-control" rows="20">{{$store.state.post.postObject.content_raw}}</textarea>
                             </div>
                         </div>
                         <div class="tab-pane" id="adddata" role="tabpanel">
@@ -45,7 +45,7 @@
 
                                     <option v-for="categoryOption in categoriesInfo"
                                             :key="categoryOption.id"
-                                            :selected="categoryOption.id === postInfo.category_id">
+                                            :selected="categoryOption.id === $store.state.post.postObject.category_id">
                                         {{categoryOption.id_title}}
                                     </option>
 
@@ -54,20 +54,26 @@
 
                             <div class="form-group">
                                 <label for="slug">Индетификатор</label>
-                                <input :input="e => $store.state.post.postObject.slug = e.target.value" name="slug" id="slug" v-model="postInfo.slug" type="text"
+                                <input :input="e => $store.state.post.postObject.slug = e.target.value" name="slug" id="slug" v-model="$store.state.post.postObject.slug" type="text"
                                        class="form-control">
                             </div>
 
                             <div class="form-group">
-                                <label for="slug">Автор</label>
-                                <input :input="e => $store.state.post.postObject.author = e.target.value" name="author" id="author" v-model="postInfo.author" type="text"
+                                <label for="author">Автор</label>
+                                <input :input="e => $store.state.post.postObject.author = e.target.value" name="author" id="author" v-model="$store.state.post.postObject.author" type="text"
+                                       class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inventory_number">Инвентарный номер</label>
+                                <input :input="e => $store.state.post.postObject.inventory_number = e.target.value" name="inventory_number" id="inventory_number" v-model="$store.state.post.postObject.inventory_number" type="text"
                                        class="form-control">
                             </div>
 
                             <div class="form-group">
                                 <label for="excerpt">Выдержка</label>
-                                <textarea v-on:input="changeExcerpt" name="excerpt" id="excerpt" v-model="postInfo.excerpt"
-                                          class="form-control">{{postInfo.excerpt}}</textarea>
+                                <textarea v-on:input="changeExcerpt" name="excerpt" id="excerpt" v-model="$store.state.post.postObject.excerpt"
+                                          class="form-control">{{$store.state.post.postObject.excerpt}}</textarea>
                             </div>
 
                             <div class="form-check">
@@ -84,35 +90,42 @@
         </div>
     </div>
 
-    
+
 </template>
 
 <script>
-    import {DateTimeParser} from "../../parsers/datetime-parser";
+    import {DateTimeParser} from "../../../parsers/datetime-parser";
 
     export default {
-        name: "PostEditMainColComponent",
-        props: ['post', 'categorylist', 'is_publishedAfterUpdate'],
+        name: "PostCreateMainColComponent",
+        props:['categorylist'],
 
         data() {
             return {
-                postInfo: this.post,
                 categoriesInfo: [],
-                dateTimeParser: new DateTimeParser()
+                dateTimeParser: new DateTimeParser(),
+                changeColorIfPublished: false
             }
         },
 
-        watch: {
-            is_publishedAfterUpdate: function(newVal, oldVal) {
-            }
-        },
+
 
         mounted() {
-
             this.categoriesInfo = this.categorylist;
+            this.test = this.$store.state.post.postObject.is_published;
         },
 
+        computed: {
+            is_publishedAfterUpdate: function(newVal, oldVal) {
+                console.log(this.$store.state.post.postObject.is_published);
+                return this.$store.state.post.postObject.is_published
+            }
+        },
+
+
+
         methods: {
+
             changeExcerpt() {
                 this.$store.state.post.postObject.excerpt = event.target.value;
             },
@@ -123,10 +136,11 @@
             },
 
             changePublishedAt(event) {
-                if (!this.$store.state.post.postObject.is_published)
+                this.$store.state.post.postObject.is_published = !this.$store.state.post.postObject.is_published;
+                if (this.$store.state.post.postObject.is_published)
                     this.$store.state.post.postObject.published_at = this.dateTimeParser.getCurrentDateTime();
                 else this.$store.state.post.postObject.published_at = null;
-
+                this.changeColorIfPublished = !this.changeColorIfPublished;
             }
         }
     }

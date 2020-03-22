@@ -18,4 +18,9 @@ export class PostServices {
         return this.requestService.destroy(url);
     }
 
+    store(_body) {
+        const url = `/admin/museum/posts/`;
+        return this.requestService.store(url, _body);
+    }
+
 }

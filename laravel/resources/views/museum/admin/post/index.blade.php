@@ -35,7 +35,6 @@
 
     function closeNotify() {
         window.history.pushState('pageAdminMuseumPosts', 'closeNotify', '/admin/museum/posts');
-        console.log(123);
     }
 
 </script>

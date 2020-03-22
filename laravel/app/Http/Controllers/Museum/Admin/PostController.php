@@ -8,6 +8,8 @@ use App\Models\MuseumPost;
 use App\Repositories\MuseumCategoryRepository;
 use App\Repositories\MuseumPostRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PostController extends BaseAdminController
 {
@@ -32,7 +34,6 @@ class PostController extends BaseAdminController
      */
     public function index()
     {
-        //$postsList = MuseumPost::all();
         $postsList = $this->museumPostRepository->getAllWithPaginate();
 
         return view('museum.admin.post.index', compact('postsList'));
@@ -45,7 +46,10 @@ class PostController extends BaseAdminController
      */
     public function create()
     {
-        //
+        $categoryList = $this->museumCategoryRepository->getForComboBox();
+        $postInfo = new MuseumPost();
+
+        return view('museum.admin.post.create', compact('categoryList', 'postInfo'));
     }
 
     /**
@@ -56,7 +60,22 @@ class PostController extends BaseAdminController
      */
     public function store(Request $request)
     {
-        //
+
+        $data = $request->input();
+        $data['user_id'] = Auth::id();
+
+        if (empty($data['slug'])) {
+            $data['slug'] = Str::slug($data['title']);
+        }
+
+        $item = new MuseumPost($data);
+        $item->save();
+
+        if ($item) {
+            return response(['message' => 'Запись успешно создана', 'status' => 'OK', 'id' => $item['id']]);
+        } else {
+            return response(['message' => 'Ошибка сохранения, перепроверьте данные', 'status' => 'ERROR']);
+        }
     }
 
     /**
@@ -100,7 +119,7 @@ class PostController extends BaseAdminController
 
 
         if (empty($item)) {
-            return back(['msg' => 'Сохраняемая категория не существует'])->withInput();
+            return response(['message' => 'Сохраняемая категория не существует']);
         }
 
        ;
@@ -114,16 +133,9 @@ class PostController extends BaseAdminController
 
 
         if ($result) {
-
             return response(['message' => 'Успешно сохранено', 'status' => 'OK', 'is_published' => $data['is_published']]);
-//            return redirect()->route('museum.admin.posts.edit', $item->id)
-//                ->with(['success' => 'Успешно сохранено']);
         } else {
-
             return response(['message' => 'Ошибка сохранения, перепроверьте данные', 'status' => 'ERROR']);
-
-//            return back()->withErrors(['msg' => 'Ошибка сохранения'])
-//                ->withInput();
         }
 
 

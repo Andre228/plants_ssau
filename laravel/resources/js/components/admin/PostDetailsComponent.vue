@@ -59,7 +59,6 @@
 <script>
     import PostEditMainColComponent from "./includes/PostEditMainColComponent";
     import PostEditAddColComponent from "./includes/PostEditAddColComponent";
-    import axios from "axios";
     import {PostServices} from './services/post-service';
     export default {
         name: "PostDetailsComponent",
@@ -79,7 +78,7 @@
 
         mounted() {
             this.$store.state.post.postObject = this.postInfo;
-            this.is_publishedAfterUpdate = this.postInfo.is_published
+            this.is_publishedAfterUpdate = this.postInfo.is_published;
             // this.$store.dispatch('setPostObject', this.postInfo);
         },
 

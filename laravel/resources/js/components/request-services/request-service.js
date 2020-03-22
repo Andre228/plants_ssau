@@ -8,20 +8,15 @@ export class RequestService {
 
 
     update(url, _body) {
-        return Promise.resolve(
-            axios.patch(url, _body)
-                .then((response) => {
-                    return response;
-                })
-        );
+        return axios.patch(url, _body);
     }
 
     destroy(url) {
-       return Promise.resolve(axios.delete(url)
-            .then((response) => {
-                return response
-            })
-            .catch());
+       return axios.delete(url);
+    }
+
+    store(url, _body) {
+        return axios.post(url, _body)
     }
 
 }
