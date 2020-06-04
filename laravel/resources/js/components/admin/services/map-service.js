@@ -12,15 +12,25 @@ export class MapService {
     }
 
     buildMap(containerName, store) {
-        this.$store = store;
-        this.map = L.map(containerName).setView([51.959, -8.623], 12);
+        let lat;
+        let lng;
+        if (store) {
+          this.$store = store;
+          lat = this.$store.getters.getPostObject.coordinates.lat;
+          lng = this.$store.getters.getPostObject.coordinates.lng;
+        }
+        if (!lat || !lng) {
+            lat = 51.959;
+            lng = -8.623;
+        }
+        this.map = L.map(containerName).setView([lat, lng], 12);
         this.mapLayer = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
             attribution:
                 '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         });
         this.map.addLayer(this.mapLayer);
 
-        let theMarker = L.marker([51.959, -8.623], { draggable: true});
+        let theMarker = L.marker([lat, lng], { draggable: true});
         this.marker = theMarker;
         this.map.addLayer(this.marker);
 

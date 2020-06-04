@@ -82460,13 +82460,26 @@ var MapService = /*#__PURE__*/function () {
     value: function buildMap(containerName, store) {
       var _this = this;
 
-      this.$store = store;
-      this.map = leaflet__WEBPACK_IMPORTED_MODULE_0___default.a.map(containerName).setView([51.959, -8.623], 12);
+      var lat;
+      var lng;
+
+      if (store) {
+        this.$store = store;
+        lat = this.$store.getters.getPostObject.coordinates.lat;
+        lng = this.$store.getters.getPostObject.coordinates.lng;
+      }
+
+      if (!lat || !lng) {
+        lat = 51.959;
+        lng = -8.623;
+      }
+
+      this.map = leaflet__WEBPACK_IMPORTED_MODULE_0___default.a.map(containerName).setView([lat, lng], 12);
       this.mapLayer = leaflet__WEBPACK_IMPORTED_MODULE_0___default.a.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       });
       this.map.addLayer(this.mapLayer);
-      var theMarker = leaflet__WEBPACK_IMPORTED_MODULE_0___default.a.marker([51.959, -8.623], {
+      var theMarker = leaflet__WEBPACK_IMPORTED_MODULE_0___default.a.marker([lat, lng], {
         draggable: true
       });
       this.marker = theMarker;
