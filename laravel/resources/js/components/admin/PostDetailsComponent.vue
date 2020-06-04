@@ -76,6 +76,17 @@
             }
         },
 
+        created() {
+            if (this.postInfo.coordinates == null) {
+                this.postInfo.coordinates = {};
+                this.postInfo.coordinates.title = '';
+                this.postInfo.coordinates.lat = 51.959;
+                this.postInfo.coordinates.lng = -8.623;
+            } else {
+                this.postInfo.coordinates = JSON.parse(this.postInfo.coordinates);
+            }
+        },
+
         mounted() {
             this.$store.state.post.postObject = this.postInfo;
             this.is_publishedAfterUpdate = this.postInfo.is_published;

@@ -98,6 +98,20 @@
         methods: {
             convertDateToString(post) {
 
+
+
+                // let formatter = new Intl.DateTimeFormat("ru", {
+                //   year: 'numeric',
+                //   month: '2-digit',
+                //   day: '2-digit',
+                //
+                //   hour: "numeric",
+                //   minute: "numeric",
+                //   second: "numeric",
+                // });
+                //
+                // let dataF = formatter.format(new Date(mestnoe));
+
                 const d = new Date(post.published_at);
                 const ye = new Intl.DateTimeFormat('ru', { year: 'numeric' }).format(d);
                 const mo = new Intl.DateTimeFormat('ru', { month: '2-digit' }).format(d);

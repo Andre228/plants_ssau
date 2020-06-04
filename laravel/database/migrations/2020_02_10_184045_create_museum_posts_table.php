@@ -21,7 +21,7 @@ class CreateMuseumPostsTable extends Migration
             $table->bigInteger('inventory_number');
 
             $table->string('slug')->unique();
-            $table->string('coordinates');
+            $table->json('coordinates');
 
             $table->string('title');
             $table->text('excerpt')->nullable();

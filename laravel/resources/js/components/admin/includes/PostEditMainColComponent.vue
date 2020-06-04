@@ -22,6 +22,9 @@
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#adddata" role="tab">Доп. данные</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#mediadata" role="tab">Медиа</a>
+                        </li>
                     </ul>
                     <br>
                     <div class="tab-content">
@@ -35,6 +38,14 @@
                                 <label for="content_raw">Статья</label>
                                 <textarea :input="e => $store.state.post.postObject.content_raw = e.target.value" name="content_raw" id="content_raw" v-model="postInfo.content_raw"
                                           class="form-control" rows="20">{{postInfo.content_raw}}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <div id="mapContainer"></div>
+                                <div class="form-group">
+                                    <label for="coordinatesTitle">Краткое описание метки</label>
+                                    <input :input="e => $store.state.post.postObject.coordinates.title = e.target.value" name="coordinatesTitle" id="coordinatesTitle" v-model="postInfo.coordinates.title" type="text"
+                                           class="form-control">
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="adddata" role="tabpanel">
@@ -78,6 +89,10 @@
                             </div>
 
                         </div>
+
+                        <div class="tab-pane" id="mediadata" role="tabpanel">
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,17 +103,29 @@
 </template>
 
 <script>
-    import {DateTimeParser} from "../../parsers/datetime-parser";
+    import { DateTimeParser } from "../../parsers/datetime-parser";
+    //import L from 'leaflet';
+    import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+    import { MapService } from "../services/map-service";
 
     export default {
         name: "PostEditMainColComponent",
         props: ['post', 'categorylist', 'is_publishedAfterUpdate'],
+        components: {
+            LMap,
+            LTileLayer,
+            LMarker,
+        },
 
         data() {
             return {
                 postInfo: this.post,
                 categoriesInfo: [],
-                dateTimeParser: new DateTimeParser()
+                dateTimeParser: new DateTimeParser(),
+                map: {},
+                mapLayer: null,
+                marker: null,
+                mapService: new MapService()
             }
         },
 
@@ -108,12 +135,24 @@
         },
 
         mounted() {
-
             this.categoriesInfo = this.categorylist;
+            this.$store.state.post.postObject = this.postInfo;
+            this.map = this.mapService.buildMap('mapContainer', this.$store);
+            this.marker = this.mapService.getMarker();
+
+        },
+
+        beforeDestroy() {
+            if (this.map) {
+                this.map.remove();
+            }
+            if (this.marker) {
+                this.marker.removeAllListeners();
+            }
         },
 
         methods: {
-            changeExcerpt() {
+            changeExcerpt(event) {
                 this.$store.state.post.postObject.excerpt = event.target.value;
             },
 
@@ -127,11 +166,16 @@
                     this.$store.state.post.postObject.published_at = this.dateTimeParser.getCurrentDateTime();
                 else this.$store.state.post.postObject.published_at = null;
 
-            }
+            },
+
         }
     }
 </script>
 
 <style scoped>
-
+    @import "~leaflet/dist/leaflet.css";
+    #mapContainer {
+        width: 100%;
+        height: 50vh;
+    }
 </style>

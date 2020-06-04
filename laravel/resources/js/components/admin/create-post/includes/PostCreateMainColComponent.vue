@@ -22,6 +22,9 @@
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#adddata" role="tab">Доп. данные</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#mediadata" role="tab">Медиа</a>
+                        </li>
                     </ul>
                     <br>
                     <div class="tab-content">
@@ -36,6 +39,7 @@
                                 <textarea :input="e => $store.state.post.postObject.content_raw = e.target.value" name="content_raw" id="content_raw" v-model="$store.state.post.postObject.content_raw"
                                           class="form-control" rows="20">{{$store.state.post.postObject.content_raw}}</textarea>
                             </div>
+
                         </div>
                         <div class="tab-pane" id="adddata" role="tabpanel">
 
@@ -84,6 +88,12 @@
                             </div>
 
                         </div>
+
+                        <div class="tab-pane" id="mediadata" role="tabpanel">
+                            <div>
+                                <div id="mapContainer"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,17 +104,29 @@
 </template>
 
 <script>
-    import {DateTimeParser} from "../../../parsers/datetime-parser";
+    import { DateTimeParser } from "../../../parsers/datetime-parser";
+    //import L from 'leaflet';
+    import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+    import { MapService } from "../../services/map-service";
 
     export default {
         name: "PostCreateMainColComponent",
         props:['categorylist'],
+        components: {
+            LMap,
+            LTileLayer,
+            LMarker,
+        },
 
         data() {
             return {
                 categoriesInfo: [],
                 dateTimeParser: new DateTimeParser(),
-                changeColorIfPublished: false
+                changeColorIfPublished: false,
+                map: {},
+                mapLayer: null,
+                marker: null,
+                mapService: new MapService()
             }
         },
 
@@ -113,6 +135,14 @@
         mounted() {
             this.categoriesInfo = this.categorylist;
             this.test = this.$store.state.post.postObject.is_published;
+            this.map = this.mapService.buildMap('mapContainer', this.$store);
+            this.marker = this.mapService.getMarker();
+        },
+
+        beforeDestroy() {
+            if (this.map) {
+                this.map.remove();
+            }
         },
 
         computed: {
@@ -147,5 +177,9 @@
 </script>
 
 <style scoped>
-
+    @import "~leaflet/dist/leaflet.css";
+    #mapContainer {
+        width: 100%;
+        height: 50vh;
+    }
 </style>

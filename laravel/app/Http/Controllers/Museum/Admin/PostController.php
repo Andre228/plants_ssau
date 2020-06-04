@@ -149,7 +149,16 @@ class PostController extends BaseAdminController
      */
     public function destroy($id)
     {
-        return response(['message' => 'Успешно удалено', 'status' => 'OK']);
-        //dd($id);
+
+        $post = $this->museumPostRepository->getEdit($id);
+        $result = $post->forceDelete();
+
+
+        if ($result) {
+            return response(['message' => 'Успешно удалено', 'status' => 'OK']);
+        } else {
+            return response(['message' => 'Ошибка удаления', 'status' => 'ERROR']);
+        }
+
     }
 }
