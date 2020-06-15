@@ -26,6 +26,10 @@ class MuseumPost extends Model
         'category_id'
     ];
 
+    protected $casts = [
+        'coordinates' => 'array',
+    ];
+
     public function category()
     {
         return $this->belongsTo(MuseumCategory::class);

@@ -77,14 +77,7 @@
         },
 
         created() {
-            if (this.postInfo.coordinates == null) {
-                this.postInfo.coordinates = {};
-                this.postInfo.coordinates.title = '';
-                this.postInfo.coordinates.lat = 51.959;
-                this.postInfo.coordinates.lng = -8.623;
-            } else {
-                this.postInfo.coordinates = JSON.parse(this.postInfo.coordinates);
-            }
+           this.initCoordinates();
         },
 
         mounted() {
@@ -95,6 +88,27 @@
 
 
         methods: {
+
+            initCoordinates() {
+                if (this.postInfo.coordinates == null) {
+                    this.postInfo.coordinates = {};
+                    this.postInfo.coordinates.title = '';
+                    this.postInfo.coordinates.lat = 51.959;
+                    this.postInfo.coordinates.lng = -8.623;
+                } else {
+                    if (!this.postInfo.coordinates.title) {
+                        this.postInfo.coordinates.title = '';
+                    }
+                    if (!this.postInfo.coordinates.lat) {
+                        this.postInfo.coordinates.lat = 51.959;
+                    }
+                    if (!this.postInfo.coordinates.lng) {
+                        this.postInfo.coordinates.lng = -8.623;
+                    }
+                }
+                // this.postInfo.coordinates = JSON.parse(this.postInfo.coordinates);
+            },
+
             update() {
                 if ( this.responseMessages || this.errors) {
                     this.clearResponseMessage();

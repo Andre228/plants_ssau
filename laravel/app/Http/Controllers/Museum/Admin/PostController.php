@@ -69,9 +69,11 @@ class PostController extends BaseAdminController
         }
 
         $item = new MuseumPost($data);
-        $item->save();
 
-        if ($item) {
+        $result = $item->save();
+
+
+        if ($result) {
             return response(['message' => 'Запись успешно создана', 'status' => 'OK', 'id' => $item['id']]);
         } else {
             return response(['message' => 'Ошибка сохранения, перепроверьте данные', 'status' => 'ERROR']);

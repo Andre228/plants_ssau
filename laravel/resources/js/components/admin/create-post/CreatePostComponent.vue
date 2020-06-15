@@ -50,6 +50,7 @@
 
         data() {
             return {
+                post: this.postInfo,
                 responseMessages: '',
                 errors: '',
                 categoriesInfo: [],
@@ -59,12 +60,21 @@
             }
         },
 
+        created() {
+            this.post = {
+                category_id: 1,
+                is_published: false,
+                coordinates: {
+                    title: '',
+                    lat: 51.959,
+                    lng: -8.623
+                }
+            };
+            this.$store.state.post.postObject = this.post;
+        },
 
         mounted() {
-            this.$store.state.post.postObject = {};
             this.categoriesInfo = this.categorylist;
-            this.$store.state.post.postObject.is_published = false;
-            this.$store.state.post.postObject.category_id = 1;
         },
 
         methods: {

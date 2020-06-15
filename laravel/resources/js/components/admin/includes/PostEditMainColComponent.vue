@@ -157,7 +157,7 @@
             },
 
             changeCategory(event) {
-                const foundCategory = this.categoriesInfo.find(category => category.id_title === event.target.value);
+                let foundCategory = this.categoriesInfo.find(category => category.id_title === event.target.value);
                 this.$store.state.post.postObject.category_id = foundCategory.id;
             },
 

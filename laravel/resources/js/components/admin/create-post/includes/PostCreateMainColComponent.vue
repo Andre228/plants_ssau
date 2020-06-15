@@ -39,6 +39,14 @@
                                 <textarea :input="e => $store.state.post.postObject.content_raw = e.target.value" name="content_raw" id="content_raw" v-model="$store.state.post.postObject.content_raw"
                                           class="form-control" rows="20">{{$store.state.post.postObject.content_raw}}</textarea>
                             </div>
+                            <div class="form-group">
+                                <div id="mapContainer"></div>
+                                <div class="form-group">
+                                    <label for="coordinatesTitle">Краткое описание метки</label>
+                                    <input v-on:input="e => changeMarker" name="coordinatesTitle" id="coordinatesTitle" v-model="$store.state.post.postObject.coordinates.title" type="text"
+                                           class="form-control">
+                                </div>
+                            </div>
 
                         </div>
                         <div class="tab-pane" id="adddata" role="tabpanel">
@@ -90,9 +98,7 @@
                         </div>
 
                         <div class="tab-pane" id="mediadata" role="tabpanel">
-                            <div>
-                                <div id="mapContainer"></div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -130,11 +136,8 @@
             }
         },
 
-
-
         mounted() {
             this.categoriesInfo = this.categorylist;
-            this.test = this.$store.state.post.postObject.is_published;
             this.map = this.mapService.buildMap('mapContainer', this.$store);
             this.marker = this.mapService.getMarker();
         },
@@ -143,30 +146,34 @@
             if (this.map) {
                 this.map.remove();
             }
+            if (this.marker) {
+                this.marker.removeAllListeners();
+            }
         },
 
         computed: {
             is_publishedAfterUpdate: function(newVal, oldVal) {
-                console.log(this.$store.state.post.postObject.is_published);
                 return this.$store.state.post.postObject.is_published
             }
         },
 
-
-
         methods: {
 
-            changeExcerpt() {
+            changeMarker(event) {
+                this.$store.state.post.postObject.coordinates.title = event.target.value;
+            },
+
+            changeExcerpt(event) {
                 this.$store.state.post.postObject.excerpt = event.target.value;
             },
 
             changeCategory(event) {
-                const foundCategory = this.categoriesInfo.find(category => category.id_title === event.target.value);
+                let foundCategory = this.categoriesInfo.find(category => category.id_title === event.target.value);
                 this.$store.state.post.postObject.category_id = foundCategory.id;
             },
 
             changePublishedAt(event) {
-                this.$store.state.post.postObject.is_published = !this.$store.state.post.postObject.is_published;
+                this.$store.state.post.postObject.is_published = !this.$store.getters.getPostObject.is_published;
                 if (this.$store.state.post.postObject.is_published)
                     this.$store.state.post.postObject.published_at = this.dateTimeParser.getCurrentDateTime();
                 else this.$store.state.post.postObject.published_at = null;

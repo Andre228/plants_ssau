@@ -8,16 +8,16 @@ export class MapService {
         this.map = {};
         this.mapLayer = null;
         this.marker = null;
-        this.$store = null;
+        this.store = null;
     }
 
     buildMap(containerName, store) {
         let lat;
         let lng;
         if (store) {
-          this.$store = store;
-          lat = this.$store.getters.getPostObject.coordinates.lat;
-          lng = this.$store.getters.getPostObject.coordinates.lng;
+          this.store = store;
+          lat = this.store.getters.getPostObject.coordinates.lat;
+          lng = this.store.getters.getPostObject.coordinates.lng;
         }
         if (!lat || !lng) {
             lat = 51.959;
@@ -72,8 +72,10 @@ export class MapService {
     }
 
     bindPopupListener(marker) {
-        let _title = this.$store.state.post.postObject.coordinates.title;
-        marker.bindPopup(_title).openPopup();
+       // console.log(this.$store.getters);
+        let title = this.store.getters.getPostObject.coordinates.title;
+
+        marker.bindPopup(title).openPopup();
     }
 
     unbindPopupListener(marker) {
@@ -81,7 +83,7 @@ export class MapService {
     }
 
     setCoordinates(marker) {
-        this.$store.state.post.postObject.coordinates = {
+        this.store.state.post.postObject.coordinates = {
             lat: marker.getLatLng().lat,
             lng: marker.getLatLng().lng,
             title: marker.getPopup().getContent()
