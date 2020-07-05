@@ -107,7 +107,6 @@
                 axios.patch(`/home/user-profile-save/${this.userInfo.id}`, {name: this.name, email: this.email})
                     .then((response) => {
                         if (response.data.status == 'OK') {
-                            console.log(response.data);
                             this.responseMessages = response.data.message;
                             this.disabled = false;
                         }

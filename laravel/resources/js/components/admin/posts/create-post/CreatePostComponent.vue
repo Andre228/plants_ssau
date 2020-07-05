@@ -89,14 +89,15 @@
                     this.errors = 'Произошла ошибка, перепроверьте данные';
                 }
 
-                this.postServices.store(_body).then(response => {
-                    if (response.data.status == 'OK') {
-                        this.postId = response.data.id;
-                        this.responseMessages = response.data.message;
-                    }
-                    if (response.data.status == 'ERROR') {
-                        this.errors = response.data.message;
-                    }
+                this.postServices.store(_body)
+                    .then(response => {
+                        if (response.data.status == 'OK') {
+                            this.postId = response.data.id;
+                            this.responseMessages = response.data.message;
+                        }
+                        if (response.data.status == 'ERROR') {
+                            this.errors = response.data.message;
+                        }
                 }).catch((error) => this.errors = 'Произошла ошибка, проверьте данные');
 
 

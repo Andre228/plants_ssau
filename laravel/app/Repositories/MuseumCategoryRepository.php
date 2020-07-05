@@ -45,6 +45,7 @@ class MuseumCategoryRepository extends CoreRepository
     public function getCategories($how)
     {
         $columns = ['id', 'title', 'parent_id'];
+        $categoryList = null;
 
         if($how == 'per-page') {
             $categoryList = Model::paginate(5);
@@ -52,6 +53,22 @@ class MuseumCategoryRepository extends CoreRepository
 
         if($how == 'all') {
             $categoryList = Model::all();
+        }
+
+        return $categoryList;
+
+    }
+
+    public function getSearchingCategories($query)
+    {
+        $categoryList = null;
+
+        if (!empty($query)) {
+            $categoryList = Model::where('title', 'LIKE', '%' . $query . '%')
+                ->orWhere('description', 'LIKE', "%{$query}%")
+                ->get();
+        } else {
+            $categoryList = Model::paginate(5);
         }
 
         return $categoryList;

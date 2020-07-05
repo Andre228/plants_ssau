@@ -6,16 +6,16 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="#">Navbar</a>
+            <!--<a class="navbar-brand" href="#">Navbar</a>-->
 
             <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item active">
                         <a :href="'/admin/museum/posts/create'" class="nav-link">Добавить <span class="sr-only">(current)</span></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
+                    <!--<li class="nav-item">-->
+                        <!--<a class="nav-link" href="#">Link</a>-->
+                    <!--</li>-->
                     <li class="nav-item">
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -59,6 +59,7 @@
 
 <script>
     import PostCardComponent from "./PostCardComponent";
+    import { DateTimeParser } from "../../parsers/datetime-parser";
     export default {
         name: "PostsComponent",
         components: {PostCardComponent},
@@ -68,7 +69,8 @@
             return {
                 postsInfo: [],
                 searchingPost: '',
-                computedPosts: []
+                computedPosts: [],
+                dateTimeParser: new DateTimeParser()
             }
         },
 
@@ -85,7 +87,7 @@
                     return this.computedPosts.filter((post) => {
                         return post.title.toLocaleLowerCase().match(this.searchingPost.toLocaleLowerCase()) ||
                             post.author.toLocaleLowerCase().match(this.searchingPost.toLocaleLowerCase()) ||
-                            this.convertDateToString(post).toString().match(this.searchingPost);
+                            this.dateTimeParser.convertDateToString(post.published_at).toString().match(this.searchingPost);
                     })
                 },
 
@@ -97,29 +99,7 @@
 
         methods: {
             convertDateToString(post) {
-
-
-
-                // let formatter = new Intl.DateTimeFormat("ru", {
-                //   year: 'numeric',
-                //   month: '2-digit',
-                //   day: '2-digit',
-                //
-                //   hour: "numeric",
-                //   minute: "numeric",
-                //   second: "numeric",
-                // });
-                //
-                // let dataF = formatter.format(new Date(mestnoe));
-
-                const d = new Date(post.published_at);
-                const ye = new Intl.DateTimeFormat('ru', { year: 'numeric' }).format(d);
-                const mo = new Intl.DateTimeFormat('ru', { month: '2-digit' }).format(d);
-                const da = new Intl.DateTimeFormat('ru', { day: '2-digit' }).format(d);
-
-                let published_at = `${da}-${mo}-${ye}`;
-
-                return published_at
+                return this.dateTimeParser.convertDateToString(post.published_at);
             },
 
             sort(param) {
@@ -134,8 +114,6 @@
 </script>
 
 <style scoped>
-
-
 
     .search-input {
         width: 100px;
@@ -153,6 +131,5 @@
     .btn-search {
         margin-left: 10px;
     }
-
 
 </style>

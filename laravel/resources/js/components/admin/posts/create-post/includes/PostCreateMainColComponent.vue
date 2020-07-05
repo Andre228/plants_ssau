@@ -110,7 +110,7 @@
 </template>
 
 <script>
-    import { DateTimeParser } from "../../../parsers/datetime-parser";
+    import { DateTimeParser } from "../../../../parsers/datetime-parser";
     //import L from 'leaflet';
     import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
     import { MapService } from "../../services/map-service";

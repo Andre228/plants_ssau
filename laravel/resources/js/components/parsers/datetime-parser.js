@@ -22,4 +22,44 @@ export class DateTimeParser {
 
         return published_at;
     }
+
+    getCurrentDate() {
+        const d = new Date();
+        const ye = new Intl.DateTimeFormat('ru', { year: 'numeric' }).format(d);
+        const mo = new Intl.DateTimeFormat('ru', { month: '2-digit' }).format(d);
+        const da = new Intl.DateTimeFormat('ru', { day: '2-digit' }).format(d);
+
+        const currentDate = `${ye}-${mo}-${da}`;
+
+        return currentDate;
+    }
+
+    convertDateToString(date) {
+
+        // let formatter = new Intl.DateTimeFormat("ru", {
+        //   year: 'numeric',
+        //   month: '2-digit',
+        //   day: '2-digit',
+        //
+        //   hour: "numeric",
+        //   minute: "numeric",
+        //   second: "numeric",
+        // });
+        //
+        // let dataF = formatter.format(new Date(mestnoe));
+        if (date) {
+            const d = new Date(date);
+            const ye = new Intl.DateTimeFormat('ru', { year: 'numeric' }).format(d);
+            const mo = new Intl.DateTimeFormat('ru', { month: '2-digit' }).format(d);
+            const da = new Intl.DateTimeFormat('ru', { day: '2-digit' }).format(d);
+
+            let published_at = `${da}-${mo}-${ye}`;
+
+            return published_at;
+        } else {
+            return this.getCurrentDate();
+        }
+
+
+    }
 }

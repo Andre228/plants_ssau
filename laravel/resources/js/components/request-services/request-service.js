@@ -16,7 +16,11 @@ export class RequestService {
     }
 
     store(url, _body) {
-        if (url && _body) return axios.post(url, _body)
+        if (url && _body) return axios.post(url, _body);
+    }
+
+    get(url) {
+        if (url) return axios.get(url);
     }
 
 }

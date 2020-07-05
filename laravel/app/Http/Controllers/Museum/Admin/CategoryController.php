@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Museum\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MuseumCategory;
 use App\Repositories\MuseumCategoryRepository;
-use Illuminate\Http\Request;
+use Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Str;
@@ -34,6 +34,7 @@ class CategoryController extends BaseAdminController
     public function index($how)
     {
         $categoryList = $this->museumCategoryRepository->getCategories($how);
+
         return view('museum.admin.category.index', compact('categoryList'));
 
     }
@@ -49,7 +50,7 @@ class CategoryController extends BaseAdminController
         $item = new MuseumCategory();
         $categoryList = $this->museumCategoryRepository->getForComboBox();
 
-        return view('museum.admin.category.create', compact('item','categoryList'));
+        return view('museum.admin.category.create', compact('categoryList', 'search'));
 
     }
 
@@ -177,6 +178,14 @@ class CategoryController extends BaseAdminController
 
         return response()->json(['data' => $resp->toArray()]);
 
+    }
+
+    public function search(Request $request)
+    {
+        $search = Request::input('search');
+        $categoryList = $this->museumCategoryRepository->getSearchingCategories($search);
+
+        return view('museum.admin.category.index', compact('categoryList', 'search'));
     }
 
     public function showAll($how) {

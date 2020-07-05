@@ -4,13 +4,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 
-
 @extends('layouts.app')
 
 @section('content')
 
     <link href="{{ asset('css/table/table-nav.css') }}" rel="stylesheet">
-
     <div class="container">
         @if($errors->any())
             <div class="row justify-content-center notification-block">
@@ -49,22 +47,9 @@
                         <i style="font-size: 30px;" class="fas fa-caret-square-down"></i>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarTableToggler">
-
-                        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                            <li class="nav-item active">
-                                <a class="nav-link nav-link-hover" href="{{ route('museum.admin.categories.create') }}"><i class="fas fa-plus" style="margin-right: 5px;"></i>Добавить <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link nav-link-hover" href="{{ route('museum.admin.categories.index', 'per-page') }}">Постранично</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link nav-link-hover" href="{{ route('museum.admin.categories.index', 'all') }}">Вывести все</a>
-                            </li>
-                        </ul>
-                        <form method="GET" action="{{route('museum.admin.categories.search')}}" class="form-inline my-2 my-lg-0">
-                            @csrf
-                            <input name="search" value="{{ $search ?? '' }}" class="form-control mr-sm-2" type="search" placeholder="Введите для поиска" aria-label="Search">
-                            <button-component :type="'submit'" :loading="true" :delay="500" ></button-component>
+                        <form class="form-inline my-2 my-lg-0">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Введите для поиска" aria-label="Search">
+                            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Поиск</button>
                         </form>
                     </div>
                 </nav>
@@ -75,24 +60,20 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Категория</th>
-                                <th>Родитель</th>
+                                <th>№</th>
+                                <th>Логин</th>
+                                <th>Email адрес</th>
+                                <th>Дата регистрации</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($categoryList as $item)
-                                @php /** @var \App\Models\MuseumCategory $item*/ @endphp
+                            @foreach($users as $item)
+                                @php /** @var \App\Models\User $item*/ @endphp
                                     <tr>
-                                        <td>{{$item->id}}</td>
-                                        <td>
-                                            <a href="{{route('museum.admin.categories.edit', $item->id)}}">
-                                                {{$item->title}}
-                                            </a>
-                                        </td>
-                                        <td @if(in_array($item->parent_id, [0,1])) style="color:#ccc" @endif>
-                                            {{$item->parent_id}}  {{-- {{$item->parentCategory->title}} --}}
-                                        </td>
+                                        <td>{{ $item->id }}</td>
+                                        <td><a href="{{ route('museum.admin.users.edit', $item->id) }}">{{ $item->name }}</a></td>
+                                        <td>{{ $item->email }}</td>
+                                        <td>{{ $item->created_at }}</td>
                                     </tr>
                             @endforeach
                             </tbody>
@@ -101,21 +82,23 @@
                 </div>
             </div>
         </div>
-        @if(($categoryList instanceof \Illuminate\Pagination\LengthAwarePaginator) && $categoryList->total() > $categoryList->count())
+        @if(($users instanceof \Illuminate\Pagination\LengthAwarePaginator) && $users->total() > $users->count())
             <br>
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            {{$categoryList->links()}}
+                            {{ $users->links() }}
                         </div>
                     </div>
                 </div>
             </div>
         @endif
     </div>
+
 @endsection
 <script>
+
     function deleteErrorsBlock() {
         $("div.notification-block").fadeOut(1000, function(){$(this).remove()});
     }
@@ -127,4 +110,5 @@
     $(document).ready(function () {
         $('.success-block').fadeIn(2000).fadeOut(2000, function(){$(this).remove()});
     });
+
 </script>

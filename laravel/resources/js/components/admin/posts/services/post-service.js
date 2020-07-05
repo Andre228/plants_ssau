@@ -1,4 +1,4 @@
-import {RequestService} from "../../request-services/request-service";
+import {RequestService} from "../../../request-services/request-service";
 
 
 export class PostServices {

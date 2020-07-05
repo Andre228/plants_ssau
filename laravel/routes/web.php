@@ -56,6 +56,7 @@ Route::group($groupDataAdmin, function () {
     Route::get('/categories/{id}/edit','CategoryController@edit')->name('museum.admin.categories.edit');
     Route::patch('/categories/{id}','CategoryController@update')->name('museum.admin.categories.update');
     Route::delete('/categories/{id}','CategoryController@destroy')->name('museum.admin.categories.destroy');
+    Route::get('/categories/search','CategoryController@search')->name('museum.admin.categories.search');
     Route::get('/categories/{how}','CategoryController@index')->name('museum.admin.categories.index');
 
 
@@ -65,6 +66,11 @@ Route::group($groupDataAdmin, function () {
     Route::get('/posts/{id}/edit','PostController@edit')->name('museum.admin.posts.edit');
     Route::patch('/posts/{id}','PostController@update')->name('museum.admin.posts.update');
     Route::delete('/posts/{id}','PostController@destroy')->name('museum.admin.posts.destroy');
+
+
+    Route::get('/users','UserController@index')->name('museum.admin.users.index');
+    Route::get('/users/{id}/edit','UserController@edit')->name('museum.admin.users.edit');
+   // Route::get('/getusers/per-page','UserController@getUsersOnPage')->name('museum.admin.users.on-page');
 
 });
 

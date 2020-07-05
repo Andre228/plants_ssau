@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from  'vuex';
 import post from './admin/post'
+import user from './admin/user';
 
 
 Vue.use(Vuex);
@@ -9,7 +10,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
 
     modules: {
-        post
+        post,
+        user
     },
 
     state: {
