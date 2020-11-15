@@ -64,7 +64,7 @@
                         <form method="GET" action="{{route('museum.admin.categories.search')}}" class="form-inline my-2 my-lg-0">
                             @csrf
                             <input name="search" value="{{ $search ?? '' }}" class="form-control mr-sm-2" type="search" placeholder="Введите для поиска" aria-label="Search">
-                            <button-component :type="'submit'" :loading="true" :delay="500" ></button-component>
+                            <button-component :type="'submit'" :loading="true" :delay="500" :text="'Поиск'"></button-component>
                         </form>
                     </div>
                 </nav>

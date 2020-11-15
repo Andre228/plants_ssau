@@ -7,8 +7,8 @@ export class RequestService {
     }
 
 
-    update(url, _body) {
-        if (url && _body) return axios.patch(url, _body);
+    update(url, _body, headers) {
+        if (url && _body) return axios.patch(url, _body, headers);
     }
 
     destroy(url) {
@@ -21,6 +21,10 @@ export class RequestService {
 
     get(url) {
         if (url) return axios.get(url);
+    }
+
+    post(url, _body, headers) {
+        if (url && _body) return axios.post(url, _body, headers);
     }
 
 }

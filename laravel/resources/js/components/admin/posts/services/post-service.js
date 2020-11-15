@@ -23,4 +23,14 @@ export class PostServices {
         return this.requestService.store(url, _body);
     }
 
+    upload(postId, _body) {
+        if (postId && _body) {
+            const headers = {
+                "Content-Type": "multipart/form-data"
+            };
+            const url = `/admin/museum/posts/${postId}/upload-file`;
+            return this.requestService.post(url, _body, { headers: headers });
+        }
+    }
+
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 class MuseumPost extends Model
 {
@@ -39,4 +40,11 @@ class MuseumPost extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+//    public function getCreatedAtAttribute($value)
+//    {
+//        return Carbon::createFromTimestamp(strtotime($value))
+//            ->timezone('Europe/Samara')
+//            ->toDateTimeString();
+//    }
 }

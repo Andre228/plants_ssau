@@ -92,6 +92,10 @@
 
                         <div class="tab-pane" id="mediadata" role="tabpanel">
 
+                            <carousel-component :images="images"></carousel-component>
+
+                            <upload-file-component v-on:saveFile="uploadFile"></upload-file-component>
+
                         </div>
                     </div>
                 </div>
@@ -104,14 +108,18 @@
 
 <script>
     import { DateTimeParser } from "../../../parsers/datetime-parser";
-    //import L from 'leaflet';
     import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
     import { MapService } from "../services/map-service";
+    import CarouselComponent from "../../../CarouselComponent";
+    import UploadFileComponent from "../../../UploadFileComponent";
+    import {PostServices} from "../services/post-service";
 
     export default {
         name: "PostEditMainColComponent",
-        props: ['post', 'categorylist', 'is_publishedAfterUpdate'],
+        props: ['post', 'categorylist', 'is_publishedAfterUpdate', 'images'],
         components: {
+            UploadFileComponent,
+            CarouselComponent,
             LMap,
             LTileLayer,
             LMarker,
@@ -125,7 +133,8 @@
                 map: {},
                 mapLayer: null,
                 marker: null,
-                mapService: new MapService()
+                mapService: new MapService(),
+                postServices: new PostServices()
             }
         },
 
@@ -167,6 +176,26 @@
                 else this.$store.state.post.postObject.published_at = null;
 
             },
+
+            uploadFile(event) {
+                this.$emit('uploadFile', event);
+                // const postId = this.$store.getters.getPostObject.id;
+                // //multipart/form-data
+                //
+                //
+                // if (event[0]) {
+                //     let body = new FormData();
+                //     const file = event[0];
+                //     const updatedAt = this.dateTimeParser.getCurrentDateTime();
+                //     body.append('file', file, file.name);
+                //     body.append('updated_at', updatedAt);
+                //
+                //     this.postServices.upload(postId, body).then(response => {
+                //         console.log(response);
+                //     });
+                // }
+
+            }
 
         }
     }

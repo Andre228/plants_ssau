@@ -1,17 +1,18 @@
 <template>
-    <button :disabled="!isLoad" class="btn btn-outline-secondary my-2 my-sm-0" :type="typeButton" @click="click">Поиск</button>
+    <button :disabled="!isLoad" class="btn btn-outline-secondary my-2 my-sm-0" :type="typeButton" @click="click">{{ displayText }}</button>
 </template>
 
 <script>
 
     export default {
         name: "ButtonComponent",
-        props: ['loading', 'type', 'delay'],
+        props: ['loading', 'type', 'delay', 'text'],
 
         data() {
             return {
                 typeButton: this.type,
                 delayButton: this.delay,
+                displayText: this.text,
                 keywords: null,
                 isLoad: false
             }

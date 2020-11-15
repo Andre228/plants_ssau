@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <post-details-component :post="{{ $item }}" :categorylist="{{ $categoryList }}"></post-details-component>
+    <post-details-component :post="{{ $item }}" :categorylist="{{ $categoryList }}" :imageslist="{{ $imageList }}"></post-details-component>
 
 @endsection
 <script>

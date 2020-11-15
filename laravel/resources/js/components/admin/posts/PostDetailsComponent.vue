@@ -22,7 +22,12 @@
             <div class="row justify-content-center">
 
                 <div class="col-md-8">
-                    <post-edit-main-col-component :is_publishedAfterUpdate="is_publishedAfterUpdate" :post="postInfo" :categorylist="categoriesInfo">
+                    <post-edit-main-col-component
+                            v-on:uploadFile="uploadFile"
+                            :is_publishedAfterUpdate="is_publishedAfterUpdate"
+                            :post="postInfo"
+                            :categorylist="categoriesInfo"
+                            :images="images">
 
                     </post-edit-main-col-component>
                 </div>
@@ -60,16 +65,19 @@
     import PostEditMainColComponent from "./includes/PostEditMainColComponent";
     import PostEditAddColComponent from "./includes/PostEditAddColComponent";
     import {PostServices} from './services/post-service';
+    import {DateTimeParser} from "../../parsers/datetime-parser";
     export default {
         name: "PostDetailsComponent",
         components: {PostEditAddColComponent, PostEditMainColComponent},
-        props: ['post', 'categorylist'],
+        props: ['post', 'categorylist', 'imageslist'],
 
         data() {
             return {
                 postInfo: this.post,
                 categoriesInfo: this.categorylist,
+                images: this.imageslist,
                 responseMessages: '',
+                dateTimeParser: new DateTimeParser(),
                 errors: '',
                 is_publishedAfterUpdate: false,
                 postServices: new PostServices()
@@ -115,21 +123,24 @@
                 }
 
                 const postId = this.$store.getters.getPostObject.id;
-                const _body = this.$store.getters.getPostObject;
+                const body = this.$store.getters.getPostObject;
+                body.updated_at = this.dateTimeParser.getCurrentDateTime();
 
-                if (!postId || !_body) {
+                if (!postId || !body) {
                     this.errors = 'Указанный объект не найден';
                 }
 
-                this.postServices.update(postId, _body).then(response => {
-                    if (response.data.status == 'OK') {
+                this.postServices.update(postId, body)
+                    .then(response => {
+                      if (response.data.status == 'OK') {
                         this.is_publishedAfterUpdate = response.data.is_published;
                         this.responseMessages = response.data.message;
-                    }
-                    if (response.data.status == 'ERROR') {
+                      }
+                      if (response.data.status == 'ERROR') {
                         this.errors = response.data.message;
-                    }
-                }).catch((error) => this.errors = error);
+                      }
+                    })
+                    .catch((error) => this.errors = error);
 
             },
 
@@ -152,6 +163,35 @@
                         .catch((error) => this.errors = error);
                 } else {
                     this.errors = 'Ошибка удаления экспоната, данный экспонат не существует';
+                }
+
+            },
+
+            uploadFile(event) {
+
+                if ( this.responseMessages || this.errors) {
+                    this.clearResponseMessage();
+                }
+
+                const postId = this.$store.getters.getPostObject.id;
+
+                if (event[0]) {
+                    let body = new FormData();
+                    const file = event[0];
+                    const updatedAt = this.dateTimeParser.getCurrentDateTime();
+                    body.append('file', file, file.name);
+                    body.append('updated_at', updatedAt);
+
+                    this.postServices.upload(postId, body)
+                        .then(response => {
+                            if (response.data.status == 'OK') {
+                                this.responseMessages = response.data.message;
+                            }
+                            if (response.data.status == 'ERROR') {
+                                this.errors = response.data.message;
+                            }
+                        })
+                        .catch((error) => this.errors = error);
                 }
 
             },

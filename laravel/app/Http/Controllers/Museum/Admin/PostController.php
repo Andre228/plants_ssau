@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Museum\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\MuseumCategory;
+use App\Models\MuseumImage;
 use App\Models\MuseumPost;
 use App\Repositories\MuseumCategoryRepository;
+use App\Repositories\MuseumImageRepository;
 use App\Repositories\MuseumPostRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PostController extends BaseAdminController
@@ -17,6 +18,7 @@ class PostController extends BaseAdminController
 
     private $museumPostRepository;
     private $museumCategoryRepository;
+    private $museumImageRepository;
 
 
     public function __construct()
@@ -25,6 +27,7 @@ class PostController extends BaseAdminController
 
         $this->museumPostRepository = app(MuseumPostRepository::class);
         $this->museumCategoryRepository = app(MuseumCategoryRepository::class);
+        $this->museumImageRepository = app(MuseumImageRepository::class);
     }
 
     /**
@@ -101,9 +104,13 @@ class PostController extends BaseAdminController
     {
         $item = $this->museumPostRepository->getEdit($id);
         $categoryList = $this->museumCategoryRepository->getForComboBox();
+        $imageList = $this->museumImageRepository->getAllImagesByPostId($id);
+        //dd();
+
+      // $arr = $imageList->toArray();
 
 
-        return view('museum.admin.post.edit', compact('item', 'categoryList'));
+        return view('museum.admin.post.edit')->with('item', $item)->with('categoryList', $categoryList)->with('imageList', $imageList);
     }
 
     /**
@@ -160,6 +167,45 @@ class PostController extends BaseAdminController
             return response(['message' => 'Успешно удалено', 'status' => 'OK']);
         } else {
             return response(['message' => 'Ошибка удаления', 'status' => 'ERROR']);
+        }
+
+    }
+
+    public function upload(Request $request, $id)
+    {
+        $data = $request->all();
+        if ($request->hasFile('file')) {
+
+            $date = str_replace(' ', '_', $request->updated_at);
+            $date = str_replace(':', '_', $date);
+
+            $fileName = $date . '_' . rand(100, 1000000) . '_' . Str::random(10) . '_' . $data['file']->getClientOriginalName();
+            $filePath = 'images/posts/' . $id;
+
+            $path = Storage::disk('public')->putFileAs(
+                $filePath,
+                $request->file('file'),
+                $fileName
+            );
+
+            $path = '/storage/' . $path;
+
+            if ($path) {
+
+                $data = array(
+                    'post_id' => $id,
+                    'name' => $fileName,
+                    'alias' => $path,
+                );
+
+                $imgobject = new MuseumImage();
+                $imgobject->create($data);
+
+                return response(['message' => 'Успешно загружено', 'status' => 'OK']);
+            } else {
+                return response(['message' => 'Ошибка загрузки файла', 'status' => 'ERROR']);
+            }
+
         }
 
     }

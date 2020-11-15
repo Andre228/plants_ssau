@@ -1,4 +1,3 @@
-
 import L from 'leaflet';
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
 
@@ -72,9 +71,7 @@ export class MapService {
     }
 
     bindPopupListener(marker) {
-       // console.log(this.$store.getters);
         let title = this.store.getters.getPostObject.coordinates.title;
-
         marker.bindPopup(title).openPopup();
     }
 
