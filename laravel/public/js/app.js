@@ -2588,6 +2588,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PostCardComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PostCardComponent */ "./resources/js/components/admin/posts/PostCardComponent.vue");
 /* harmony import */ var _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../parsers/datetime-parser */ "./resources/js/components/parsers/datetime-parser.js");
+/* harmony import */ var _UploadFileComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../UploadFileComponent */ "./resources/js/components/UploadFileComponent.vue");
 //
 //
 //
@@ -2647,12 +2648,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostsComponent",
   components: {
-    PostCardComponent: _PostCardComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
+    PostCardComponent: _PostCardComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
+    UploadFileComponent: _UploadFileComponent__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   props: ['posts'],
   data: function data() {
@@ -2693,6 +2704,9 @@ __webpack_require__.r(__webpack_exports__);
         return !post.is_published;
       });
       if (param === null) this.filteredPosts = this.postsInfo;
+    },
+    changeFile: function changeFile(event) {
+      console.log(event.target.files);
     }
   }
 });
@@ -8184,7 +8198,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.search-input[data-v-3b75de91] {\n    width: 100px;\n    transition: ease-in-out, width .35s ease-in-out;\n    border-radius: 4px;\n    border: none;\n}\n.search-input[data-v-3b75de91]:focus {\n    outline: none !important;\n    box-shadow: 0 0 10px white;\n    width: 400px;\n}\n.btn-search[data-v-3b75de91] {\n    margin-left: 10px;\n}\n\n", ""]);
+exports.push([module.i, "\n.search-input[data-v-3b75de91] {\n    width: 100px;\n    transition: ease-in-out, width .35s ease-in-out;\n    border-radius: 4px;\n    border: none;\n}\n.search-input[data-v-3b75de91]:focus {\n    outline: none !important;\n    box-shadow: 0 0 10px white;\n    width: 400px;\n}\n.btn-search[data-v-3b75de91] {\n    margin-left: 10px;\n}\n.example-2 .form-group[data-v-3b75de91] {\n    margin-bottom: 0  !important;\n}\n.example-2 .btn-tertiary[data-v-3b75de91]{color:#888;padding:0;line-height:40px;width:auto;margin:auto;display:block;border:2px solid #888}\n.example-2 .btn-tertiary[data-v-3b75de91]:hover,.example-2 .btn-tertiary[data-v-3b75de91]:focus{ -webkit-filter: brightness(130%); filter: brightness(130%);\n}\n.example-2 .input-file[data-v-3b75de91]{width:.1px;height:.1px;opacity:0;overflow:hidden;position:absolute;z-index:-1}\n.example-2 .input-file + .js-labelFile[data-v-3b75de91]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 10px;cursor:pointer}\n.example-2 .input-file + .js-labelFile .icon[data-v-3b75de91]:before{content:\"\\F093\"}\n.example-2 .input-file + .js-labelFile.has-file .icon[data-v-3b75de91]:before{content:\"\\F00C\";color:#5AAC7B}\n\n", ""]);
 
 // exports
 
@@ -54902,6 +54916,28 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("li", { staticClass: "nav-item" }, [
+                _c("div", { staticClass: "example-2" }, [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("input", {
+                      staticClass: "input-file",
+                      attrs: {
+                        type: "file",
+                        name: "file",
+                        id: "fileExportFromCSV"
+                      },
+                      on: {
+                        change: function($event) {
+                          return _vm.changeFile($event)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(1)
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "nav-item" }, [
                 _c("div", { staticClass: "dropdown" }, [
                   _c(
                     "a",
@@ -55061,6 +55097,23 @@ var staticRenderFns = [
         }
       },
       [_c("span", { staticClass: "navbar-toggler-icon" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      {
+        staticClass: "btn btn-tertiary js-labelFile",
+        attrs: { for: "fileExportFromCSV" }
+      },
+      [
+        _c("i", { staticClass: "icon fa fa-check" }),
+        _vm._v(" "),
+        _c("span", { staticClass: "js-fileName" }, [_vm._v("Експорт")])
+      ]
     )
   }
 ]

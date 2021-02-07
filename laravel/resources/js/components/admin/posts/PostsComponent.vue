@@ -13,9 +13,17 @@
                     <li class="nav-item active">
                         <a :href="'/admin/museum/posts/create'" class="nav-link">Добавить <span class="sr-only">(current)</span></a>
                     </li>
-                    <!--<li class="nav-item">-->
-                        <!--<a class="nav-link" href="#">Link</a>-->
-                    <!--</li>-->
+                    <li class="nav-item">
+                        <div class="example-2">
+                            <div class="form-group">
+                                <input @change="changeFile($event)" type="file" name="file" id="fileExportFromCSV" class="input-file">
+                                <label for="fileExportFromCSV" class="btn btn-tertiary js-labelFile">
+                                    <i class="icon fa fa-check"></i>
+                                    <span class="js-fileName">Експорт</span>
+                                </label>
+                            </div>
+                        </div>
+                    </li>
                     <li class="nav-item">
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -60,9 +68,10 @@
 <script>
     import PostCardComponent from "./PostCardComponent";
     import { DateTimeParser } from "../../parsers/datetime-parser";
+    import UploadFileComponent from "../../UploadFileComponent";
     export default {
         name: "PostsComponent",
-        components: {PostCardComponent},
+        components: {PostCardComponent, UploadFileComponent},
         props: ['posts'],
 
         data() {
@@ -108,6 +117,10 @@
                 if (param === false) this.filteredPosts = this.postsInfo.filter((post) => !post.is_published );
                 if (param === null) this.filteredPosts = this.postsInfo;
 
+            },
+
+            changeFile(event) {
+                console.log(event.target.files);
             }
         }
     }
@@ -131,5 +144,16 @@
     .btn-search {
         margin-left: 10px;
     }
+
+    .example-2 .form-group {
+        margin-bottom: 0  !important;
+    }
+
+    .example-2 .btn-tertiary{color:#888;padding:0;line-height:40px;width:auto;margin:auto;display:block;border:2px solid #888}
+    .example-2 .btn-tertiary:hover,.example-2 .btn-tertiary:focus{ filter: brightness(130%); }
+    .example-2 .input-file{width:.1px;height:.1px;opacity:0;overflow:hidden;position:absolute;z-index:-1}
+    .example-2 .input-file + .js-labelFile{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 10px;cursor:pointer}
+    .example-2 .input-file + .js-labelFile .icon:before{content:"\f093"}
+    .example-2 .input-file + .js-labelFile.has-file .icon:before{content:"\f00c";color:#5AAC7B}
 
 </style>

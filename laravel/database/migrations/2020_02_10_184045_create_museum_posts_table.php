@@ -34,6 +34,16 @@ class CreateMuseumPostsTable extends Migration
             $table->string('author');
             $table->timestamp('collection_date')->nullable();
 
+            $table->bigInteger('barcode')->nullable();
+            $table->string('adopted_name', 550)->nullable();
+            $table->string('russian_name', 350)->nullable();
+            $table->string('label_text', 350)->nullable();//accuracy
+            $table->integer('accuracy')->nullable();
+            $table->string('collectors')->nullable();
+            $table->string('determination')->nullable();
+            $table->float('environmental_status')->nullable();
+            $table->string('label_name', 550)->nullable();
+
 
 
             $table->timestamps();
