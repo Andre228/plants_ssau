@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Museum\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MuseumCategory;
 use App\Repositories\MuseumCategoryRepository;
-use Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Http\Request;
 use Str;
 
 class CategoryController extends BaseAdminController

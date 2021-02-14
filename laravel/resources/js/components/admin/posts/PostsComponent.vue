@@ -84,6 +84,7 @@
         },
 
         mounted() {
+            console.log(this.posts);
              this.postsInfo = this.posts;
              this.computedPosts = this.postsInfo;
         },

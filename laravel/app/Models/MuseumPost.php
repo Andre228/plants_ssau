@@ -24,7 +24,17 @@ class MuseumPost extends Model
         'author',
         'collection_date',
         'user_id',
-        'category_id'
+        'category_id',
+
+        'barcode',
+        'adopted_name',
+        'russian_name',
+        'label_text',
+        'accuracy',
+        'collectors',
+        'determination',
+        'environmental_status',
+        'label_name'
     ];
 
     protected $casts = [

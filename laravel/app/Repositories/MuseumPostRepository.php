@@ -53,7 +53,17 @@ class MuseumPostRepository extends CoreRepository
             'is_published',
             'published_at',
             'user_id',
-            'category_id'
+            'category_id',
+
+            'barcode',
+            'adopted_name',
+            'russian_name',
+            'label_text',
+            'accuracy',
+            'collectors',
+            'determination',
+            'environmental_status',
+            'label_name',
         ];
 
         if ($howMuch !== null) {

@@ -2675,6 +2675,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
+    console.log(this.posts);
     this.postsInfo = this.posts;
     this.computedPosts = this.postsInfo;
   },
@@ -3179,6 +3180,52 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CarouselComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../CarouselComponent */ "./resources/js/components/CarouselComponent.vue");
 /* harmony import */ var _UploadFileComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../UploadFileComponent */ "./resources/js/components/UploadFileComponent.vue");
 /* harmony import */ var _services_post_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/post-service */ "./resources/js/components/admin/posts/services/post-service.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -56115,47 +56162,126 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "content_raw" } }, [
-                    _vm._v("Статья")
+                  _c("label", { attrs: { for: "title" } }, [
+                    _vm._v("Принятое название")
                   ]),
                   _vm._v(" "),
-                  _c(
-                    "textarea",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.postInfo.content_raw,
-                          expression: "postInfo.content_raw"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        input: function(e) {
-                          return (_vm.$store.state.post.postObject.content_raw =
-                            e.target.value)
-                        },
-                        name: "content_raw",
-                        id: "content_raw",
-                        rows: "20"
-                      },
-                      domProps: { value: _vm.postInfo.content_raw },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.postInfo,
-                            "content_raw",
-                            $event.target.value
-                          )
-                        }
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.postInfo.adopted_name,
+                        expression: "postInfo.adopted_name"
                       }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      input: function(e) {
+                        return (_vm.$store.state.post.postObject.adopted_name =
+                          e.target.value)
+                      },
+                      name: "adopted_name",
+                      type: "text",
+                      minlength: "3",
+                      required: ""
                     },
-                    [_vm._v(_vm._s(_vm.postInfo.content_raw))]
-                  )
+                    domProps: { value: _vm.postInfo.adopted_name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.postInfo,
+                          "adopted_name",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "title" } }, [
+                    _vm._v("Русское название")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.postInfo.russian_name,
+                        expression: "postInfo.russian_name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      input: function(e) {
+                        return (_vm.$store.state.post.postObject.russian_name =
+                          e.target.value)
+                      },
+                      name: "russian_name",
+                      type: "text",
+                      minlength: "3",
+                      required: ""
+                    },
+                    domProps: { value: _vm.postInfo.russian_name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.postInfo,
+                          "russian_name",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "title" } }, [
+                    _vm._v("Текст на этикетке")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.postInfo.label_text,
+                        expression: "postInfo.label_text"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      input: function(e) {
+                        return (_vm.$store.state.post.postObject.label_text =
+                          e.target.value)
+                      },
+                      name: "label_text",
+                      type: "text",
+                      minlength: "3",
+                      required: ""
+                    },
+                    domProps: { value: _vm.postInfo.label_text },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.postInfo,
+                          "label_text",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
@@ -56213,7 +56339,7 @@ var render = function() {
               [
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "category_id" } }, [
-                    _vm._v("Категория")
+                    _vm._v("Семейство")
                   ]),
                   _vm._v(" "),
                   _c(
@@ -56288,7 +56414,198 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "slug" } }, [_vm._v("Автор")]),
+                  _c("label", { attrs: { for: "slug" } }, [
+                    _vm._v("Точность, м.")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.postInfo.accuracy,
+                        expression: "postInfo.accuracy"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      input: function(e) {
+                        return (_vm.$store.state.post.postObject.accuracy =
+                          e.target.value)
+                      },
+                      name: "accuracy",
+                      type: "text"
+                    },
+                    domProps: { value: _vm.postInfo.accuracy },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.postInfo, "accuracy", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "slug" } }, [_vm._v("Сборщики")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.postInfo.collectors,
+                        expression: "postInfo.collectors"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      input: function(e) {
+                        return (_vm.$store.state.post.postObject.collectors =
+                          e.target.value)
+                      },
+                      name: "collectors",
+                      type: "text"
+                    },
+                    domProps: { value: _vm.postInfo.collectors },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.postInfo,
+                          "collectors",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "slug" } }, [
+                    _vm._v("Определение")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.postInfo.determination,
+                        expression: "postInfo.determination"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      input: function(e) {
+                        return (_vm.$store.state.post.postObject.determination =
+                          e.target.value)
+                      },
+                      name: "determination",
+                      type: "text"
+                    },
+                    domProps: { value: _vm.postInfo.determination },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.postInfo,
+                          "determination",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "slug" } }, [
+                    _vm._v("Природоохранный статус")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.postInfo.environmental_status,
+                        expression: "postInfo.environmental_status"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      input: function(e) {
+                        return (_vm.$store.state.post.postObject.environmental_status =
+                          e.target.value)
+                      },
+                      name: "environmental_status",
+                      type: "text"
+                    },
+                    domProps: { value: _vm.postInfo.environmental_status },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.postInfo,
+                          "environmental_status",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "slug" } }, [
+                    _vm._v("Имя на этикетке")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.postInfo.label_name,
+                        expression: "postInfo.label_name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      input: function(e) {
+                        return (_vm.$store.state.post.postObject.label_name =
+                          e.target.value)
+                      },
+                      name: "label_name",
+                      type: "text"
+                    },
+                    domProps: { value: _vm.postInfo.label_name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.postInfo,
+                          "label_name",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "slug" } }, [
+                    _vm._v("Автор статьи")
+                  ]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -56319,6 +56636,50 @@ var render = function() {
                       }
                     }
                   })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "content_raw" } }, [
+                    _vm._v("Статья")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "textarea",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.postInfo.content_raw,
+                          expression: "postInfo.content_raw"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        input: function(e) {
+                          return (_vm.$store.state.post.postObject.content_raw =
+                            e.target.value)
+                        },
+                        name: "content_raw",
+                        id: "content_raw",
+                        rows: "20"
+                      },
+                      domProps: { value: _vm.postInfo.content_raw },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.postInfo,
+                            "content_raw",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.postInfo.content_raw))]
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [

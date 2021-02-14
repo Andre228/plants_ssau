@@ -35,9 +35,19 @@
                                        class="form-control" minlength="3" required/>
                             </div>
                             <div class="form-group">
-                                <label for="content_raw">Статья</label>
-                                <textarea :input="e => $store.state.post.postObject.content_raw = e.target.value" name="content_raw" id="content_raw" v-model="postInfo.content_raw"
-                                          class="form-control" rows="20">{{postInfo.content_raw}}</textarea>
+                                <label for="title">Принятое название</label>
+                                <input :input="e => $store.state.post.postObject.adopted_name = e.target.value" name="adopted_name" type="text" v-model="postInfo.adopted_name"
+                                       class="form-control" minlength="3" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Русское название</label>
+                                <input :input="e => $store.state.post.postObject.russian_name = e.target.value" name="russian_name" type="text" v-model="postInfo.russian_name"
+                                       class="form-control" minlength="3" required/>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Текст на этикетке</label>
+                                <input :input="e => $store.state.post.postObject.label_text = e.target.value" name="label_text" type="text" v-model="postInfo.label_text"
+                                       class="form-control" minlength="3" required/>
                             </div>
                             <div class="form-group">
                                 <div id="mapContainer"></div>
@@ -51,7 +61,7 @@
                         <div class="tab-pane" id="adddata" role="tabpanel">
 
                             <div class="form-group">
-                                <label for="category_id">Категория</label>
+                                <label for="category_id">Семейство</label>
                                 <select @change="changeCategory" name="category_id" id="category_id" class="form-control" placeholder="Выберете категорию" required>
 
                                     <option v-for="categoryOption in categoriesInfo"
@@ -70,9 +80,45 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="slug">Автор</label>
+                                <label for="slug">Точность, м.</label>
+                                <input :input="e => $store.state.post.postObject.accuracy = e.target.value" name="accuracy" v-model="postInfo.accuracy" type="text"
+                                       class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="slug">Сборщики</label>
+                                <input :input="e => $store.state.post.postObject.collectors = e.target.value" name="collectors" v-model="postInfo.collectors" type="text"
+                                       class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="slug">Определение</label>
+                                <input :input="e => $store.state.post.postObject.determination = e.target.value" name="determination" v-model="postInfo.determination" type="text"
+                                       class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="slug">Природоохранный статус</label>
+                                <input :input="e => $store.state.post.postObject.environmental_status = e.target.value" name="environmental_status" v-model="postInfo.environmental_status" type="text"
+                                       class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="slug">Имя на этикетке</label>
+                                <input :input="e => $store.state.post.postObject.label_name = e.target.value" name="label_name" v-model="postInfo.label_name" type="text"
+                                       class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="slug">Автор статьи</label>
                                 <input :input="e => $store.state.post.postObject.author = e.target.value" name="author" id="author" v-model="postInfo.author" type="text"
                                        class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="content_raw">Статья</label>
+                                <textarea :input="e => $store.state.post.postObject.content_raw = e.target.value" name="content_raw" id="content_raw" v-model="postInfo.content_raw"
+                                class="form-control" rows="20">{{postInfo.content_raw}}</textarea>
                             </div>
 
                             <div class="form-group">
