@@ -67,6 +67,7 @@ Route::group($groupDataAdmin, function () {
     Route::patch('/posts/{id}','PostController@update')->name('museum.admin.posts.update');
     Route::delete('/posts/{id}','PostController@destroy')->name('museum.admin.posts.destroy');
     Route::post('/posts/{id}/upload-file','PostController@upload')->name('museum.admin.posts.upload');
+    Route::post('/posts/import','PostController@import')->name('museum.admin.posts.import');
 
 
     Route::get('/users','UserController@index')->name('museum.admin.users.index');

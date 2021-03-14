@@ -75,4 +75,10 @@ class MuseumCategoryRepository extends CoreRepository
 
     }
 
+    public function getCategoryByName($name)
+    {
+        $category = Model::where('title', $name)->get()->toArray();
+        return $category ? $category : null;
+    }
+
 }

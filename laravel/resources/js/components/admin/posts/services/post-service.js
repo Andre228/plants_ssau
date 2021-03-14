@@ -25,12 +25,23 @@ export class PostServices {
 
     upload(postId, _body) {
         if (postId && _body) {
-            const headers = {
-                "Content-Type": "multipart/form-data"
-            };
             const url = `/admin/museum/posts/${postId}/upload-file`;
-            return this.requestService.post(url, _body, { headers: headers });
+            return this.requestService.post(url, _body, { headers: this.getHeadersMultipart() });
         }
+    }
+
+    import(_body) {
+        if (_body) {
+            const url = `/admin/museum/posts/import`;
+            return this.requestService.post(url, _body, { headers: this.getHeadersMultipart() });
+        }
+    }
+
+    getHeadersMultipart() {
+        const headers = {
+            "Content-Type": "multipart/form-data"
+        };
+        return headers;
     }
 
 }

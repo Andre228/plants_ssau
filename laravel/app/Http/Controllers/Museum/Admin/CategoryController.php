@@ -50,7 +50,7 @@ class CategoryController extends BaseAdminController
         $item = new MuseumCategory();
         $categoryList = $this->museumCategoryRepository->getForComboBox();
 
-        return view('museum.admin.category.create', compact('categoryList', 'search'));
+        return view('museum.admin.category.create', compact('categoryList', 'item'));
 
     }
 

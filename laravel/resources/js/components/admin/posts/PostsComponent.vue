@@ -2,6 +2,8 @@
 
     <div>
 
+
+
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="border-radius: 4px;">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -43,7 +45,7 @@
             </div>
         </nav>
 
-        <div class="container">
+        <div class="container" >
 
             <div class="justify-content-center">
 
@@ -69,6 +71,9 @@
     import PostCardComponent from "./PostCardComponent";
     import { DateTimeParser } from "../../parsers/datetime-parser";
     import UploadFileComponent from "../../UploadFileComponent";
+    import { PostServices } from "./services/post-service";
+    import {LoaderService} from "../../services/loader-service";
+    import {NotifyService} from "../../services/notify-service";
     export default {
         name: "PostsComponent",
         components: {PostCardComponent, UploadFileComponent},
@@ -79,12 +84,15 @@
                 postsInfo: [],
                 searchingPost: '',
                 computedPosts: [],
-                dateTimeParser: new DateTimeParser()
+                dateTimeParser: new DateTimeParser(),
+                postServices: new PostServices(),
+                loading: false,
+                loaderService: new LoaderService(),
+                notifyService: new NotifyService()
             }
         },
 
         mounted() {
-            console.log(this.posts);
              this.postsInfo = this.posts;
              this.computedPosts = this.postsInfo;
         },
@@ -120,8 +128,35 @@
 
             },
 
-            changeFile(event) {
-                console.log(event.target.files);
+
+
+            async changeFile(event) {
+
+                if (event.target.files.length > 0) {
+
+                    this.loaderService.runLoader();
+
+                    let body = new FormData();
+                    const file = event.target.files[0];
+                    body.append('file', file, file.name);
+
+                    await this.postServices.import(body)
+                        .then(response => {
+                            if (response.data.status == 'OK') {
+                                this.notifyService.success(response.data.message);
+                            }
+                            if (response.data.status == 'ERROR') {
+                                this.notifyService.error(response.data.message);
+                            }
+                        })
+                        .catch((error) => {
+                            this.notifyService.error(error);
+                        });
+
+                    this.loaderService.removeLoader();
+                    event.target.value = null;
+
+                }
             }
         }
     }

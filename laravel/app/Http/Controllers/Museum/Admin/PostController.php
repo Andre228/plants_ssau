@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Museum\Admin;
 
+use App\Imports\PostsImport;
 use App\Models\MuseumImage;
 use App\Models\MuseumPost;
 use App\Repositories\MuseumCategoryRepository;
 use App\Repositories\MuseumImageRepository;
 use App\Repositories\MuseumPostRepository;
+use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PostController extends BaseAdminController
 {
@@ -208,5 +211,26 @@ class PostController extends BaseAdminController
 
         }
 
+    }
+
+    public function import(Request $request)
+    {
+        $prevCount = $this->museumPostRepository->getAllWithPaginate()->count();
+
+        if ($request->hasFile('file')) {
+
+            Excel::import(new PostsImport, $request->file('file'));
+
+            $currentCount = $this->museumPostRepository->getAllWithPaginate()->count();
+
+            if ($prevCount < $currentCount) {
+                return response(['message' => 'Успешно импортировано', 'status' => 'OK']);
+            } else {
+                return response(['message' => 'Ошибка импорта', 'status' => 'ERROR']);
+            }
+
+        } else {
+            return response(['message' => 'Вы не передали файл', 'status' => 'ERROR']);
+        }
     }
 }
