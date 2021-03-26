@@ -5,19 +5,19 @@
         <div class="container">
 
 
-            <div v-if="responseMessages" class="alert alert-success alert-dismissible" role="alert">
-                {{responseMessages}}
-                <button @click="clearResponseMessage()" type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+            <!--<div v-if="responseMessages" class="alert alert-success alert-dismissible" role="alert">-->
+                <!--{{responseMessages}}-->
+                <!--<button @click="clearResponseMessage()" type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+                    <!--<span aria-hidden="true">&times;</span>-->
+                <!--</button>-->
+            <!--</div>-->
 
-            <div v-if="errors" class="alert alert-danger alert-dismissible" role="alert">
-                {{errors}}
-                <button @click="clearResponseMessage()" type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+            <!--<div v-if="errors" class="alert alert-danger alert-dismissible" role="alert">-->
+                <!--{{errors}}-->
+                <!--<button @click="clearResponseMessage()" type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+                    <!--<span aria-hidden="true">&times;</span>-->
+                <!--</button>-->
+            <!--</div>-->
 
             <div class="row justify-content-center">
 
@@ -66,6 +66,7 @@
     import PostEditAddColComponent from "./includes/PostEditAddColComponent";
     import {PostServices} from './services/post-service';
     import {DateTimeParser} from "../../parsers/datetime-parser";
+    import {NotifyService} from "../../services/notify-service";
     export default {
         name: "PostDetailsComponent",
         components: {PostEditAddColComponent, PostEditMainColComponent},
@@ -76,11 +77,10 @@
                 postInfo: this.post,
                 categoriesInfo: this.categorylist,
                 images: this.imageslist,
-                responseMessages: '',
                 dateTimeParser: new DateTimeParser(),
-                errors: '',
                 is_publishedAfterUpdate: false,
-                postServices: new PostServices()
+                postServices: new PostServices(),
+                notifyService: new NotifyService()
             }
         },
 
@@ -118,9 +118,6 @@
             },
 
             update() {
-                if ( this.responseMessages || this.errors) {
-                    this.clearResponseMessage();
-                }
 
                 const postId = this.$store.getters.getPostObject.id;
                 const body = this.$store.getters.getPostObject;
@@ -134,21 +131,19 @@
                     .then(response => {
                       if (response.data.status == 'OK') {
                         this.is_publishedAfterUpdate = response.data.is_published;
-                        this.responseMessages = response.data.message;
+                        this.notifyService.success(response.data.message);
                       }
                       if (response.data.status == 'ERROR') {
-                        this.errors = response.data.message;
+                        this.notifyService.error(response.data.message);
                       }
                     })
-                    .catch((error) => this.errors = error);
+                    .catch((error) => {
+                        this.notifyService.error(error);
+                    });
 
             },
 
             destroy() {
-
-                if ( this.responseMessages || this.errors) {
-                    this.clearResponseMessage();
-                }
 
                 const postId = this.$store.getters.getPostObject.id;
                 if (postId) {
@@ -169,10 +164,6 @@
 
             uploadFile(event) {
 
-                if ( this.responseMessages || this.errors) {
-                    this.clearResponseMessage();
-                }
-
                 const postId = this.$store.getters.getPostObject.id;
 
                 if (event[0]) {
@@ -185,21 +176,18 @@
                     this.postServices.upload(postId, body)
                         .then(response => {
                             if (response.data.status == 'OK') {
-                                this.responseMessages = response.data.message;
+                                this.notifyService.success(response.data.message);
                             }
                             if (response.data.status == 'ERROR') {
-                                this.errors = response.data.message;
+                                this.notifyService.error(response.data.message);
                             }
                         })
-                        .catch((error) => this.errors = error);
+                        .catch((error) => {
+                            this.notifyService.error(error);
+                        });
                 }
 
-            },
-
-           clearResponseMessage() {
-                this.responseMessages = '';
-                this.errors = '';
-           },
+            }
         }
     }
 </script>

@@ -91,4 +91,22 @@ class MuseumPostRepository extends CoreRepository
         return $result;
     }
 
+    public function deleteMore($count)
+    {
+        $posts = $this->startConditions()->orderBy('id', 'desc')->take($count)->get()->toArray();
+
+        $ids [] = [];
+        $result = null;
+
+        for ($i = 0; $i < count($posts); $i++ ) {
+            $ids[$i] = $posts[$i]['id'];
+        }
+
+        if (!empty($ids)) {
+            $result = $this->startConditions()->whereIn('id', $ids)->delete();
+        }
+
+        return $result;
+    }
+
 }

@@ -6,7 +6,7 @@
          'notify-info': isInfo,
          'notify-error': isError}"
          role="alert">
-        {{text}}
+        <span v-html="text"></span>
         <button @click="close()" type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -56,7 +56,7 @@
     .notify {
         position: fixed;
         z-index: 1112;
-        width: 250px;
+        width: 300px !important;
         height: auto;
         bottom: 2%;
         right: 2%;

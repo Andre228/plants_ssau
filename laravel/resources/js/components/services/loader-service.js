@@ -7,8 +7,8 @@ export class LoaderService {
         this.bodyElement = document.getElementsByTagName('body')[0];
     }
 
-    runLoader() {
-        this.createInstance();
+    runLoader(message = 'Загрузка...') {
+        this.createInstance(message);
         this.bodyElement.appendChild(this.instance.$el);
     }
 
@@ -16,10 +16,10 @@ export class LoaderService {
         this.bodyElement.removeChild(this.instance.$el);
     }
 
-    createInstance() {
+    createInstance(message) {
         const ComponentClass = Vue.extend(LoaderComponent);
         this.instance = new ComponentClass({
-            propsData: { object: {} }
+            propsData: { object: {}, text: message }
         });
         this.instance.$mount();
     }

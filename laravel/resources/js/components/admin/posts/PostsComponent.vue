@@ -38,6 +38,18 @@
                             </div>
                         </div>
                     </li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle" type="button" id="deleteDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Удалить
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="deleteDropdown">
+                                <a class="dropdown-item" style="cursor: pointer;" @click="deletePosts(5)">Первые 5</a>
+                                <a class="dropdown-item" style="cursor: pointer;" @click="deletePosts(10)">Первые 10</a>
+                                <a class="dropdown-item" style="cursor: pointer;" @click="deletePosts(50)">Первые 50</a>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
                 <span class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2 search-input" type="search" placeholder="Поиск..." aria-label="Search" v-model="searchingPost">
@@ -72,8 +84,8 @@
     import { DateTimeParser } from "../../parsers/datetime-parser";
     import UploadFileComponent from "../../UploadFileComponent";
     import { PostServices } from "./services/post-service";
-    import {LoaderService} from "../../services/loader-service";
-    import {NotifyService} from "../../services/notify-service";
+    import { LoaderService } from "../../services/loader-service";
+    import { NotifyService } from "../../services/notify-service";
     export default {
         name: "PostsComponent",
         components: {PostCardComponent, UploadFileComponent},
@@ -88,13 +100,21 @@
                 postServices: new PostServices(),
                 loading: false,
                 loaderService: new LoaderService(),
-                notifyService: new NotifyService()
+                notifyService: new NotifyService(),
+                response: {}
             }
         },
 
         mounted() {
-             this.postsInfo = this.posts;
-             this.computedPosts = this.postsInfo;
+            this.postsInfo = this.posts;
+            this.computedPosts = this.postsInfo;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const text = localStorage.getItem('import-response');
+            if (urlParams && text) {
+                this.afterImport(urlParams.get('import'), text);
+            }
+
         },
 
         computed: {
@@ -128,8 +148,6 @@
 
             },
 
-
-
             async changeFile(event) {
 
                 if (event.target.files.length > 0) {
@@ -143,20 +161,66 @@
                     await this.postServices.import(body)
                         .then(response => {
                             if (response.data.status == 'OK') {
-                                this.notifyService.success(response.data.message);
+                                this.response = {
+                                    type: 'success',
+                                    text: response.data.message
+                                };
                             }
                             if (response.data.status == 'ERROR') {
-                                this.notifyService.error(response.data.message);
+                                this.response = {
+                                    type: 'error',
+                                    text: response.data.message
+                                };
                             }
                         })
                         .catch((error) => {
-                            this.notifyService.error(error);
+                            this.response = {
+                                type: 'error',
+                                text: error
+                            };
                         });
 
                     this.loaderService.removeLoader();
                     event.target.value = null;
 
+
                 }
+                if (this.response.type === 'success') {
+                    window.location.assign('/admin/museum/posts?import=1');
+                } else {
+                    window.location.assign('/admin/museum/posts?import=0');
+                }
+                localStorage.setItem('import-response', this.response.text);
+
+            },
+
+            async deletePosts(count) {
+                this.loaderService.runLoader();
+                await this.postServices.deleteMore(count)
+                    .then(response => {
+                        if (response.data.status == 'OK') {
+                            this.notifyService.success(response.data.message);
+                            this.postsInfo.splice(0, count);
+                            this.computedPosts = this.postsInfo;
+                        }
+                        if (response.data.status == 'ERROR') {
+                            this.notifyService.error(response.data.message);
+                        }
+                    })
+                    .catch((error) => {
+                        this.notifyService.error(error);
+                    });
+
+                this.loaderService.removeLoader();
+            },
+
+            afterImport(importState, text) {
+                if (importState === '1') {
+                    this.notifyService.success(text);
+                } else {
+                    this.notifyService.error(text);
+                }
+                localStorage.removeItem('import-response');
             }
         }
     }

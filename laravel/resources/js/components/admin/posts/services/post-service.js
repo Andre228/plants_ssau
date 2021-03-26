@@ -37,6 +37,11 @@ export class PostServices {
         }
     }
 
+    deleteMore(count) {
+        const url = `/admin/museum/posts/delete/${count}`;
+        return this.requestService.destroy(url);
+    }
+
     getHeadersMultipart() {
         const headers = {
             "Content-Type": "multipart/form-data"

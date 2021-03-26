@@ -2384,6 +2384,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _includes_PostEditAddColComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./includes/PostEditAddColComponent */ "./resources/js/components/admin/posts/includes/PostEditAddColComponent.vue");
 /* harmony import */ var _services_post_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./services/post-service */ "./resources/js/components/admin/posts/services/post-service.js");
 /* harmony import */ var _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../parsers/datetime-parser */ "./resources/js/components/parsers/datetime-parser.js");
+/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/notify-service */ "./resources/js/components/services/notify-service.js");
 //
 //
 //
@@ -2447,6 +2448,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -2463,11 +2465,10 @@ __webpack_require__.r(__webpack_exports__);
       postInfo: this.post,
       categoriesInfo: this.categorylist,
       images: this.imageslist,
-      responseMessages: '',
       dateTimeParser: new _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_3__["DateTimeParser"](),
-      errors: '',
       is_publishedAfterUpdate: false,
-      postServices: new _services_post_service__WEBPACK_IMPORTED_MODULE_2__["PostServices"]()
+      postServices: new _services_post_service__WEBPACK_IMPORTED_MODULE_2__["PostServices"](),
+      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_4__["NotifyService"]()
     };
   },
   created: function created() {
@@ -2502,10 +2503,6 @@ __webpack_require__.r(__webpack_exports__);
     update: function update() {
       var _this = this;
 
-      if (this.responseMessages || this.errors) {
-        this.clearResponseMessage();
-      }
-
       var postId = this.$store.getters.getPostObject.id;
       var body = this.$store.getters.getPostObject;
       body.updated_at = this.dateTimeParser.getCurrentDateTime();
@@ -2517,22 +2514,19 @@ __webpack_require__.r(__webpack_exports__);
       this.postServices.update(postId, body).then(function (response) {
         if (response.data.status == 'OK') {
           _this.is_publishedAfterUpdate = response.data.is_published;
-          _this.responseMessages = response.data.message;
+
+          _this.notifyService.success(response.data.message);
         }
 
         if (response.data.status == 'ERROR') {
-          _this.errors = response.data.message;
+          _this.notifyService.error(response.data.message);
         }
       })["catch"](function (error) {
-        return _this.errors = error;
+        _this.notifyService.error(error);
       });
     },
     destroy: function destroy() {
       var _this2 = this;
-
-      if (this.responseMessages || this.errors) {
-        this.clearResponseMessage();
-      }
 
       var postId = this.$store.getters.getPostObject.id;
 
@@ -2555,10 +2549,6 @@ __webpack_require__.r(__webpack_exports__);
     uploadFile: function uploadFile(event) {
       var _this3 = this;
 
-      if (this.responseMessages || this.errors) {
-        this.clearResponseMessage();
-      }
-
       var postId = this.$store.getters.getPostObject.id;
 
       if (event[0]) {
@@ -2569,20 +2559,16 @@ __webpack_require__.r(__webpack_exports__);
         body.append('updated_at', updatedAt);
         this.postServices.upload(postId, body).then(function (response) {
           if (response.data.status == 'OK') {
-            _this3.responseMessages = response.data.message;
+            _this3.notifyService.success(response.data.message);
           }
 
           if (response.data.status == 'ERROR') {
-            _this3.errors = response.data.message;
+            _this3.notifyService.error(response.data.message);
           }
         })["catch"](function (error) {
-          return _this3.errors = error;
+          _this3.notifyService.error(error);
         });
       }
-    },
-    clearResponseMessage: function clearResponseMessage() {
-      this.responseMessages = '';
-      this.errors = '';
     }
   }
 });
@@ -2681,6 +2667,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2703,12 +2701,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       postServices: new _services_post_service__WEBPACK_IMPORTED_MODULE_4__["PostServices"](),
       loading: false,
       loaderService: new _services_loader_service__WEBPACK_IMPORTED_MODULE_5__["LoaderService"](),
-      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_6__["NotifyService"]()
+      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_6__["NotifyService"](),
+      response: {}
     };
   },
   mounted: function mounted() {
     this.postsInfo = this.posts;
     this.computedPosts = this.postsInfo;
+    var urlParams = new URLSearchParams(window.location.search);
+    var text = localStorage.getItem('import-response');
+
+    if (urlParams && text) {
+      this.afterImport(urlParams.get('import'), text);
+    }
   },
   computed: {
     filteredPosts: {
@@ -2759,14 +2764,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.next = 7;
                 return _this2.postServices["import"](body).then(function (response) {
                   if (response.data.status == 'OK') {
-                    _this2.notifyService.success(response.data.message);
+                    _this2.response = {
+                      type: 'success',
+                      text: response.data.message
+                    };
                   }
 
                   if (response.data.status == 'ERROR') {
-                    _this2.notifyService.error(response.data.message);
+                    _this2.response = {
+                      type: 'error',
+                      text: response.data.message
+                    };
                   }
                 })["catch"](function (error) {
-                  _this2.notifyService.error(error);
+                  _this2.response = {
+                    type: 'error',
+                    text: error
+                  };
                 });
 
               case 7:
@@ -2775,12 +2789,68 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 event.target.value = null;
 
               case 9:
+                if (_this2.response.type === 'success') {
+                  window.location.assign('/admin/museum/posts?import=1');
+                } else {
+                  window.location.assign('/admin/museum/posts?import=0');
+                }
+
+                localStorage.setItem('import-response', _this2.response.text);
+
+              case 11:
               case "end":
                 return _context.stop();
             }
           }
         }, _callee);
       }))();
+    },
+    deletePosts: function deletePosts(count) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this3.loaderService.runLoader();
+
+                _context2.next = 3;
+                return _this3.postServices.deleteMore(count).then(function (response) {
+                  if (response.data.status == 'OK') {
+                    _this3.notifyService.success(response.data.message);
+
+                    _this3.postsInfo.splice(0, count);
+
+                    _this3.computedPosts = _this3.postsInfo;
+                  }
+
+                  if (response.data.status == 'ERROR') {
+                    _this3.notifyService.error(response.data.message);
+                  }
+                })["catch"](function (error) {
+                  _this3.notifyService.error(error);
+                });
+
+              case 3:
+                _this3.loaderService.removeLoader();
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    afterImport: function afterImport(importState, text) {
+      if (importState === '1') {
+        this.notifyService.success(text);
+      } else {
+        this.notifyService.error(text);
+      }
+
+      localStorage.removeItem('import-response');
     }
   }
 });
@@ -3722,14 +3792,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "LoaderComponent",
-  props: ['object'],
+  props: ['object', 'text'],
   data: function data() {
     return {
       styleObject: {
         height: document.documentElement.clientHeight + 'px'
-      }
+      },
+      message: this.text
     };
   },
   mounted: function mounted() {}
@@ -8493,7 +8566,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.loader[data-v-76b9392f] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100vh;\n    z-index: 1100;\n    background-color: #6c757d;\n    opacity: .3;\n}\n.spinner-loader[data-v-76b9392f] {\n    z-index: 1111;\n    color: white !important;\n    position: fixed;\n    top: 50%;\n    left: 50%;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.loader[data-v-76b9392f] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100vh;\n    z-index: 1100;\n    background-color: #6c757d;\n    opacity: .3;\n}\n.spinner-loader[data-v-76b9392f] {\n    z-index: 1111;\n    color: white !important;\n    position: fixed;\n    top: 50%;\n    left: 50%;\n}\n.loader-text[data-v-76b9392f] {\n    width: 100px;\n    height: auto;\n    position: fixed;\n    top: 65%;\n    left: 49%;\n    color: white;\n    word-break: break-all;\n}\n\n\n", ""]);
 
 // exports
 
@@ -8512,7 +8585,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.notify[data-v-05228c8e] {\n    position: fixed;\n    z-index: 1112;\n    width: 250px;\n    height: auto;\n    bottom: 2%;\n    right: 2%;\n    border-radius: 4px;\n    color: #6c757d;\n}\n.notify-success[data-v-05228c8e] {\n    border-color: #38c172;\n    background-color: #98dfb6;\n}\n.notify-warning[data-v-05228c8e] {\n    border-color: #ffd344;\n    background-color: #fff593;\n}\n.notify-info[data-v-05228c8e] {\n    color: #084298;\n    border-color: #b6d4fe;\n    background-color: #cfe2ff;\n}\n.notify-error[data-v-05228c8e] {\n    border-color: #ff4f51;\n    background-color: #ffbfae;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.notify[data-v-05228c8e] {\n    position: fixed;\n    z-index: 1112;\n    width: 300px !important;\n    height: auto;\n    bottom: 2%;\n    right: 2%;\n    border-radius: 4px;\n    color: #6c757d;\n}\n.notify-success[data-v-05228c8e] {\n    border-color: #38c172;\n    background-color: #98dfb6;\n}\n.notify-warning[data-v-05228c8e] {\n    border-color: #ffd344;\n    background-color: #fff593;\n}\n.notify-info[data-v-05228c8e] {\n    color: #084298;\n    border-color: #b6d4fe;\n    background-color: #cfe2ff;\n}\n.notify-error[data-v-05228c8e] {\n    border-color: #ff4f51;\n    background-color: #ffbfae;\n}\n\n\n", ""]);
 
 // exports
 
@@ -55777,78 +55850,6 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "container" }, [
-      _vm.responseMessages
-        ? _c(
-            "div",
-            {
-              staticClass: "alert alert-success alert-dismissible",
-              attrs: { role: "alert" }
-            },
-            [
-              _vm._v(
-                "\n            " +
-                  _vm._s(_vm.responseMessages) +
-                  "\n            "
-              ),
-              _c(
-                "button",
-                {
-                  staticClass: "close",
-                  attrs: {
-                    type: "button",
-                    "data-dismiss": "alert",
-                    "aria-label": "Close"
-                  },
-                  on: {
-                    click: function($event) {
-                      return _vm.clearResponseMessage()
-                    }
-                  }
-                },
-                [
-                  _c("span", { attrs: { "aria-hidden": "true" } }, [
-                    _vm._v("×")
-                  ])
-                ]
-              )
-            ]
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.errors
-        ? _c(
-            "div",
-            {
-              staticClass: "alert alert-danger alert-dismissible",
-              attrs: { role: "alert" }
-            },
-            [
-              _vm._v("\n            " + _vm._s(_vm.errors) + "\n            "),
-              _c(
-                "button",
-                {
-                  staticClass: "close",
-                  attrs: {
-                    type: "button",
-                    "data-dismiss": "alert",
-                    "aria-label": "Close"
-                  },
-                  on: {
-                    click: function($event) {
-                      return _vm.clearResponseMessage()
-                    }
-                  }
-                },
-                [
-                  _c("span", { attrs: { "aria-hidden": "true" } }, [
-                    _vm._v("×")
-                  ])
-                ]
-              )
-            ]
-          )
-        : _vm._e(),
-      _vm._v(" "),
       _c("div", { staticClass: "row justify-content-center" }, [
         _c(
           "div",
@@ -56059,6 +56060,80 @@ var render = function() {
                           }
                         },
                         [_vm._v("Не опубликованные")]
+                      )
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "nav-item" }, [
+                _c("div", { staticClass: "dropdown" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "nav-link dropdown-toggle",
+                      attrs: {
+                        type: "button",
+                        id: "deleteDropdown",
+                        "data-toggle": "dropdown",
+                        "aria-haspopup": "true",
+                        "aria-expanded": "false"
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Удалить\n                        "
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "dropdown-menu",
+                      attrs: { "aria-labelledby": "deleteDropdown" }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "dropdown-item",
+                          staticStyle: { cursor: "pointer" },
+                          on: {
+                            click: function($event) {
+                              return _vm.deletePosts(5)
+                            }
+                          }
+                        },
+                        [_vm._v("Первые 5")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "a",
+                        {
+                          staticClass: "dropdown-item",
+                          staticStyle: { cursor: "pointer" },
+                          on: {
+                            click: function($event) {
+                              return _vm.deletePosts(10)
+                            }
+                          }
+                        },
+                        [_vm._v("Первые 10")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "a",
+                        {
+                          staticClass: "dropdown-item",
+                          staticStyle: { cursor: "pointer" },
+                          on: {
+                            click: function($event) {
+                              return _vm.deletePosts(50)
+                            }
+                          }
+                        },
+                        [_vm._v("Первые 50")]
                       )
                     ]
                   )
@@ -58236,7 +58311,9 @@ var render = function() {
   return _c("div", [
     _c("div", { staticClass: "loader", style: _vm.styleObject }),
     _vm._v(" "),
-    _vm._m(0)
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "loader-text" }, [_vm._v(_vm._s(_vm.message))])
   ])
 }
 var staticRenderFns = [
@@ -58290,7 +58367,8 @@ var render = function() {
           attrs: { role: "alert" }
         },
         [
-          _vm._v("\n    " + _vm._s(_vm.text) + "\n    "),
+          _c("span", { domProps: { innerHTML: _vm._s(_vm.text) } }),
+          _vm._v(" "),
           _c(
             "button",
             {
@@ -85289,6 +85367,12 @@ var PostServices = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "deleteMore",
+    value: function deleteMore(count) {
+      var url = "/admin/museum/posts/delete/".concat(count);
+      return this.requestService.destroy(url);
+    }
+  }, {
     key: "getHeadersMultipart",
     value: function getHeadersMultipart() {
       var headers = {
@@ -85757,7 +85841,8 @@ var LoaderService = /*#__PURE__*/function () {
   _createClass(LoaderService, [{
     key: "runLoader",
     value: function runLoader() {
-      this.createInstance();
+      var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Загрузка...';
+      this.createInstance(message);
       this.bodyElement.appendChild(this.instance.$el);
     }
   }, {
@@ -85767,11 +85852,12 @@ var LoaderService = /*#__PURE__*/function () {
     }
   }, {
     key: "createInstance",
-    value: function createInstance() {
+    value: function createInstance(message) {
       var ComponentClass = vue__WEBPACK_IMPORTED_MODULE_1__["extend"](_widgets_LoaderComponent__WEBPACK_IMPORTED_MODULE_0__["default"]);
       this.instance = new ComponentClass({
         propsData: {
-          object: {}
+          object: {},
+          text: message
         }
       });
       this.instance.$mount();

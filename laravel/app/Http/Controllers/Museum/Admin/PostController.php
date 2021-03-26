@@ -222,15 +222,32 @@ class PostController extends BaseAdminController
             Excel::import(new PostsImport, $request->file('file'));
 
             $currentCount = $this->museumPostRepository->getAllWithPaginate()->count();
+            $count = $currentCount - $prevCount;
 
             if ($prevCount < $currentCount) {
-                return response(['message' => 'Успешно импортировано', 'status' => 'OK']);
+                return response(['message' => "Успешно импортировано <strong> $count </strong> новых записей", 'status' => 'OK']);
             } else {
                 return response(['message' => 'Ошибка импорта', 'status' => 'ERROR']);
             }
 
         } else {
             return response(['message' => 'Вы не передали файл', 'status' => 'ERROR']);
+        }
+    }
+
+    public function deletePosts($count)
+    {
+        if ($count > 0) {
+
+            $result = $this->museumPostRepository->deleteMore($count);
+
+            if ($result > 0) {
+                return response(['message' => "Успешно удалены <strong> $count </strong> записей", 'status' => 'OK']);
+            } else {
+                return response(['message' => 'Ошибка удаления', 'status' => 'ERROR']);
+            }
+        } else {
+            return response(['message' => 'Ошибка удаления', 'status' => 'ERROR']);
         }
     }
 }
