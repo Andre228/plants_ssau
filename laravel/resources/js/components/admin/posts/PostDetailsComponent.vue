@@ -23,7 +23,7 @@
 
                 <div class="col-md-8">
                     <post-edit-main-col-component
-                            v-on:uploadFile="uploadFile"
+                            v-on:imagesUpload="imagesUpload"
                             :is_publishedAfterUpdate="is_publishedAfterUpdate"
                             :post="postInfo"
                             :categorylist="categoriesInfo"
@@ -162,15 +162,17 @@
 
             },
 
-            uploadFile(event) {
+            imagesUpload(event) {
 
                 const postId = this.$store.getters.getPostObject.id;
 
-                if (event[0]) {
+                if (event && event.length > 0) {
                     let body = new FormData();
-                    const file = event[0];
+                    const files = event;
                     const updatedAt = this.dateTimeParser.getCurrentDateTime();
-                    body.append('file', file, file.name);
+                    for (let i = 0; i < files.length; i++) {
+                        body.append('file' + i, files[i], files[i].name);
+                    }
                     body.append('updated_at', updatedAt);
 
                     this.postServices.upload(postId, body)

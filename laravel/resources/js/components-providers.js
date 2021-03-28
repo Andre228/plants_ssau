@@ -3,7 +3,7 @@ import ButtonComponent from './components/ButtonComponent';
 import TableItemComponent from './components/TableItemComponent';
 import ProfileComponent from './components/ProfileComponent';
 import LoginTitleComponent from './components/LoginTitleComponent'
-import UploadFileComponent from './components/UploadFileComponent';
+import ImageUploadComponent from './components/ImageUploadComponent';
 import CarouselComponent from './components/CarouselComponent';
 
 import PostsComponent from "./components/admin/posts/PostsComponent";
@@ -25,7 +25,7 @@ export const componentsProvider = {
     ProfileComponent,
     LoginTitleComponent,
     CarouselComponent,
-    UploadFileComponent,
+    ImageUploadComponent,
 
     PostsComponent,
     PostDetailsComponent,

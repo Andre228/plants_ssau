@@ -82,13 +82,13 @@
 <script>
     import PostCardComponent from "./PostCardComponent";
     import { DateTimeParser } from "../../parsers/datetime-parser";
-    import UploadFileComponent from "../../UploadFileComponent";
+    import ImageUploadComponent from "../../ImageUploadComponent";
     import { PostServices } from "./services/post-service";
     import { LoaderService } from "../../services/loader-service";
     import { NotifyService } from "../../services/notify-service";
     export default {
         name: "PostsComponent",
-        components: {PostCardComponent, UploadFileComponent},
+        components: {PostCardComponent, ImageUploadComponent},
         props: ['posts'],
 
         data() {

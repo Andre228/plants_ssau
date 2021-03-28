@@ -177,38 +177,44 @@ class PostController extends BaseAdminController
     public function upload(Request $request, $id)
     {
         $data = $request->all();
-        if ($request->hasFile('file')) {
 
-            $date = str_replace(' ', '_', $request->updated_at);
-            $date = str_replace(':', '_', $date);
+        try {
+            foreach ($data as $key => $value) {
+                if ($key != 'updated_at' && $request->hasFile('file0')) {
 
-            $fileName = $date . '_' . rand(100, 1000000) . '_' . Str::random(10) . '_' . $data['file']->getClientOriginalName();
-            $filePath = 'images/posts/' . $id;
+                    $date = str_replace(' ', '_', $request->updated_at);
+                    $date = str_replace(':', '_', $date);
 
-            $path = Storage::disk('public')->putFileAs(
-                $filePath,
-                $request->file('file'),
-                $fileName
-            );
 
-            $path = '/storage/' . $path;
+                    $fileName = $date . '_' . rand(100, 1000000) . '_' . Str::random(10) . '_' . $value->getClientOriginalName();
+                    $filePath = 'images/posts/' . $id;
 
-            if ($path) {
+                    $path = Storage::disk('public')->putFileAs(
+                        $filePath,
+                        $value,
+                        $fileName
+                    );
 
-                $data = array(
-                    'post_id' => $id,
-                    'name' => $fileName,
-                    'alias' => $path,
-                );
+                    $path = '/storage/' . $path;
 
-                $imgobject = new MuseumImage();
-                $imgobject->create($data);
+                    if ($path) {
 
-                return response(['message' => 'Успешно загружено', 'status' => 'OK']);
-            } else {
-                return response(['message' => 'Ошибка загрузки файла', 'status' => 'ERROR']);
+                        $data = array(
+                            'post_id' => $id,
+                            'name' => $fileName,
+                            'alias' => $path,
+                        );
+
+                        $imgobject = new MuseumImage();
+                        $imgobject->create($data);
+
+                    }
+
+                }
             }
-
+            return response(['message' => 'Успешно загружено', 'status' => 'OK']);
+        } catch (Exception $exception) {
+            return response(['message' => 'Ошибка загрузки файла', 'status' => 'ERROR']);
         }
 
     }

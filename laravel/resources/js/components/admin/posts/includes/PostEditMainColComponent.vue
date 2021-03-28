@@ -140,7 +140,7 @@
 
                             <carousel-component :images="images"></carousel-component>
 
-                            <upload-file-component v-on:saveFile="uploadFile"></upload-file-component>
+                            <image-upload-component style="margin-top: -15%;" v-on:imagesUpload="uploadFile"></image-upload-component>
 
                         </div>
                     </div>
@@ -157,14 +157,14 @@
     import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
     import { MapService } from "../services/map-service";
     import CarouselComponent from "../../../CarouselComponent";
-    import UploadFileComponent from "../../../UploadFileComponent";
     import {PostServices} from "../services/post-service";
+    import ImageUploadComponent from "../../../ImageUploadComponent";
 
     export default {
         name: "PostEditMainColComponent",
         props: ['post', 'categorylist', 'is_publishedAfterUpdate', 'images'],
         components: {
-            UploadFileComponent,
+            ImageUploadComponent,
             CarouselComponent,
             LMap,
             LTileLayer,
@@ -224,23 +224,7 @@
             },
 
             uploadFile(event) {
-                this.$emit('uploadFile', event);
-                // const postId = this.$store.getters.getPostObject.id;
-                // //multipart/form-data
-                //
-                //
-                // if (event[0]) {
-                //     let body = new FormData();
-                //     const file = event[0];
-                //     const updatedAt = this.dateTimeParser.getCurrentDateTime();
-                //     body.append('file', file, file.name);
-                //     body.append('updated_at', updatedAt);
-                //
-                //     this.postServices.upload(postId, body).then(response => {
-                //         console.log(response);
-                //     });
-                // }
-
+                this.$emit('imagesUpload', event);
             }
 
         }
