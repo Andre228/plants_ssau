@@ -7,7 +7,6 @@ export class PostServices {
         this.requestService = new RequestService();
     }
 
-
     update(postId, _body) {
         const url = `/admin/museum/posts/${postId}`;
         return this.requestService.update(url, _body);
@@ -34,6 +33,20 @@ export class PostServices {
         if (_body) {
             const url = `/admin/museum/posts/import`;
             return this.requestService.post(url, _body, { headers: this.getHeadersMultipart() });
+        }
+    }
+
+    changeImage(postId, _body) {
+        if (_body) {
+            const url = `/admin/museum/posts/${postId}/change-file`;
+            return this.requestService.post(url, _body, { headers: this.getHeadersMultipart() });
+        }
+    }
+
+    removeImage(postId, _body) {
+        if (_body) {
+            const url = `/admin/museum/posts/${postId}/delete-file`;
+            return this.requestService.post(url, _body);
         }
     }
 

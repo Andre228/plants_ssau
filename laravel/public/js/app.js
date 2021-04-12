@@ -2034,24 +2034,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2085,7 +2067,10 @@ __webpack_require__.r(__webpack_exports__);
       return this.index !== 0;
     },
     showModal: function showModal() {
-      this.$modal.open(_dialogs_AdminImagesDialogComponent__WEBPACK_IMPORTED_MODULE_1__["default"], this.images);
+      this.$modal.open(_dialogs_AdminImagesDialogComponent__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        images: this.images,
+        index: this.index
+      });
     }
   }
 });
@@ -3839,6 +3824,18 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _admin_posts_services_post_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../admin/posts/services/post-service */ "./resources/js/components/admin/posts/services/post-service.js");
+/* harmony import */ var _services_loader_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/loader-service */ "./resources/js/components/services/loader-service.js");
+/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/notify-service */ "./resources/js/components/services/notify-service.js");
+/* harmony import */ var _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../parsers/datetime-parser */ "./resources/js/components/parsers/datetime-parser.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -3859,19 +3856,49 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AdminImagesDialogComponent",
   props: ['data', 'imageHeight'],
   data: function data() {
     return {
-      images: this.data,
-      index: 0,
+      images: this.data.images,
+      index: this.data.index,
       styleImage: {
-        height: window.innerHeight * 0.8 + 'px'
-      }
+        height: window.innerHeight * 0.75 + 'px'
+      },
+      postServices: new _admin_posts_services_post_service__WEBPACK_IMPORTED_MODULE_1__["PostServices"](),
+      loaderService: new _services_loader_service__WEBPACK_IMPORTED_MODULE_2__["LoaderService"](),
+      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_3__["NotifyService"](),
+      dateTimeParser: new _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_4__["DateTimeParser"](),
+      response: {}
     };
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$modal.setSettings(this.index);
+    this.$root.$on('AdminImagesDialogComponent', function (data) {
+      if (data.method === 'change') {
+        _this.change(data);
+      }
+
+      if (data.method === 'remove') {
+        _this.remove(data);
+      }
+    });
+  },
+  watch: {
+    index: {
+      deep: true,
+      handler: function handler() {
+        this.$modal.setSettings(this.index);
+      }
+    }
+  },
   methods: {
     next: function next() {
       if (this.isAvailableNext()) {
@@ -3888,6 +3915,115 @@ __webpack_require__.r(__webpack_exports__);
     },
     isAvailablePrev: function isAvailablePrev() {
       return this.index !== 0;
+    },
+    change: function change(data) {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var body, updatedAt;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this2.loaderService.runLoader();
+
+                body = new FormData();
+                updatedAt = _this2.dateTimeParser.getCurrentDateTime();
+                body.append('updated_at', updatedAt);
+                body.append('file', data.image, data.image.name);
+                body.append('imageId', _this2.images[data.index].id);
+                _context.next = 8;
+                return _this2.postServices.changeImage(_this2.images[data.index].post_id, body).then(function (response) {
+                  if (response.data.status == 'OK') {
+                    _this2.response = {
+                      type: 'success',
+                      text: response.data.message
+                    };
+                    _this2.images[data.index].alias = response.data.details.alias;
+                    _this2.images[data.index].id = response.data.details.id;
+                    _this2.images[data.index].post_id = response.data.details.post_id;
+                  }
+
+                  if (response.data.status == 'ERROR') {
+                    _this2.response = {
+                      type: 'error',
+                      text: response.data.message
+                    };
+                  }
+                })["catch"](function (error) {
+                  _this2.response = {
+                    type: 'error',
+                    text: error
+                  };
+                });
+
+              case 8:
+                _this2.loaderService.removeLoader();
+
+                _this2.notifyService[_this2.response.type](_this2.response.text);
+
+              case 10:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    remove: function remove(data) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var body, updatedAt;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this3.loaderService.runLoader();
+
+                body = new FormData();
+                updatedAt = _this3.dateTimeParser.getCurrentDateTime();
+                body.append('updated_at', updatedAt);
+                body.append('alias', _this3.images[data.index].alias);
+                body.append('imageId', _this3.images[data.index].id);
+                _context2.next = 8;
+                return _this3.postServices.removeImage(_this3.images[data.index].post_id, body).then(function (response) {
+                  if (response.data.status == 'OK') {
+                    _this3.response = {
+                      type: 'success',
+                      text: response.data.message
+                    };
+
+                    var index = _this3.images.indexOf(_this3.images[data.index]);
+
+                    _this3.images.splice(index, 1);
+                  }
+
+                  if (response.data.status == 'ERROR') {
+                    _this3.response = {
+                      type: 'error',
+                      text: response.data.message
+                    };
+                  }
+                })["catch"](function (error) {
+                  _this3.response = {
+                    type: 'error',
+                    text: error
+                  };
+                });
+
+              case 8:
+                _this3.loaderService.removeLoader();
+
+                _this3.notifyService[_this3.response.type](_this3.response.text);
+
+              case 10:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
     }
   }
 });
@@ -3971,6 +4107,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ModalComponent",
   props: ['currentComponent', 'data', 'config'],
@@ -3996,10 +4137,47 @@ __webpack_require__.r(__webpack_exports__);
       this.styleModal.height = height + 'px';
       this.styleModal.width = width + 'px';
     }
+
+    window.addEventListener('resize', this.onResize);
+  },
+  beforeDestroy: function beforeDestroy() {
+    window.removeEventListener('resize', this.onResize);
+  },
+  computed: {
+    height: function height() {
+      console.log(this.$refs.modalWindow.clientHeight);
+      return this.$refs.modalWindow.clientHeight;
+    }
   },
   methods: {
     close: function close() {
       this.$modal.close();
+    },
+    change: function change(event) {
+      if (event) {
+        var image = event.target.files[0];
+
+        if (this.currentComponent.name === 'AdminImagesDialogComponent' && image) {
+          this.$root.$emit('AdminImagesDialogComponent', {
+            method: 'change',
+            index: this.$modal.getSettings(),
+            image: image
+          });
+          event.target.value = null;
+        }
+      }
+    },
+    remove: function remove() {
+      if (this.currentComponent.name === 'AdminImagesDialogComponent') {
+        this.$root.$emit('AdminImagesDialogComponent', {
+          method: 'remove',
+          index: this.$modal.getSettings()
+        });
+      }
+    },
+    onResize: function onResize() {
+      this.styleOverlay.height = document.documentElement.clientHeight + 'px';
+      this.styleOverlay.width = document.documentElement.clientWidth + 'px';
     }
   }
 });
@@ -8648,7 +8826,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.slider[data-v-4681a3bc] {\n    margin: 0 auto;\n    overflow: hidden;\n    position: relative;\n}\n.container-slides[data-v-4681a3bc] {\n    display: flex;\n}\n.img-slide[data-v-4681a3bc] {\n    max-width: 100%;\n    max-height: 500px;\n}\n.slides-controls[data-v-4681a3bc] {\n    cursor: pointer;\n    border-radius: 4px;\n    background: #cccc;\n    height: 50%;\n    margin: auto;\n}\n.images[data-v-4681a3bc] {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    width: 100%;\n}\n.images img[data-v-4681a3bc]  {\n    height: 80%;\n    /*max-height: 500px;*/\n}\n.img-cont[data-v-4681a3bc] {\n    cursor: pointer;\n    height: 500px;\n}\n\n", ""]);
+exports.push([module.i, "\n.slider[data-v-4681a3bc] {\n    margin: 0 auto;\n    overflow: hidden;\n    position: relative;\n}\n.container-slides[data-v-4681a3bc] {\n    display: flex;\n}\n.img-slide[data-v-4681a3bc] {\n    max-width: 100%;\n    max-height: 500px;\n}\n.slides-controls[data-v-4681a3bc] {\n    cursor: pointer;\n    border-radius: 4px;\n    background: #cccc;\n    /*height: 50%;*/\n    /*margin: auto;*/\n    height: 300px;\n    margin-top: 30%;\n}\n.images[data-v-4681a3bc] {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    width: 100%;\n}\n.images img[data-v-4681a3bc]  {\n    height: 80%;\n    max-height: 500px;\n}\n.img-cont[data-v-4681a3bc] {\n    cursor: pointer;\n    height: 500px;\n}\n\n", ""]);
 
 // exports
 
@@ -8800,7 +8978,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.slides-controls[data-v-9a9fcc06] {\n    position: absolute;\n    border-radius: 4px;\n    cursor: pointer;\n    background: #989898;\n    height: 50%;\n    margin: auto;\n}\n.prev[data-v-9a9fcc06] {\n    width: 30%;\n    margin-left: -40%;\n}\n.next[data-v-9a9fcc06] {\n    width: 30%;\n    margin-right: -40%;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.slides-controls[data-v-9a9fcc06] {\n    position: absolute;\n    border-radius: 4px;\n    cursor: pointer;\n    background: #989898;\n    height: 50%;\n    margin: auto;\n    opacity: .3;\n}\n.images[data-v-9a9fcc06] {\n    max-height: 720px;\n    max-width: 1080px;\n}\nimg[data-v-9a9fcc06] {\n     /*width: 100%;*/\n     /*max-width: 600px;*/\n     /*height: auto;*/\n     /*height: 80%;*/\n     max-height: 600px;\n     /*transform: scale(0.5);*/\n}\n.prev[data-v-9a9fcc06] {\n    width: 10%;\n    margin-left: -11%;\n}\n.next[data-v-9a9fcc06] {\n    width: 10%;\n    margin-right: -11%;\n}\n.next[data-v-9a9fcc06]:hover {\n    color: #fff;\n    text-decoration: none;\n    outline: 0;\n    opacity: .7;\n}\n.prev[data-v-9a9fcc06]:hover {\n    color: #fff;\n    text-decoration: none;\n    outline: 0;\n    opacity: .7;\n}\n\n\n", ""]);
 
 // exports
 
@@ -8819,7 +8997,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.loader[data-v-76b9392f] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100vh;\n    z-index: 1100;\n    background-color: #6c757d;\n    opacity: .3;\n}\n.spinner-loader[data-v-76b9392f] {\n    z-index: 1111;\n    color: white !important;\n    position: fixed;\n    top: 50%;\n    left: 50%;\n}\n.loader-text[data-v-76b9392f] {\n    width: 100px;\n    height: auto;\n    position: fixed;\n    top: 65%;\n    left: 49%;\n    color: white;\n    word-break: break-all;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.loader[data-v-76b9392f] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100vh;\n    z-index: 1300;\n    background-color: #6c757d;\n    opacity: .3;\n}\n.spinner-loader[data-v-76b9392f] {\n    z-index: 1111;\n    color: white !important;\n    position: fixed;\n    top: 50%;\n    left: 50%;\n}\n.loader-text[data-v-76b9392f] {\n    width: 100px;\n    height: auto;\n    position: fixed;\n    top: 65%;\n    left: 49%;\n    color: white;\n    word-break: break-all;\n}\n\n\n", ""]);
 
 // exports
 
@@ -8838,7 +9016,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.modal-overlay[data-v-e843b74a] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    z-index: 1199;\n    background-color: #6c757d;\n    opacity: .3;\n}\n.modal-window[data-v-e843b74a] {\n    z-index: 1200;\n    width: 650px;\n    padding: 16px;\n    position: fixed;\n    top: 3%;\n    left: 25%;\n    background: #ffffff;\n    box-shadow: 0 0 17px 0 #e7e7e7;\n}\n.modal-payload[data-v-e843b74a] {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n}\n.modal-actions[data-v-e843b74a] {\n    display: flex;\n    justify-content: space-between;\n}\n.modal-actions .pull-right[data-v-e843b74a] {\n}\n\n\n", ""]);
+exports.push([module.i, "\n.modal-overlay[data-v-e843b74a] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    z-index: 1199;\n    background-color: #6c757d;\n    opacity: .3;\n}\n.modal-window[data-v-e843b74a] {\n    max-height: 750px;\n    width: 80%;\n    z-index: 1200;\n    padding: 16px;\n    position: fixed;\n    top: 3%;\n    left: 50%;\n    transform: translateX(-50%);\n    background: #ffffff;\n    box-shadow: 0 0 17px 0 #e7e7e7;\n}\n.modal-payload[data-v-e843b74a] {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    overflow: scroll;\n}\n.modal-actions[data-v-e843b74a] {\n    display: flex;\n    justify-content: space-between;\n}\n.modal-actions .pull-left[data-v-e843b74a] {\n    width: 15%;\n    display: flex;\n}\n.example-2 .btn-tertiary[data-v-e843b74a] {\n    width: 40px;\n    color: #343a40;\n    padding: 0;\n    line-height: 40px;\n    margin: auto;\n    display: block;\n    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;\n}\n.example-2 .btn-tertiary[data-v-e843b74a]:hover, .example-2 .btn-tertiary[data-v-e843b74a]:focus {\n    color: #fff;\n    text-decoration: none;\n}\n.example-2 .input-file[data-v-e843b74a] {\n    width: .1px;\n    height: .1px;\n    opacity: 0;\n    overflow: hidden;\n    position: absolute;\n    z-index: -1\n}\n.example-2 .input-file + .js-labelFile[data-v-e843b74a] {\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n    padding: 0 10px;\n    cursor: pointer;\n    height: 100%;\n}\n\n\n\n", ""]);
 
 // exports
 
@@ -8857,7 +9035,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.notify[data-v-05228c8e] {\n    position: fixed;\n    z-index: 1112;\n    width: 300px !important;\n    height: auto;\n    bottom: 2%;\n    right: 2%;\n    border-radius: 4px;\n    color: #6c757d;\n}\n.notify-success[data-v-05228c8e] {\n    border-color: #38c172;\n    background-color: #98dfb6;\n}\n.notify-warning[data-v-05228c8e] {\n    border-color: #ffd344;\n    background-color: #fff593;\n}\n.notify-info[data-v-05228c8e] {\n    color: #084298;\n    border-color: #b6d4fe;\n    background-color: #cfe2ff;\n}\n.notify-error[data-v-05228c8e] {\n    border-color: #ff4f51;\n    background-color: #ffbfae;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.notify[data-v-05228c8e] {\n    position: fixed;\n    z-index: 1250;\n    width: 300px !important;\n    height: auto;\n    bottom: 2%;\n    right: 2%;\n    border-radius: 4px;\n    color: #6c757d;\n}\n.notify-success[data-v-05228c8e] {\n    border-color: #38c172;\n    background-color: #98dfb6;\n}\n.notify-warning[data-v-05228c8e] {\n    border-color: #ffd344;\n    background-color: #fff593;\n}\n.notify-info[data-v-05228c8e] {\n    color: #084298;\n    border-color: #b6d4fe;\n    background-color: #cfe2ff;\n}\n.notify-error[data-v-05228c8e] {\n    border-color: #ff4f51;\n    background-color: #ffbfae;\n}\n\n\n", ""]);
 
 // exports
 
@@ -55671,6 +55849,7 @@ var render = function() {
     _c(
       "a",
       {
+        ref: "tt",
         staticClass: "carousel-control-prev slides-controls",
         staticStyle: { "margin-left": "5%" },
         on: { click: _vm.prev }
@@ -58796,7 +58975,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { ref: "modalBody", staticClass: "modal-payload" },
+        { staticClass: "modal-payload" },
         [
           _vm._t("default", [
             _c(_vm.component, {
@@ -58811,7 +58990,43 @@ var render = function() {
       _c("hr"),
       _vm._v(" "),
       _c("div", { staticClass: "modal-actions" }, [
-        _vm._m(1),
+        _c("div", { staticClass: "pull-left" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-outline-danger",
+              attrs: { title: "Удалить" },
+              on: {
+                click: function($event) {
+                  return _vm.remove($event)
+                }
+              }
+            },
+            [_c("i", { staticClass: "fas fa-trash" })]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "example-2",
+              staticStyle: { "margin-left": "10px" },
+              attrs: { tabindex: "1" }
+            },
+            [
+              _c("input", {
+                staticClass: "input-file",
+                attrs: { type: "file", name: "file", id: "imageChange" },
+                on: {
+                  change: function($event) {
+                    return _vm.change($event)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm._m(1)
+            ]
+          )
+        ]),
         _vm._v(" "),
         _c(
           "button",
@@ -58843,19 +59058,19 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "pull-right" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-outline-danger", attrs: { title: "Удалить" } },
-        [_c("i", { staticClass: "fas fa-trash" })]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-outline-dark", attrs: { title: "Заменить" } },
-        [_c("i", { staticClass: "fas fa-clone" })]
-      )
-    ])
+    return _c(
+      "label",
+      {
+        staticClass: "btn btn-outline-dark btn-tertiary js-labelFile",
+        attrs: { title: "Заменить", for: "imageChange" }
+      },
+      [
+        _c("i", {
+          staticClass: "fas fa-clone",
+          staticStyle: { padding: ".375rem 0 0 0" }
+        })
+      ]
+    )
   }
 ]
 render._withStripped = true
@@ -85933,6 +86148,24 @@ var PostServices = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "changeImage",
+    value: function changeImage(postId, _body) {
+      if (_body) {
+        var url = "/admin/museum/posts/".concat(postId, "/change-file");
+        return this.requestService.post(url, _body, {
+          headers: this.getHeadersMultipart()
+        });
+      }
+    }
+  }, {
+    key: "removeImage",
+    value: function removeImage(postId, _body) {
+      if (_body) {
+        var url = "/admin/museum/posts/".concat(postId, "/delete-file");
+        return this.requestService.post(url, _body);
+      }
+    }
+  }, {
     key: "deleteMore",
     value: function deleteMore(count) {
       var url = "/admin/museum/posts/delete/".concat(count);
@@ -86448,6 +86681,12 @@ var ModalPlugin = {
           this.bodyElement = null;
           this.instance = null;
         }
+      },
+      setSettings: function setSettings(settings) {
+        this.settings = settings;
+      },
+      getSettings: function getSettings() {
+        return this.settings;
       }
     };
   }

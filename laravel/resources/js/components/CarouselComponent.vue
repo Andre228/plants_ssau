@@ -1,24 +1,8 @@
 <template>
 
-    <div>
+    <div >
 
-        <!--<div id="carousel" class="carousel slide" data-ride="carousel">-->
-            <!--<div class="carousel-inner">-->
-                <!--<div class="carousel-item" v-for="(image, index) in images" :class="{ active: index === 0 }">-->
-                    <!--<img :src="image.alias" class="d-block w-100">-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">-->
-                <!--<span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
-                <!--<span class="sr-only">Previous</span>-->
-            <!--</a>-->
-            <!--<a class="carousel-control-next" href="#carousel" role="button" data-slide="next">-->
-                <!--<span class="carousel-control-next-icon" aria-hidden="true"></span>-->
-                <!--<span class="sr-only">Next</span>-->
-            <!--</a>-->
-        <!--</div>-->
-
-        <a @click="prev" class="carousel-control-prev slides-controls" style="margin-left: 5%">
+        <a @click="prev" class="carousel-control-prev slides-controls" style="margin-left: 5%" ref="tt">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
         </a>
@@ -33,8 +17,6 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>
-
-
 
     </div>
 
@@ -79,7 +61,7 @@
             },
 
             showModal() {
-                this.$modal.open(AdminImagesDialogComponent, this.images);
+                this.$modal.open(AdminImagesDialogComponent, { images: this.images, index: this.index });
             }
         }
     }
@@ -106,8 +88,10 @@
         cursor: pointer;
         border-radius: 4px;
         background: #cccc;
-        height: 50%;
-        margin: auto;
+        /*height: 50%;*/
+        /*margin: auto;*/
+        height: 300px;
+        margin-top: 30%;
     }
 
     .images {
@@ -119,7 +103,7 @@
 
     .images img  {
         height: 80%;
-        /*max-height: 500px;*/
+        max-height: 500px;
     }
 
     .img-cont {

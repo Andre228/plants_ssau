@@ -44,7 +44,7 @@
         left: 0;
         width: 100%;
         height: 100vh;
-        z-index: 1100;
+        z-index: 1300;
         background-color: #6c757d;
         opacity: .3;
     }

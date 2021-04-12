@@ -24,6 +24,14 @@ const ModalPlugin = {
                     this.bodyElement = null;
                     this.instance = null;
                 }
+            },
+
+            setSettings(settings) {
+                this.settings = settings;
+            },
+
+            getSettings() {
+                return this.settings;
             }
         }
     }

@@ -11,6 +11,7 @@ use App\Repositories\MuseumPostRepository;
 use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -108,10 +109,6 @@ class PostController extends BaseAdminController
         $item = $this->museumPostRepository->getEdit($id);
         $categoryList = $this->museumCategoryRepository->getForComboBox();
         $imageList = $this->museumImageRepository->getAllImagesByPostId($id);
-        //dd();
-
-      // $arr = $imageList->toArray();
-
 
         return view('museum.admin.post.edit')->with('item', $item)->with('categoryList', $categoryList)->with('imageList', $imageList);
     }
@@ -134,7 +131,6 @@ class PostController extends BaseAdminController
             return response(['message' => 'Сохраняемая категория не существует']);
         }
 
-       ;
         if (empty($data['slug'])) {
             $data['slug'] = Str::slug($data['title']);
         }
@@ -177,44 +173,67 @@ class PostController extends BaseAdminController
     public function upload(Request $request, $id)
     {
         $data = $request->all();
-
         try {
             foreach ($data as $key => $value) {
                 if ($key != 'updated_at' && $request->hasFile('file0')) {
-
-                    $date = str_replace(' ', '_', $request->updated_at);
-                    $date = str_replace(':', '_', $date);
-
-
-                    $fileName = $date . '_' . rand(100, 1000000) . '_' . Str::random(10) . '_' . $value->getClientOriginalName();
-                    $filePath = 'images/posts/' . $id;
-
-                    $path = Storage::disk('public')->putFileAs(
-                        $filePath,
-                        $value,
-                        $fileName
-                    );
-
-                    $path = '/storage/' . $path;
-
-                    if ($path) {
-
-                        $data = array(
-                            'post_id' => $id,
-                            'name' => $fileName,
-                            'alias' => $path,
-                        );
-
-                        $imgobject = new MuseumImage();
-                        $imgobject->create($data);
-
-                    }
-
+                    $this->museumImageRepository->createImage($request, $value, $id);
                 }
             }
             return response(['message' => 'Успешно загружено', 'status' => 'OK']);
         } catch (Exception $exception) {
             return response(['message' => 'Ошибка загрузки файла', 'status' => 'ERROR']);
+        }
+
+    }
+
+    public function change(Request $request, $id)
+    {
+        $data = $request->all();
+        if (!empty($data)) {
+            $imageResource = $this->museumImageRepository->getImageByPostIdAndId($id, $data['imageId']);
+            if (!empty($imageResource)) {
+                $isDeleted = $this->museumImageRepository->deleteImageFromFilesystem($imageResource[0]->alias);
+                if ($isDeleted) {
+                    $result = $this->museumImageRepository->updateImage($request, $data['file'], $id, $imageResource[0]);
+                    $post = $this->museumPostRepository->getEdit($id);
+                    if(!empty($post)) {
+                        $post->updated_at = $data['updated_at'];
+                        $post->save();
+                    }
+                    if ($result) {
+                        $image = $this->museumImageRepository->getEdit($data['imageId']);
+                        return response(['message' => 'Успешно изменено', 'status' => 'OK', 'details' => $image]);
+                    } else {
+                        return response(['message' => 'Изображение не изменено', 'status' => 'ERROR']);
+                    }
+                }
+            }
+        }
+
+    }
+
+    public function deleteImage(Request $request, $id)
+    {
+        $data = $request->all();
+
+        if (!empty($data['imageId']) && !empty($data['alias'])) {
+            $image = $this->museumImageRepository->getEdit($data['imageId']);
+            if (!empty($image)) {
+                $isDeleted = $this->museumImageRepository->deleteImageFromFilesystem($data['alias']);
+                if ($isDeleted) {
+                    $result = $image->forceDelete();
+                    if ($result) {
+                        return response(['message' => 'Успешно удалено', 'status' => 'OK']);
+                    } else {
+                        return response(['message' => 'Ошибка удаления', 'status' => 'ERROR']);
+                    }
+                }
+            } else {
+                return response(['message' => 'Изображение не найдено', 'status' => 'ERROR']);
+            }
+
+        } else {
+            return response(['message' => 'Нельзя удалить изображение', 'status' => 'ERROR']);
         }
 
     }

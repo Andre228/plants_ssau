@@ -55,7 +55,7 @@
 
     .notify {
         position: fixed;
-        z-index: 1112;
+        z-index: 1250;
         width: 300px !important;
         height: auto;
         bottom: 2%;
