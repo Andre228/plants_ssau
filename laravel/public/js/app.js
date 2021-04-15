@@ -2071,6 +2071,13 @@ __webpack_require__.r(__webpack_exports__);
         images: this.images,
         index: this.index
       });
+    },
+    getImage: function getImage() {
+      if (this.images[this.index]) {
+        return this.images[this.index].alias;
+      } else {
+        this.index = this.images.length - 1;
+      }
     }
   }
 });
@@ -2118,6 +2125,9 @@ __webpack_require__.r(__webpack_exports__);
       if (this.fileEvent.length > 0) {
         this.$emit('imagesUpload', this.fileEvent);
       }
+
+      this.fileEvent = null;
+      this.images = [];
     },
     changeFile: function changeFile(event) {
       if (event && event.target.files) {
@@ -2438,11 +2448,19 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _includes_PostEditMainColComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./includes/PostEditMainColComponent */ "./resources/js/components/admin/posts/includes/PostEditMainColComponent.vue");
-/* harmony import */ var _includes_PostEditAddColComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./includes/PostEditAddColComponent */ "./resources/js/components/admin/posts/includes/PostEditAddColComponent.vue");
-/* harmony import */ var _services_post_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./services/post-service */ "./resources/js/components/admin/posts/services/post-service.js");
-/* harmony import */ var _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../parsers/datetime-parser */ "./resources/js/components/parsers/datetime-parser.js");
-/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/notify-service */ "./resources/js/components/services/notify-service.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _includes_PostEditMainColComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./includes/PostEditMainColComponent */ "./resources/js/components/admin/posts/includes/PostEditMainColComponent.vue");
+/* harmony import */ var _includes_PostEditAddColComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./includes/PostEditAddColComponent */ "./resources/js/components/admin/posts/includes/PostEditAddColComponent.vue");
+/* harmony import */ var _services_post_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/post-service */ "./resources/js/components/admin/posts/services/post-service.js");
+/* harmony import */ var _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../parsers/datetime-parser */ "./resources/js/components/parsers/datetime-parser.js");
+/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/notify-service */ "./resources/js/components/services/notify-service.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -2514,8 +2532,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostDetailsComponent",
   components: {
-    PostEditAddColComponent: _includes_PostEditAddColComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
-    PostEditMainColComponent: _includes_PostEditMainColComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
+    PostEditAddColComponent: _includes_PostEditAddColComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
+    PostEditMainColComponent: _includes_PostEditMainColComponent__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   props: ['post', 'categorylist', 'imageslist'],
   data: function data() {
@@ -2523,10 +2541,10 @@ __webpack_require__.r(__webpack_exports__);
       postInfo: this.post,
       categoriesInfo: this.categorylist,
       images: this.imageslist,
-      dateTimeParser: new _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_3__["DateTimeParser"](),
+      dateTimeParser: new _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_4__["DateTimeParser"](),
       is_publishedAfterUpdate: false,
-      postServices: new _services_post_service__WEBPACK_IMPORTED_MODULE_2__["PostServices"](),
-      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_4__["NotifyService"]()
+      postServices: new _services_post_service__WEBPACK_IMPORTED_MODULE_3__["PostServices"](),
+      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_5__["NotifyService"]()
     };
   },
   created: function created() {
@@ -2607,30 +2625,53 @@ __webpack_require__.r(__webpack_exports__);
     imagesUpload: function imagesUpload(event) {
       var _this3 = this;
 
-      var postId = this.$store.getters.getPostObject.id;
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var postId, body, files, updatedAt, i;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                postId = _this3.$store.getters.getPostObject.id;
 
-      if (event && event.length > 0) {
-        var body = new FormData();
-        var files = event;
-        var updatedAt = this.dateTimeParser.getCurrentDateTime();
+                if (!(event && event.length > 0)) {
+                  _context.next = 10;
+                  break;
+                }
 
-        for (var i = 0; i < files.length; i++) {
-          body.append('file' + i, files[i], files[i].name);
-        }
+                body = new FormData();
+                files = event;
+                updatedAt = _this3.dateTimeParser.getCurrentDateTime();
 
-        body.append('updated_at', updatedAt);
-        this.postServices.upload(postId, body).then(function (response) {
-          if (response.data.status == 'OK') {
-            _this3.notifyService.success(response.data.message);
+                for (i = 0; i < files.length; i++) {
+                  body.append('file' + i, files[i], files[i].name);
+                }
+
+                body.append('updated_at', updatedAt);
+                _context.next = 9;
+                return _this3.postServices.upload(postId, body).then(function (response) {
+                  if (response.data.status == 'OK') {
+                    _this3.notifyService.success(response.data.message);
+
+                    _this3.images = response.data.details;
+                  }
+
+                  if (response.data.status == 'ERROR') {
+                    _this3.notifyService.error(response.data.message);
+                  }
+                })["catch"](function (error) {
+                  _this3.notifyService.error(error);
+                });
+
+              case 9:
+                event = null;
+
+              case 10:
+              case "end":
+                return _context.stop();
+            }
           }
-
-          if (response.data.status == 'ERROR') {
-            _this3.notifyService.error(response.data.message);
-          }
-        })["catch"](function (error) {
-          _this3.notifyService.error(error);
-        });
-      }
+        }, _callee);
+      }))();
     }
   }
 });
@@ -3564,7 +3605,10 @@ __webpack_require__.r(__webpack_exports__);
       mapLayer: null,
       marker: null,
       mapService: new _services_map_service__WEBPACK_IMPORTED_MODULE_2__["MapService"](),
-      postServices: new _services_post_service__WEBPACK_IMPORTED_MODULE_4__["PostServices"]()
+      postServices: new _services_post_service__WEBPACK_IMPORTED_MODULE_4__["PostServices"](),
+      mt: {
+        marginTop: '-15%'
+      }
     };
   },
   watch: {
@@ -3997,6 +4041,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     var index = _this3.images.indexOf(_this3.images[data.index]);
 
                     _this3.images.splice(index, 1);
+
+                    if (_this3.images.length >= 2) {
+                      _this3.index--;
+                    } else if (_this3.images.length === 1) {
+                      _this3.index = 0;
+                    } else if (_this3.images.length === 0) {
+                      _this3.$modal.close();
+                    }
                   }
 
                   if (response.data.status == 'ERROR') {
@@ -8940,7 +8992,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 exports.i(__webpack_require__(/*! -!../../../../../../node_modules/css-loader??ref--6-1!../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!leaflet/dist/leaflet.css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/leaflet/dist/leaflet.css"), "");
 
 // module
-exports.push([module.i, "\n#mapContainer[data-v-2b589d66] {\n    width: 100%;\n    height: 50vh;\n}\n", ""]);
+exports.push([module.i, "\n#mapContainer[data-v-2b589d66] {\n    width: 100%;\n    height: 50vh;\n}\n.mt-15[data-v-2b589d66] {\n    margin-top: -15%;\n}\n", ""]);
 
 // exports
 
@@ -55866,7 +55918,7 @@ var render = function() {
     _vm._v(" "),
     _c("div", { staticClass: "images" }, [
       _c("div", { staticClass: "img-cont", on: { click: _vm.showModal } }, [
-        _c("img", { attrs: { src: _vm.images[_vm.index].alias } })
+        _c("img", { attrs: { src: _vm.getImage() } })
       ])
     ]),
     _vm._v(" "),
@@ -55943,7 +55995,11 @@ var render = function() {
           "button",
           {
             staticClass: "btn btn-outline-primary",
-            attrs: { type: "button", id: "inputGroupFileAddon04" },
+            attrs: {
+              disabled: _vm.images.length <= 0,
+              type: "button",
+              id: "inputGroupFileAddon04"
+            },
             on: {
               click: function($event) {
                 return _vm.save()
@@ -58430,10 +58486,12 @@ var render = function() {
                 attrs: { id: "mediadata", role: "tabpanel" }
               },
               [
-                _c("carousel-component", { attrs: { images: _vm.images } }),
+                _vm.images.length > 0
+                  ? _c("carousel-component", { attrs: { images: _vm.images } })
+                  : _vm._e(),
                 _vm._v(" "),
                 _c("image-upload-component", {
-                  staticStyle: { "margin-top": "-15%" },
+                  class: [_vm.images.length > 0 ? "mt-15" : ""],
                   on: { imagesUpload: _vm.uploadFile }
                 })
               ],
@@ -58877,14 +58935,16 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "images" }, [
-      _c("div", { staticClass: "img-content" }, [
-        _c("img", {
-          style: _vm.styleImage,
-          attrs: { src: _vm.images[_vm.index].alias }
-        })
-      ])
-    ]),
+    _vm.images.length > 0
+      ? _c("div", { staticClass: "images" }, [
+          _c("div", { staticClass: "img-content" }, [
+            _c("img", {
+              style: _vm.styleImage,
+              attrs: { src: _vm.images[_vm.index].alias }
+            })
+          ])
+        ])
+      : _vm._e(),
     _vm._v(" "),
     _c(
       "a",
@@ -86583,8 +86643,13 @@ var DateTimeParser = /*#__PURE__*/function () {
       var se = new Intl.DateTimeFormat('ru', {
         second: '2-digit'
       }).format(d);
-      var published_at = "".concat(ye, "-").concat(mo, "-").concat(da, " ").concat(ho, ":").concat(mi, ":").concat(se);
+      var published_at = "".concat(ye, "-").concat(mo, "-").concat(da, " ").concat(ho, ":").concat(this.setZeroToFront(mi), ":").concat(this.setZeroToFront(se));
       return published_at;
+    }
+  }, {
+    key: "setZeroToFront",
+    value: function setZeroToFront(value) {
+      return (value < 10 ? '0' : '') + value;
     }
   }, {
     key: "getCurrentDate",

@@ -1,6 +1,6 @@
 <template>
 
-    <div >
+    <div>
 
         <a @click="prev" class="carousel-control-prev slides-controls" style="margin-left: 5%" ref="tt">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -9,7 +9,7 @@
 
         <div class="images">
             <div class="img-cont" @click="showModal">
-                <img :src="images[index].alias">
+                <img :src="getImage()">
             </div>
         </div>
 
@@ -62,6 +62,14 @@
 
             showModal() {
                 this.$modal.open(AdminImagesDialogComponent, { images: this.images, index: this.index });
+            },
+
+            getImage() {
+                if (this.images[this.index]) {
+                    return this.images[this.index].alias;
+                } else {
+                    this.index = this.images.length - 1;
+                }
             }
         }
     }

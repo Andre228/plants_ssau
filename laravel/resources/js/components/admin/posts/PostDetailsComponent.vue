@@ -162,7 +162,7 @@
 
             },
 
-            imagesUpload(event) {
+            async imagesUpload(event) {
 
                 const postId = this.$store.getters.getPostObject.id;
 
@@ -175,10 +175,11 @@
                     }
                     body.append('updated_at', updatedAt);
 
-                    this.postServices.upload(postId, body)
+                    await this.postServices.upload(postId, body)
                         .then(response => {
                             if (response.data.status == 'OK') {
                                 this.notifyService.success(response.data.message);
+                                this.images = response.data.details;
                             }
                             if (response.data.status == 'ERROR') {
                                 this.notifyService.error(response.data.message);
@@ -187,6 +188,7 @@
                         .catch((error) => {
                             this.notifyService.error(error);
                         });
+                    event = null;
                 }
 
             }

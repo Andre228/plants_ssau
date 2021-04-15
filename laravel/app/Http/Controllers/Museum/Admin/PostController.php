@@ -158,6 +158,7 @@ class PostController extends BaseAdminController
     public function destroy($id)
     {
 
+        $this->museumImageRepository->deleteAllImagesByPost($id);
         $post = $this->museumPostRepository->getEdit($id);
         $result = $post->forceDelete();
 
@@ -179,7 +180,13 @@ class PostController extends BaseAdminController
                     $this->museumImageRepository->createImage($request, $value, $id);
                 }
             }
-            return response(['message' => 'Успешно загружено', 'status' => 'OK']);
+            $post = $this->museumPostRepository->getEdit($id);
+            if(!empty($post)) {
+                $post->updated_at = $data['updated_at'];
+                $post->save();
+            }
+            $images = $this->museumImageRepository->getAllImagesByPostId($id);
+            return response(['message' => 'Успешно загружено', 'status' => 'OK', 'details' => $images]);
         } catch (Exception $exception) {
             return response(['message' => 'Ошибка загрузки файла', 'status' => 'ERROR']);
         }
@@ -222,6 +229,11 @@ class PostController extends BaseAdminController
                 $isDeleted = $this->museumImageRepository->deleteImageFromFilesystem($data['alias']);
                 if ($isDeleted) {
                     $result = $image->forceDelete();
+                    $post = $this->museumPostRepository->getEdit($id);
+                    if(!empty($post)) {
+                        $post->updated_at = $data['updated_at'];
+                        $post->save();
+                    }
                     if ($result) {
                         return response(['message' => 'Успешно удалено', 'status' => 'OK']);
                     } else {
@@ -264,7 +276,18 @@ class PostController extends BaseAdminController
     {
         if ($count > 0) {
 
-            $result = $this->museumPostRepository->deleteMore($count);
+            $lastPosts = $this->museumPostRepository->getLastPosts($count);
+
+            $postIds = [];
+
+            foreach ($lastPosts as $post) {
+                $postIds [] = [
+                    'id' => $post['id']
+                ];
+            }
+
+            $this->museumImageRepository->deleteMoreImagesFromFileSystem($postIds);
+            $result = $this->museumPostRepository->deleteMore($count, $lastPosts);
 
             if ($result > 0) {
                 return response(['message' => "Успешно удалены <strong> $count </strong> записей", 'status' => 'OK']);

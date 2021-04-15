@@ -19,7 +19,7 @@ class CreateMuseumImagesTable extends Migration
             $table->string('name');
             $table->string('alias');
 
-            $table->foreign('post_id')->references('id')->on('museum_posts');
+            $table->foreign('post_id')->references('id')->on('museum_posts')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -5,7 +5,7 @@
             <span class="sr-only">Previous</span>
         </a>
 
-        <div class="images">
+        <div v-if="images.length > 0" class="images">
             <div class="img-content">
                 <img :src="images[index].alias" v-bind:style="styleImage">
             </div>
@@ -139,6 +139,14 @@
 
                         const index = this.images.indexOf(this.images[data.index]);
                         this.images.splice(index, 1);
+                        if (this.images.length >= 2) {
+                            this.index--;
+                        } else if (this.images.length === 1) {
+                            this.index = 0;
+                        } else if (this.images.length === 0) {
+                            this.$modal.close();
+                        }
+
                     }
                     if (response.data.status == 'ERROR') {
                         this.response = {

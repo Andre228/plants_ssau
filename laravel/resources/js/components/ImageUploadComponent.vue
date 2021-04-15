@@ -6,7 +6,7 @@
                 <label class="custom-file-label" for="inputGroupFile04">Выбрать файл</label>
             </div>
             <div class="input-group-append">
-                <button class="btn btn-outline-primary" type="button" id="inputGroupFileAddon04" @click="save()">Сохранить</button>
+                <button :disabled='images.length <= 0' class="btn btn-outline-primary" type="button" id="inputGroupFileAddon04" @click="save()">Сохранить</button>
             </div>
         </div>
         <div v-if="images.length > 0" class="preview">
@@ -33,6 +33,8 @@
                 if (this.fileEvent.length > 0) {
                     this.$emit('imagesUpload', this.fileEvent);
                 }
+                this.fileEvent = null;
+                this.images = [];
             },
 
             changeFile(event) {

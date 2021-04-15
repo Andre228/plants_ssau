@@ -84,7 +84,7 @@ class MuseumImageRepository extends CoreRepository
                 $imgobject = new MuseumImage();
                 $imgobject->create($data);
 
-                return true;
+                return $path;
             }
         } else {
             return false;
@@ -120,6 +120,29 @@ class MuseumImageRepository extends CoreRepository
         $isDeleted = Storage::disk('public')->delete($pathInFileSystem);
 
         return $isDeleted;
+    }
+
+    public function deleteMoreImagesFromFileSystem($postIds)
+    {
+        try {
+            foreach ($postIds as $postId) {
+                $this->deleteAllImagesByPost($postId);
+            }
+            return true;
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public function deleteAllImagesByPost($postId)
+    {
+        $result = false;
+        $isExistsDir = Storage::disk('public')->exists('images/posts/' . $postId);
+        if ($isExistsDir) {
+            $result = Storage::disk('public')->deleteDirectory('images/posts/' . $postId);
+        }
+
+        return $result;
     }
 
     private function setFileInStorage($request, $image, $postId)

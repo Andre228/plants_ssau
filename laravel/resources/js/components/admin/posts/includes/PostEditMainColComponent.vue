@@ -138,9 +138,9 @@
 
                         <div class="tab-pane" id="mediadata" role="tabpanel">
 
-                            <carousel-component :images="images"></carousel-component>
+                            <carousel-component v-if="images.length > 0" :images="images"></carousel-component>
 
-                            <image-upload-component style="margin-top: -15%;" v-on:imagesUpload="uploadFile"></image-upload-component>
+                            <image-upload-component v-bind:class="[ images.length > 0 ? 'mt-15' : '' ]" v-on:imagesUpload="uploadFile"></image-upload-component>
 
                         </div>
                     </div>
@@ -180,7 +180,10 @@
                 mapLayer: null,
                 marker: null,
                 mapService: new MapService(),
-                postServices: new PostServices()
+                postServices: new PostServices(),
+                mt: {
+                    marginTop: '-15%'
+                }
             }
         },
 
@@ -236,5 +239,9 @@
     #mapContainer {
         width: 100%;
         height: 50vh;
+    }
+
+    .mt-15 {
+        margin-top: -15%;
     }
 </style>

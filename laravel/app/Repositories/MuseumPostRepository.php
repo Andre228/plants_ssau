@@ -91,9 +91,12 @@ class MuseumPostRepository extends CoreRepository
         return $result;
     }
 
-    public function deleteMore($count)
+    public function deleteMore($count, $posts = null)
     {
-        $posts = $this->startConditions()->orderBy('id', 'desc')->take($count)->get()->toArray();
+        if ($posts == null) {
+            $posts = $this->getLastPosts($count);
+        }
+
 
         $ids [] = [];
         $result = null;
@@ -107,6 +110,13 @@ class MuseumPostRepository extends CoreRepository
         }
 
         return $result;
+    }
+
+    public function getLastPosts($count)
+    {
+        $posts = $this->startConditions()->orderBy('id', 'desc')->take($count)->get()->toArray();
+
+        return $posts;
     }
 
 }

@@ -18,9 +18,13 @@ export class DateTimeParser {
         const mi = new Intl.DateTimeFormat('ru', { minute: '2-digit' }).format(d);
         const se = new Intl.DateTimeFormat('ru', { second: '2-digit' }).format(d);
 
-        const published_at = `${ye}-${mo}-${da} ${ho}:${mi}:${se}`;
+        const published_at = `${ye}-${mo}-${da} ${ho}:${this.setZeroToFront(mi)}:${this.setZeroToFront(se)}`;
 
         return published_at;
+    }
+
+    setZeroToFront(value) {
+        return (value < 10 ? '0' : '') + value;
     }
 
     getCurrentDate() {
