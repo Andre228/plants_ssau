@@ -12,6 +12,6 @@ class WelcomeController extends Controller
      */
     static public function index() {
 
-        return view('layouts.app');
+        return view('welcome');
     }
 }

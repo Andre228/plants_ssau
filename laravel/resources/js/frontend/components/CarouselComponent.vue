@@ -24,7 +24,7 @@
 
 <script>
     import ImageUploadComponent from "./ImageUploadComponent";
-    import AdminImagesDialogComponent from "./dialogs/AdminImagesDialogComponent";
+    import AdminImagesDialogComponent from "../dialogs/AdminImagesDialogComponent";
     export default {
         name: "CarouselComponent",
         props: ['images'],

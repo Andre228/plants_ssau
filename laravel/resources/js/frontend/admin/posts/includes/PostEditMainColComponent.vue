@@ -156,9 +156,9 @@
     import { DateTimeParser } from "../../../parsers/datetime-parser";
     import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
     import { MapService } from "../services/map-service";
-    import CarouselComponent from "../../../CarouselComponent";
+    import CarouselComponent from "../../../components/CarouselComponent";
     import {PostServices} from "../services/post-service";
-    import ImageUploadComponent from "../../../ImageUploadComponent";
+    import ImageUploadComponent from "../../../components/ImageUploadComponent";
 
     export default {
         name: "PostEditMainColComponent",

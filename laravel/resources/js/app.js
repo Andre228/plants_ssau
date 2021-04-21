@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import { componentsProvider } from './components-providers.js';
-import store from "./components/store/store";
+import store from "./frontend/store/store";
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import Modal from './components/plugins/modal';
+import Modal from './frontend/plugins/modal';
 
 delete Icon.Default.prototype._getIconUrl;
 

@@ -286,14 +286,19 @@ class PostController extends BaseAdminController
                 ];
             }
 
-            $this->museumImageRepository->deleteMoreImagesFromFileSystem($postIds);
-            $result = $this->museumPostRepository->deleteMore($count, $lastPosts);
+            $isDeletedImages = $this->museumImageRepository->deleteMoreImagesFromFileSystem($postIds);
+            if ($isDeletedImages) {
+                $result = $this->museumPostRepository->deleteMore($count, $lastPosts);
 
-            if ($result > 0) {
-                return response(['message' => "Успешно удалены <strong> $count </strong> записей", 'status' => 'OK']);
+                if ($result > 0) {
+                    return response(['message' => "Успешно удалены <strong> $count </strong> записей", 'status' => 'OK']);
+                } else {
+                    return response(['message' => 'Ошибка удаления', 'status' => 'ERROR']);
+                }
             } else {
                 return response(['message' => 'Ошибка удаления', 'status' => 'ERROR']);
             }
+
         } else {
             return response(['message' => 'Ошибка удаления', 'status' => 'ERROR']);
         }

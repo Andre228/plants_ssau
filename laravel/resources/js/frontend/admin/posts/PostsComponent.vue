@@ -82,7 +82,7 @@
 <script>
     import PostCardComponent from "./PostCardComponent";
     import { DateTimeParser } from "../../parsers/datetime-parser";
-    import ImageUploadComponent from "../../ImageUploadComponent";
+    import ImageUploadComponent from "../../components/ImageUploadComponent";
     import { PostServices } from "./services/post-service";
     import { LoaderService } from "../../services/loader-service";
     import { NotifyService } from "../../services/notify-service";

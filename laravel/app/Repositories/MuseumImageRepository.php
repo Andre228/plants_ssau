@@ -126,7 +126,7 @@ class MuseumImageRepository extends CoreRepository
     {
         try {
             foreach ($postIds as $postId) {
-                $this->deleteAllImagesByPost($postId);
+                $this->deleteAllImagesByPost($postId['id']);
             }
             return true;
         } catch (Exception $exception) {
