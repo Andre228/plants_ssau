@@ -24,7 +24,7 @@
         data() {
             return {
                 styleObject: {
-                   height: document.documentElement.clientHeight + 'px'
+                   height: window.outerHeight + 'px'
                 },
                 message: this.text
             }
@@ -50,7 +50,7 @@
     }
 
     .spinner-loader {
-        z-index: 1111;
+        z-index: 1301;
         color: white !important;
         position: fixed;
         top: 50%;
@@ -58,10 +58,11 @@
     }
 
     .loader-text {
+        z-index: 1301;
         width: 100px;
         height: auto;
         position: fixed;
-        top: 65%;
+        top: 45%;
         left: 49%;
         color: white;
         word-break: break-all;

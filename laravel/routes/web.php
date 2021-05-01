@@ -77,6 +77,13 @@ Route::group($groupDataAdmin, function () {
     Route::get('/users/{id}/edit','UserController@edit')->name('museum.admin.users.edit');
    // Route::get('/getusers/per-page','UserController@getUsersOnPage')->name('museum.admin.users.on-page');
 
+
+    Route::get('/news','NewsController@index')->name('museum.admin.news.index');
+    Route::get('/news/create','NewsController@create')->name('museum.admin.news.create');
+    Route::post('/news','NewsController@store')->name('museum.admin.news.store');
+    Route::get('/news/{id}/edit','NewsController@edit')->name('museum.admin.news.edit');
+    Route::patch('/news/{id}','NewsController@update')->name('museum.admin.news.update');
+
 });
 
 //Route::get('/categories_admin', 'Museum\Admin\CategoryController@getAllCategories');

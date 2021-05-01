@@ -10,11 +10,12 @@ import PostsComponent from "./frontend/admin/posts/PostsComponent";
 import PostDetailsComponent from "./frontend/admin/posts/PostDetailsComponent";
 import PostCardComponent from "./frontend/admin/posts/PostCardComponent";
 import CreatePostComponent from "./frontend/admin/posts/create-post/CreatePostComponent";
-import PostCreateMainColComponent from './frontend/admin/posts/create-post/includes/PostCreateMainColComponent';
-import PostCreateAddColComponent from './frontend/admin/posts/create-post/includes/PostCreateAddColComponent';
 
 import UserComponent from './frontend/admin/users/edit/UserComponent'
 import HomeComponent from './frontend/components/home-page/HomeComponent';
+import NewsComponent from './frontend/admin/news/NewsComponent';
+import CreateNewsComponent from './frontend/admin/news/CreateNewsComponent';
+import NewsDetailsComponent from './frontend/admin/news/NewsDetailsComponent';
 
 
 
@@ -33,10 +34,12 @@ export const componentsProvider = {
     PostDetailsComponent,
     PostCardComponent,
     CreatePostComponent,
-    PostCreateMainColComponent,
-    PostCreateAddColComponent,
 
     UserComponent,
 
-    HomeComponent
+    HomeComponent,
+
+    NewsComponent,
+    NewsDetailsComponent,
+    CreateNewsComponent
 };

@@ -117,8 +117,8 @@
                             text: error
                         };
                     });
-                this.loaderService.removeLoader();
-                this.notifyService[this.response.type](this.response.text);
+
+                this.afterRequest();
             },
 
 
@@ -161,8 +161,15 @@
                             text: error
                         };
                     });
+
+                this.afterRequest();
+
+            },
+
+            afterRequest() {
                 this.loaderService.removeLoader();
                 this.notifyService[this.response.type](this.response.text);
+                this.response = {};
             }
 
         }

@@ -43,16 +43,16 @@
             <br>
 
 
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="card card-block">
-                            <div class="card-body ml-auto">
-                                <button @click="destroy()" class="btn btn-outline-danger"><i class="fas fa-trash" style="margin-right: 5px;"></i>Удалить</button>
-                            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card card-block">
+                        <div class="card-body ml-auto">
+                            <button @click="destroy()" class="btn btn-outline-danger"><i class="fas fa-trash" style="margin-right: 5px;"></i>Удалить</button>
                         </div>
                     </div>
-                    <div class="col-md-3"></div>
                 </div>
+                <div class="col-md-3"></div>
+            </div>
 
 
         </div>
@@ -114,7 +114,6 @@
                         this.postInfo.coordinates.lng = -8.623;
                     }
                 }
-                // this.postInfo.coordinates = JSON.parse(this.postInfo.coordinates);
             },
 
             update() {

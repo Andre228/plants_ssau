@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 
 class MuseumPost extends Model
 {
-    //protected $fillable = ['category_id'];
+
     use SoftDeletes;
 
     protected $fillable = [
@@ -51,10 +51,4 @@ class MuseumPost extends Model
         return $this->belongsTo(User::class);
     }
 
-//    public function getCreatedAtAttribute($value)
-//    {
-//        return Carbon::createFromTimestamp(strtotime($value))
-//            ->timezone('Europe/Samara')
-//            ->toDateTimeString();
-//    }
 }

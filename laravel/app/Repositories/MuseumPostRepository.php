@@ -119,4 +119,30 @@ class MuseumPostRepository extends CoreRepository
         return $posts;
     }
 
+    public function getLastPublishedPosts($count = 10)
+    {
+
+        $columns = [
+            'id',
+            'title',
+            'author',
+            'is_published',
+            'published_at',
+            'russian_name',
+            'determination',
+            'collectors',
+            'collection_date'
+        ];
+
+        $posts = $this->startConditions()
+            ->select($columns)
+            ->where('is_published', '=', 1)
+            ->orderBy('id', 'desc')
+            ->take($count)
+            ->get()
+            ->toBase();
+
+        return $posts;
+    }
+
 }

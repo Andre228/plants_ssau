@@ -25,6 +25,20 @@ class MuseumUserRepository extends CoreRepository
         return $this->startConditions()->find($id);
     }
 
+    public function getUserBaseInfo($id)
+    {
+        $columns = [
+            'name',
+        ];
+
+        $result = $this
+            ->startConditions()
+            ->where('id', '=', $id)
+            ->first($columns);
+
+        return $result;
+    }
+
     public function getAllUsers()
     {
         $columns = [

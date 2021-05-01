@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <button class="btn btn-primary" style="margin-left: 10px" @click="store()" :disabled="isdisabled">Добавить</button>
+                            <button class="btn btn-primary" style="margin-left: 10px" @click="store()" :disabled="isDisabled">Добавить</button>
                             <a :href="'/admin/museum/posts'" class="btn btn-light" style="margin-left: 15px">Назад</a>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
 
 
         computed: {
-            isdisabled() {
+            isDisabled() {
                 if ( this.$store.state.post.postObject.title
                     && this.$store.state.post.postObject.content_raw
                     && this.$store.state.post.postObject.category_id
