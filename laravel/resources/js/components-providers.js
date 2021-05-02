@@ -16,6 +16,7 @@ import HomeComponent from './frontend/components/home-page/HomeComponent';
 import NewsComponent from './frontend/admin/news/NewsComponent';
 import CreateNewsComponent from './frontend/admin/news/CreateNewsComponent';
 import NewsDetailsComponent from './frontend/admin/news/NewsDetailsComponent';
+import CategoryComponent from './frontend/components/category-page/CategoryComponent';
 
 
 
@@ -41,5 +42,7 @@ export const componentsProvider = {
 
     NewsComponent,
     NewsDetailsComponent,
-    CreateNewsComponent
+    CreateNewsComponent,
+
+    CategoryComponent
 };

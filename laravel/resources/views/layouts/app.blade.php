@@ -30,7 +30,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top header-container">
             <div class="container-fluid">
-                <a href="{{ route('welcome') }}" class="navbar-brand">
+                <a href="{{ route('museum.welcome') }}" class="navbar-brand">
                     <i class="fab fa-pagelines" style="font-size: 40px; color: darkseagreen;"></i>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
@@ -43,7 +43,7 @@
 
 
                         <li class="nav-item active">
-                            <a href="{{ route('welcome') }}" class="nav-link nav-link-hover">Главная</a>
+                            <a href="{{ route('museum.welcome') }}" class="nav-link nav-link-hover">Главная</a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link nav-link-hover">Новости</a>
@@ -52,7 +52,7 @@
                             <a href="#" class="nav-link nav-link-hover">Экспонаты</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link nav-link-hover">Раздел</a>
+                            <a href="{{ route('museum.category') }}" class="nav-link nav-link-hover">Раздел</a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link nav-link-hover">О нас</a>

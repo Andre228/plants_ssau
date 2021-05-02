@@ -14,7 +14,8 @@
 
 Auth::routes();
 
-Route::get('/','Museum\WelcomeController@index')->name('welcome');
+Route::get('/','Museum\WelcomeController@index')->name('museum.welcome');
+Route::get('/categories','Museum\CategoryController@index')->name('museum.category');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::patch('/home/user-profile-save/{id}', 'HomeController@update')->name('user.profile.save');

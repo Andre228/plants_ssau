@@ -6,7 +6,7 @@
             </h4>
 
             <article v-for="item in newsInfo" class="blog-post">
-                <h2 class="blog-post-title">{{ item.title }}</h2>
+                <h5 class="blog-post-title" style="font-weight: bold">{{ item.title }}</h5>
                 <p class="blog-post-meta">Последнее изменение: {{ item.updated_at }}, написал(а): <span style="text-decoration: underline">{{ item.user.name }}</span></p>
                 <hr>
                <p>{{ item.content_raw }}</p>

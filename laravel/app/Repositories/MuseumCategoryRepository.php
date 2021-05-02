@@ -44,7 +44,6 @@ class MuseumCategoryRepository extends CoreRepository
 
     public function getCategories($how)
     {
-        $columns = ['id', 'title', 'parent_id'];
         $categoryList = null;
 
         if($how == 'per-page') {
@@ -73,6 +72,22 @@ class MuseumCategoryRepository extends CoreRepository
 
         return $categoryList;
 
+    }
+
+    public function getCategoriesBaseInfo()
+    {
+        $columns = [
+            'id',
+            'title',
+            'updated_at'
+        ];
+
+        $categoryList = $this->startConditions()
+            ->select($columns)
+            ->toBase()
+            ->get();
+
+        return $categoryList;
     }
 
     public function getCategoryByName($name)

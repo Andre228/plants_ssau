@@ -24,14 +24,13 @@
         data() {
             return {
                 styleObject: {
-                   height: window.outerHeight + 'px'
+                   height: document.documentElement.scrollHeight + 'px'
                 },
                 message: this.text
             }
         },
 
-        mounted() {
-        }
+        mounted() {}
     }
 </script>
 

@@ -145,4 +145,46 @@ class MuseumPostRepository extends CoreRepository
         return $posts;
     }
 
+    public function getPostsByCategoryId($categoryId, $new = true, $old = false)
+    {
+        $posts = null;
+
+        $columns = [
+            'id',
+            'title',
+            'author',
+            'is_published',
+            'published_at',
+            'russian_name',
+            'determination',
+            'collectors',
+            'collection_date'
+        ];
+
+        if ($new) {
+            $posts = $this->startConditions()
+                ->select($columns)
+                ->where('category_id', '=', $categoryId)
+                ->where('is_published', '=', 1)
+                ->orderBy('published_at', 'desc')
+                ->get()
+                ->toBase();
+        }
+
+        if ($old) {
+            $posts = $this->startConditions()
+                ->select($columns)
+                ->where('category_id', '=', $categoryId)
+                ->where('is_published', '=', 1)
+                ->orderBy('published_at', 'asc')
+                ->get()
+                ->toBase();
+        }
+
+
+
+        return $posts;
+
+    }
+
 }
