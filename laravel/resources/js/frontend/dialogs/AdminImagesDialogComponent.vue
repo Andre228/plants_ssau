@@ -23,6 +23,7 @@
     import {LoaderService} from "../services/loader-service";
     import {NotifyService} from "../services/notify-service";
     import {DateTimeParser} from "../parsers/datetime-parser";
+    import {DeviceHelper} from "../helpers/device-helper";
 
     export default {
         name: "AdminImagesDialogComponent",
@@ -53,6 +54,10 @@
                     this.remove(data);
                 }
             });
+
+            if (DeviceHelper.isPhone()) {
+                this.styleImage.height = (window.screen.height * 0.68) + 'px';
+            }
         },
 
         watch: {
@@ -189,8 +194,8 @@
     }
 
     .images {
-        max-height: 720px;
-        max-width: 1080px;
+        /*max-height: 720px;*/
+        /*max-width: 1080px;*/
     }
 
      img {
@@ -198,7 +203,7 @@
          /*max-width: 600px;*/
          /*height: auto;*/
          /*height: 80%;*/
-         max-height: 600px;
+         /*max-height: 600px;*/
          /*transform: scale(0.5);*/
     }
 

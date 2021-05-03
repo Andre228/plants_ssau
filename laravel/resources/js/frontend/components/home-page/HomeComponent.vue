@@ -1,10 +1,14 @@
 <template>
-    <div class="row">
-        <div>
-            <side-left-component class="col-md-4" :posts="postsList"></side-left-component>
+
+    <div class="row justify-content-around">
+        <div class="col-md-7">
+            <side-right-component :news="newsList"></side-right-component>
         </div>
-        <side-right-component class="col-md-7" :news="newsList"></side-right-component>
+        <div class="col-md-5">
+            <side-left-component :posts="postsList"></side-left-component>
+        </div>
     </div>
+
 </template>
 
 <script>

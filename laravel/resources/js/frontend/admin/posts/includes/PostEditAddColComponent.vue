@@ -7,8 +7,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <button class="btn btn-primary" style="margin-left: 10px" @click="update()">Сохранить</button>
-                            <a :href="'/admin/museum/posts'" class="btn btn-light" style="margin-left: 15px">Назад</a>
+                            <button class="btn btn-primary" style="margin-left: 10px; width: fit-content" @click="update()">Сохранить</button>
+                            <a :href="'/admin/museum/posts'" class="btn btn-light" style="margin-left: 15px; width: fit-content">Назад</a>
                         </div>
                     </div>
                 </div>

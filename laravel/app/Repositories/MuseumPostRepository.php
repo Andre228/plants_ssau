@@ -148,6 +148,7 @@ class MuseumPostRepository extends CoreRepository
     public function getPostsByCategoryId($categoryId, $new = true, $old = false)
     {
         $posts = null;
+        $orderState = 'desc';
 
         $columns = [
             'id',
@@ -161,26 +162,21 @@ class MuseumPostRepository extends CoreRepository
             'collection_date'
         ];
 
-        if ($new) {
-            $posts = $this->startConditions()
-                ->select($columns)
-                ->where('category_id', '=', $categoryId)
-                ->where('is_published', '=', 1)
-                ->orderBy('published_at', 'desc')
-                ->get()
-                ->toBase();
-        }
-
         if ($old) {
-            $posts = $this->startConditions()
-                ->select($columns)
-                ->where('category_id', '=', $categoryId)
-                ->where('is_published', '=', 1)
-                ->orderBy('published_at', 'asc')
-                ->get()
-                ->toBase();
+            $orderState = 'asc';
         }
 
+        if ($new) {
+            $orderState = 'desc';
+        }
+
+        $posts = $this->startConditions()
+            ->select($columns)
+            ->where('category_id', '=', $categoryId)
+            ->where('is_published', '=', 1)
+            ->orderBy('published_at', $orderState)
+            ->get()
+            ->toBase();
 
 
         return $posts;

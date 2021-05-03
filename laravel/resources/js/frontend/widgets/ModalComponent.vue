@@ -29,6 +29,8 @@
 </template>
 
 <script>
+    import {DeviceHelper} from "../helpers/device-helper";
+
     export default {
         name: "ModalComponent",
         props: ['currentComponent', 'data', 'config'],
@@ -39,7 +41,7 @@
                 dataProps: this.data,
                 options: this.config,
                 styleOverlay: {
-                    height: document.documentElement.clientHeight + 'px',
+                    height: document.documentElement.scrollHeight + 'px',
                     width: document.documentElement.clientWidth + 'px'
                 },
                 styleModal: {
@@ -50,13 +52,23 @@
         },
 
         mounted() {
-            if (this.options) {
+            console.log(document.documentElement.clientHeight);
+            console.log(document.documentElement.scrollHeight);
+            if (this.options && this.options.height && this.options.width) {
                 const height = this.options.height;
                 const width = this.options.width;
 
                 this.styleModal.height = height + 'px';
                 this.styleModal.width = width + 'px';
             }
+
+            if (DeviceHelper.isPhone()) {
+                this.styleModal.height = (window.screen.height * 0.85) + 'px';
+            } else {
+                this.styleModal.width = window.innerWidth * 0.8 + 'px';
+            }
+
+
             window.addEventListener('resize', this.onResize);
         },
 
@@ -66,7 +78,6 @@
 
         computed: {
             height () {
-                console.log(this.$refs.modalWindow.clientHeight);
                 return this.$refs.modalWindow.clientHeight;
             }
         },

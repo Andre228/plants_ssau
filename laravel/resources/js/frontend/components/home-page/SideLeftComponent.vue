@@ -1,17 +1,10 @@
 <template>
     <div>
-        <div class="d-flex flex-column align-items-stretch bg-white" style="width: 380px; height: 100vh; overflow-y: scroll">
+        <div class="d-flex flex-column align-items-stretch bg-white" style="height: 100vh; overflow-y: scroll">
             <h3 href="/" class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
                 <span class="fs-5 fw-semibold">Последние добавленные</span>
             </h3>
             <div class="list-group list-group-flush border-bottom scrollarea">
-                <!--<a href="#" class="list-group-item list-group-item-action active py-3 lh-tight" aria-current="true">-->
-                    <!--<div class="d-flex w-100 align-items-center justify-content-between">-->
-                        <!--<strong class="mb-1">List group item heading</strong>-->
-                        <!--<small>Wed</small>-->
-                    <!--</div>-->
-                    <!--<div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>-->
-                <!--</a>-->
                 <a v-for="post in postsInfo" href="#" class="list-group-item list-group-item-action py-3 lh-tight">
                     <div class="d-flex w-100 align-items-center justify-content-between">
                         <strong class="mb-1" style="word-break: break-word">{{ post.russian_name }}</strong>

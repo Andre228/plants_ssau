@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <h4 class="pb-4 mb-4 fst-italic border-bottom">
+            <h4 class="pb-4 mb-4 border-bottom">
                 {{ title }}
             </h4>
 
