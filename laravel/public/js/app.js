@@ -4652,7 +4652,10 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {},
   methods: {
     openModal: function openModal() {
-      this.$modal.open(_dialogs_SearchDialogComponent__WEBPACK_IMPORTED_MODULE_0__["default"]);
+      this.$modal.open(_dialogs_SearchDialogComponent__WEBPACK_IMPORTED_MODULE_0__["default"], null, {
+        inputs: true,
+        scrollable: false
+      });
     }
   }
 });
@@ -5041,6 +5044,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _services_loader_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../services/loader-service */ "./resources/js/frontend/services/loader-service.js");
+/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../services/notify-service */ "./resources/js/frontend/services/notify-service.js");
+/* harmony import */ var _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../parsers/datetime-parser */ "./resources/js/frontend/parsers/datetime-parser.js");
+/* harmony import */ var _request_services_request_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../request-services/request-service */ "./resources/js/frontend/request-services/request-service.js");
 //
 //
 //
@@ -5052,9 +5059,186 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "SearchDialogComponent",
-  mounted: function mounted() {}
+  data: function data() {
+    return {
+      barcode: {
+        match: 'any',
+        value: null,
+        displayText: '',
+        displayMatch: 'any',
+        type: 'number'
+      },
+      determination: {
+        match: 'any',
+        value: null,
+        displayText: '',
+        displayMatch: 'any',
+        type: 'string'
+      },
+      russian_name: {
+        match: 'any',
+        value: null,
+        displayText: '',
+        displayMatch: 'any',
+        type: 'string'
+      },
+      collection_date: {
+        match: 'any',
+        value: null,
+        displayText: '',
+        displayMatch: 'any',
+        type: 'date' // tooltipText: 'Обратите внимание, что параметры, которые равны пустому полю'
+
+      },
+      paramsArray: [],
+      rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_3__["RequestService"](),
+      loaderService: new _services_loader_service__WEBPACK_IMPORTED_MODULE_0__["LoaderService"](),
+      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_1__["NotifyService"](),
+      dateTimeParser: new _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_2__["DateTimeParser"](),
+      response: {}
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.$root.$on('SearchDialogComponent', function (data) {
+      if (data.method === 'search') {
+        _this.search();
+      }
+    });
+    this.paramsArray = [this.barcode, this.determination, this.russian_name, this.collection_date];
+  },
+  methods: {
+    search: function search() {
+      this.convertToSqlParams(this.paramsArray);
+      var params = {
+        barcode: this.paramsArray[0],
+        determination: this.paramsArray[1],
+        russian_name: this.paramsArray[2],
+        collection_date: this.paramsArray[3]
+      };
+      var url = "/search";
+      this.rest.post(url, params).then(function (res) {
+        console.log(res);
+      });
+    },
+    changeParam: function changeParam(param) {
+      this.$modal.next(this.isDisabledSubmit());
+
+      if (this[param].displayMatch === 'null') {
+        this[param].displayText = null;
+      }
+    },
+    convertToSqlParams: function convertToSqlParams(array) {
+      if (array.length > 0) {
+        for (var i = 0; i < array.length; i++) {
+          if (array[i].displayMatch === '=') {
+            array[i].match = '=';
+
+            if (!array[i].displayText) {
+              array[i].value = null;
+            } else {
+              array[i].value = array[i].displayText.trim();
+            }
+          }
+
+          if (array[i].displayMatch === '!=' || array[i].displayMatch === 'any') {
+            array[i].match = '!=';
+            array[i].value = array[i].displayText.trim();
+
+            if (!array[i].displayText.trim() || array[i].displayMatch === 'any') {
+              array[i].value = null;
+            }
+          }
+
+          if (array[i].displayMatch === 'null') {
+            array[i].match = '=';
+            array[i].value = null;
+            array[i].displayText = null;
+          }
+
+          if (array[i].displayMatch === 'like' && array[i].displayText) {
+            array[i].match = 'like';
+            array[i].value = "%".concat(array[i].displayText.trim(), "%");
+          }
+
+          if (array[i].displayMatch === 'any') {
+            array[i].match = 'any';
+            array[i].value = null;
+          }
+
+          if (array[i].type === 'date') {
+            array[i].match = array[i].displayMatch;
+            var date = array[i].displayText ? new Date(array[i].displayText) : new Date();
+            array[i].value = this.dateTimeParser.getCurrentDateTime(date);
+          }
+        }
+      }
+
+      return array;
+    },
+    isDisabledSubmit: function isDisabledSubmit() {
+      return this.paramsArray.every(function (item) {
+        return item.displayMatch === 'any';
+      }) || false;
+    }
+  }
 });
 
 /***/ }),
@@ -5142,6 +5326,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ModalComponent",
@@ -5151,6 +5339,13 @@ __webpack_require__.r(__webpack_exports__);
       component: this.currentComponent,
       dataProps: this.data,
       options: this.config,
+      inputs: false,
+      scrollable: true,
+      buttonDisabled: true,
+      tooltipText: 'Чтобы осуществить поиск необходим хотя бы один параметр отличный от "Любое"',
+      scrollModalBody: {
+        overflow: this.config && !this.config.scrollable ? 'none' : 'scroll'
+      },
       styleOverlay: {
         height: document.documentElement.scrollHeight + 'px',
         width: document.documentElement.clientWidth + 'px'
@@ -5162,14 +5357,21 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    console.log(document.documentElement.clientHeight);
-    console.log(document.documentElement.scrollHeight);
+    var _this = this;
 
     if (this.options && this.options.height && this.options.width) {
       var height = this.options.height;
       var width = this.options.width;
       this.styleModal.height = height + 'px';
       this.styleModal.width = width + 'px';
+    }
+
+    if (this.options && this.options.inputs) {
+      this.inputs = true;
+      this.$modal.subscribe(function (data) {
+        _this.buttonDisabled = data;
+        _this.tooltipText = _this.buttonDisabled ? 'Чтобы осуществить поиск необходим хотя бы один параметр отличный от "Любое"' : 'Поиск';
+      });
     }
 
     if (_helpers_device_helper__WEBPACK_IMPORTED_MODULE_0__["DeviceHelper"].isPhone()) {
@@ -5182,6 +5384,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   beforeDestroy: function beforeDestroy() {
     window.removeEventListener('resize', this.onResize);
+    this.$modal.unsubscribe();
   },
   computed: {
     height: function height() {
@@ -5211,6 +5414,13 @@ __webpack_require__.r(__webpack_exports__);
         this.$root.$emit('AdminImagesDialogComponent', {
           method: 'remove',
           index: this.$modal.getSettings()
+        });
+      }
+    },
+    search: function search() {
+      if (this.currentComponent.name === 'SearchDialogComponent') {
+        this.$root.$emit('SearchDialogComponent', {
+          method: 'search'
         });
       }
     },
@@ -10055,7 +10265,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.category-card[data-v-dd8ff278] {\n    padding: 10px;\n    border: 1px solid #c8cbcf;\n    border-radius: 4px;\n    color: black;\n    text-decoration: none;\n}\n.category-card[data-v-dd8ff278]:hover {\n\n    color: #495057;\n    text-decoration: none;\n    background-color: #f8f9fa;\n}\na[data-v-dd8ff278] {\n    color: #0d6efd;\n    cursor: pointer;\n}\na[data-v-dd8ff278]:hover {\n    text-decoration: underline;\n    color: #0056b3;\n}\n.published[data-v-dd8ff278] {\n    border-left: 4px solid #b6d4fe;\n}\n.no-published[data-v-dd8ff278] {\n    border-left: 4px solid #f0ad4e;\n}\n\n", ""]);
+exports.push([module.i, "\n.category-card[data-v-dd8ff278] {\n    padding: 10px;\n    border: 1px solid #c8cbcf;\n    border-radius: 4px;\n    color: black;\n    text-decoration: none;\n}\n.category-card[data-v-dd8ff278]:hover {\n\n    color: #495057;\n    text-decoration: none;\n    background-color: #f8f9fa;\n}\na[data-v-dd8ff278]:not(.category-card):not(.head-category) {\n    color: #0d6efd !important;\n    cursor: pointer;\n}\na[data-v-dd8ff278]:hover:not(.category-card):not(.head-category) {\n    text-decoration: underline !important;\n    color: #0056b3 !important;\n}\n.published[data-v-dd8ff278] {\n    border-left: 4px solid #b6d4fe;\n}\n.no-published[data-v-dd8ff278] {\n    border-left: 4px solid #f0ad4e;\n}\n\n", ""]);
 
 // exports
 
@@ -10131,7 +10341,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.modal-overlay[data-v-6c49eb42] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    z-index: 1199;\n    background-color: #6c757d;\n    opacity: .3;\n}\n.modal-window[data-v-6c49eb42] {\n    max-height: 750px;\n    width: 80%;\n    z-index: 1200;\n    padding: 16px;\n    position: fixed;\n    top: 3%;\n    left: 50%;\n    transform: translateX(-50%);\n    background: #ffffff;\n    box-shadow: 0 0 17px 0 #e7e7e7;\n}\n.modal-payload[data-v-6c49eb42] {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    overflow: scroll;\n}\n.modal-actions[data-v-6c49eb42] {\n    display: flex;\n    justify-content: space-between;\n}\n.modal-actions .pull-left[data-v-6c49eb42] {\n    width: 15%;\n    display: flex;\n}\n.example-2 .btn-tertiary[data-v-6c49eb42] {\n    width: 40px;\n    color: #343a40;\n    padding: 0;\n    line-height: 40px;\n    margin: auto;\n    display: block;\n    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;\n}\n.example-2 .btn-tertiary[data-v-6c49eb42]:hover, .example-2 .btn-tertiary[data-v-6c49eb42]:focus {\n    color: #fff;\n    text-decoration: none;\n}\n.example-2 .input-file[data-v-6c49eb42] {\n    width: .1px;\n    height: .1px;\n    opacity: 0;\n    overflow: hidden;\n    position: absolute;\n    z-index: -1\n}\n.example-2 .input-file + .js-labelFile[data-v-6c49eb42] {\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n    padding: 0 10px;\n    cursor: pointer;\n    height: 100%;\n}\n\n\n\n", ""]);
+exports.push([module.i, "\n.modal-overlay[data-v-6c49eb42] {\n    position: absolute;\n    top: 0;\n    left: 0;\n    z-index: 1199;\n    background-color: #6c757d;\n    opacity: .3;\n}\n.modal-window[data-v-6c49eb42] {\n    max-height: 750px;\n    width: 80%;\n    z-index: 1200;\n    padding: 16px;\n    position: fixed;\n    top: 3%;\n    left: 50%;\n    transform: translateX(-50%);\n    background: #ffffff;\n    box-shadow: 0 0 17px 0 #e7e7e7;\n}\n.modal-payload[data-v-6c49eb42] {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n}\n.modal-actions[data-v-6c49eb42] {\n    display: flex;\n    justify-content: space-between;\n}\n.modal-actions .pull-left[data-v-6c49eb42] {\n    width: 15%;\n    display: flex;\n    align-items: center;\n}\n.example-2 .btn-tertiary[data-v-6c49eb42] {\n    width: 40px;\n    color: #343a40;\n    padding: 0;\n    line-height: 40px;\n    margin: auto;\n    display: block;\n    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;\n}\n.example-2 .btn-tertiary[data-v-6c49eb42]:hover, .example-2 .btn-tertiary[data-v-6c49eb42]:focus {\n    color: #fff;\n    text-decoration: none;\n}\n.example-2 .input-file[data-v-6c49eb42] {\n    width: .1px;\n    height: .1px;\n    opacity: 0;\n    overflow: hidden;\n    position: absolute;\n    z-index: -1\n}\n.example-2 .input-file + .js-labelFile[data-v-6c49eb42] {\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n    padding: 0 10px;\n    cursor: pointer;\n    height: 100%;\n}\n\n\n\n", ""]);
 
 // exports
 
@@ -61003,17 +61213,17 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("hr", { staticClass: "col-10 col-md-11 mb-5" }),
+      _c("hr", { staticClass: "col-11 col-md-11 mb-5" }),
       _vm._v(" "),
       _c("div", { staticClass: "row g-5" }, [
         _c("div", { staticClass: "col-md-12" }, [
           _c("div", { staticClass: "row align-items-center" }, [
-            _c("h2", [_vm._v("Разделы")]),
+            _c("h2", { staticClass: "col-md-2" }, [_vm._v("Разделы")]),
             _vm._v(" "),
             _c(
               "div",
               {
-                staticClass: "form-check",
+                staticClass: "form-check col-md-2",
                 staticStyle: { "margin-left": "10px" },
                 on: {
                   click: function($event) {
@@ -61050,7 +61260,7 @@ var render = function() {
             _c(
               "div",
               {
-                staticClass: "form-check",
+                staticClass: "form-check col-md-2",
                 staticStyle: { "margin-left": "10px" },
                 on: {
                   click: function($event) {
@@ -61130,8 +61340,7 @@ var staticRenderFns = [
           "a",
           {
             staticClass:
-              "d-flex align-items-center text-dark text-decoration-none",
-            attrs: { href: "/" }
+              "d-flex align-items-center text-dark text-decoration-none head-category"
           },
           [
             _c("i", {
@@ -61177,12 +61386,19 @@ var render = function() {
         staticStyle: { "z-index": "5" }
       },
       [
-        _c("div", { staticClass: "search", on: { click: _vm.openModal } }, [
-          _c("i", {
-            staticClass: "fas fa-search",
-            staticStyle: { "font-size": "2rem" }
-          })
-        ])
+        _c(
+          "div",
+          {
+            staticClass: "search nav-link nav-link-hover",
+            on: { click: _vm.openModal }
+          },
+          [
+            _c("i", {
+              staticClass: "fas fa-search",
+              staticStyle: { "font-size": "2rem" }
+            })
+          ]
+        )
       ]
     )
   ])
@@ -61505,7 +61721,375 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n\n\n    test\n\n")])
+  return _c("div", { staticStyle: { width: "90%" } }, [
+    _c("form", { staticClass: "row mt-5" }, [
+      _c("div", { staticClass: "input-group mb-3" }, [
+        _c(
+          "label",
+          {
+            staticClass: "col-sm-3 col-form-label",
+            staticStyle: { "font-size": "1.2rem" }
+          },
+          [_vm._v("1) Штрихкод")]
+        ),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.barcode.displayMatch,
+                expression: "barcode.displayMatch"
+              }
+            ],
+            staticClass: "form-control form-select",
+            staticStyle: { flex: "0.3 1 auto" },
+            attrs: { title: "Сравнение" },
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.$set(
+                    _vm.barcode,
+                    "displayMatch",
+                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                  )
+                },
+                function($event) {
+                  return _vm.changeParam("barcode")
+                }
+              ]
+            }
+          },
+          [
+            _c("option", { attrs: { value: "any", selected: "" } }, [
+              _vm._v(" Любое ")
+            ]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "=" } }, [_vm._v(" = ")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "!=" } }, [_vm._v(" Не равно ")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "null" } }, [_vm._v(" Пусто ")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "like" } }, [
+              _vm._v(" Частичное совпадение ")
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.barcode.displayText,
+              expression: "barcode.displayText"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { disabled: _vm.barcode.displayMatch === "any", type: "text" },
+          domProps: { value: _vm.barcode.displayText },
+          on: {
+            change: function($event) {
+              return _vm.changeParam("barcode")
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.barcode, "displayText", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "input-group mb-3" }, [
+        _c(
+          "label",
+          {
+            staticClass: "col-sm-3 col-form-label",
+            staticStyle: { "font-size": "1.2rem" }
+          },
+          [_vm._v("2) Определение")]
+        ),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.determination.displayMatch,
+                expression: "determination.displayMatch"
+              }
+            ],
+            staticClass: "form-control form-select",
+            staticStyle: { flex: "0.3 1 auto" },
+            attrs: { title: "Определение" },
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.$set(
+                    _vm.determination,
+                    "displayMatch",
+                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                  )
+                },
+                function($event) {
+                  return _vm.changeParam("determination")
+                }
+              ]
+            }
+          },
+          [
+            _c("option", { attrs: { value: "any", selected: "" } }, [
+              _vm._v(" Любое ")
+            ]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "=" } }, [_vm._v(" = ")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "!=" } }, [_vm._v(" Не равно ")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "null" } }, [_vm._v(" Пусто ")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "like" } }, [
+              _vm._v(" Частичное совпадение ")
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.determination.displayText,
+              expression: "determination.displayText"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            disabled: _vm.determination.displayMatch === "any",
+            type: "text"
+          },
+          domProps: { value: _vm.determination.displayText },
+          on: {
+            change: function($event) {
+              return _vm.changeParam("determination")
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.determination, "displayText", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "input-group mb-3" }, [
+        _c(
+          "label",
+          {
+            staticClass: "col-sm-3 col-form-label",
+            staticStyle: { "font-size": "1.2rem" }
+          },
+          [_vm._v("3) Русское название")]
+        ),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.russian_name.displayMatch,
+                expression: "russian_name.displayMatch"
+              }
+            ],
+            staticClass: "form-control form-select",
+            staticStyle: { flex: "0.3 1 auto" },
+            attrs: { title: "Русское название" },
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.$set(
+                    _vm.russian_name,
+                    "displayMatch",
+                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                  )
+                },
+                function($event) {
+                  return _vm.changeParam("russian_name")
+                }
+              ]
+            }
+          },
+          [
+            _c("option", { attrs: { value: "any", selected: "" } }, [
+              _vm._v(" Любое ")
+            ]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "=" } }, [_vm._v(" = ")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "!=" } }, [_vm._v(" Не равно ")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "null" } }, [_vm._v(" Пусто ")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "like" } }, [
+              _vm._v(" Частичное совпадение ")
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.russian_name.displayText,
+              expression: "russian_name.displayText"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            disabled: _vm.russian_name.displayMatch === "any",
+            type: "text"
+          },
+          domProps: { value: _vm.russian_name.displayText },
+          on: {
+            change: function($event) {
+              return _vm.changeParam("russian_name")
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.russian_name, "displayText", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "input-group mb-3" }, [
+        _c(
+          "label",
+          {
+            staticClass: "col-sm-3 col-form-label",
+            staticStyle: { "font-size": "1.2rem" }
+          },
+          [_vm._v("4) Дата сбора\n                ")]
+        ),
+        _vm._v(" "),
+        _c(
+          "select",
+          {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.collection_date.displayMatch,
+                expression: "collection_date.displayMatch"
+              }
+            ],
+            staticClass: "form-control form-select",
+            staticStyle: { flex: "0.3 1 auto" },
+            attrs: { title: "Дата сбора" },
+            on: {
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.$set(
+                    _vm.collection_date,
+                    "displayMatch",
+                    $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+                  )
+                },
+                function($event) {
+                  return _vm.changeParam("collection_date")
+                }
+              ]
+            }
+          },
+          [
+            _c("option", { attrs: { value: "any", selected: "" } }, [
+              _vm._v(" Любое ")
+            ]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "=" } }, [_vm._v(" = ")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: ">" } }, [_vm._v(" Позже ")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "<" } }, [_vm._v(" Раньше ")])
+          ]
+        ),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.collection_date.displayText,
+              expression: "collection_date.displayText"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            disabled: _vm.collection_date.displayMatch === "any",
+            type: "datetime-local",
+            id: "element"
+          },
+          domProps: { value: _vm.collection_date.displayText },
+          on: {
+            change: function($event) {
+              return _vm.changeParam("collection_date")
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.collection_date, "displayText", $event.target.value)
+            }
+          }
+        })
+      ])
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -61579,7 +62163,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "modal-payload" },
+        { staticClass: "modal-payload", style: _vm.scrollModalBody },
         [
           _vm._t("default", [
             _c(_vm.component, {
@@ -61594,43 +62178,70 @@ var render = function() {
       _c("hr"),
       _vm._v(" "),
       _c("div", { staticClass: "modal-actions" }, [
-        _c("div", { staticClass: "pull-left" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-outline-danger",
-              attrs: { title: "Удалить" },
-              on: {
-                click: function($event) {
-                  return _vm.remove($event)
-                }
-              }
-            },
-            [_c("i", { staticClass: "fas fa-trash" })]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "example-2",
-              staticStyle: { "margin-left": "10px" },
-              attrs: { tabindex: "1" }
-            },
-            [
-              _c("input", {
-                staticClass: "input-file",
-                attrs: { type: "file", name: "file", id: "imageChange" },
-                on: {
-                  change: function($event) {
-                    return _vm.change($event)
+        !_vm.inputs
+          ? _c("div", { staticClass: "pull-left" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-outline-danger",
+                  attrs: { title: "Удалить" },
+                  on: {
+                    click: function($event) {
+                      return _vm.remove($event)
+                    }
                   }
-                }
-              }),
+                },
+                [_c("i", { staticClass: "fas fa-trash" })]
+              ),
               _vm._v(" "),
-              _vm._m(1)
-            ]
-          )
-        ]),
+              _c(
+                "div",
+                {
+                  staticClass: "example-2",
+                  staticStyle: { "margin-left": "10px" },
+                  attrs: { tabindex: "1" }
+                },
+                [
+                  _c("input", {
+                    staticClass: "input-file",
+                    attrs: { type: "file", name: "file", id: "imageChange" },
+                    on: {
+                      change: function($event) {
+                        return _vm.change($event)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm._m(1)
+                ]
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.inputs
+          ? _c("div", { staticClass: "pull-left" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-outline-primary",
+                  attrs: { disabled: _vm.buttonDisabled },
+                  on: { click: _vm.search }
+                },
+                [_vm._v("Найти")]
+              ),
+              _vm._v(" "),
+              _vm.buttonDisabled
+                ? _c(
+                    "span",
+                    {
+                      staticStyle: { "margin-left": "5%", cursor: "pointer" },
+                      attrs: { title: _vm.tooltipText }
+                    },
+                    [_c("i", { staticClass: "fas fa-question-circle" })]
+                  )
+                : _vm._e()
+            ])
+          : _vm._e(),
         _vm._v(" "),
         _c(
           "button",
@@ -87262,7 +87873,7 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_providers_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components-providers.js */ "./resources/js/components-providers.js");
+/* harmony import */ var _components_provider_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components-provider.js */ "./resources/js/components-provider.js");
 /* harmony import */ var _frontend_store_store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./frontend/store/store */ "./resources/js/frontend/store/store.js");
 /* harmony import */ var vue2_leaflet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue2-leaflet */ "./node_modules/vue2-leaflet/dist/vue2-leaflet.es.js");
 /* harmony import */ var leaflet_dist_leaflet_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! leaflet/dist/leaflet.css */ "./node_modules/leaflet/dist/leaflet.css");
@@ -87295,7 +87906,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('l-marker', vue2_leaflet__W
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(_frontend_plugins_modal__WEBPACK_IMPORTED_MODULE_6__["default"]);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: '#app',
-  components: _components_providers_js__WEBPACK_IMPORTED_MODULE_1__["componentsProvider"],
+  components: _components_provider_js__WEBPACK_IMPORTED_MODULE_1__["componentsProvider"],
   store: _frontend_store_store__WEBPACK_IMPORTED_MODULE_2__["default"]
 });
 
@@ -87346,10 +87957,10 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
-/***/ "./resources/js/components-providers.js":
-/*!**********************************************!*\
-  !*** ./resources/js/components-providers.js ***!
-  \**********************************************/
+/***/ "./resources/js/components-provider.js":
+/*!*********************************************!*\
+  !*** ./resources/js/components-provider.js ***!
+  \*********************************************/
 /*! exports provided: componentsProvider */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -90189,7 +90800,8 @@ var DateTimeParser = /*#__PURE__*/function () {
   _createClass(DateTimeParser, [{
     key: "getCurrentDateTime",
     value: function getCurrentDateTime() {
-      var d = new Date();
+      var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var d = date ? date : new Date();
       var ye = new Intl.DateTimeFormat('ru', {
         year: 'numeric'
       }).format(d);
@@ -90292,6 +90904,8 @@ var ModalPlugin = {
         var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
         if (!this.instance) {
+          this.responseDialog = function () {};
+
           this.bodyElement = document.getElementsByTagName('body')[0];
           var ComponentClass = Vue.extend(_widgets_ModalComponent__WEBPACK_IMPORTED_MODULE_1__["default"]);
           this.instance = new ComponentClass({
@@ -90318,6 +90932,15 @@ var ModalPlugin = {
       },
       getSettings: function getSettings() {
         return this.settings;
+      },
+      next: function next(data) {
+        this.responseDialog(data);
+      },
+      subscribe: function subscribe(fn) {
+        this.responseDialog = fn;
+      },
+      unsubscribe: function unsubscribe() {
+        this.responseDialog = null;
       }
     };
   }

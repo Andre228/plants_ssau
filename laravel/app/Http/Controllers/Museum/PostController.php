@@ -4,21 +4,42 @@ namespace App\Http\Controllers\Museum;
 
 use App\Http\Controllers\Controller;
 use App\Models\MuseumPost;
+use App\Repositories\MuseumPostRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Museum\BaseController as BaseController;
 
 class PostController extends BaseController
 {
+
+    private $museumPostRepository;
+
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->museumPostRepository = app(MuseumPostRepository::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $items = MuseumPost::all();
+        $foundPosts = null;
+        if (!empty($request->getContent())) {
+            $foundPosts = $this->museumPostRepository->search(json_decode($request->getContent(), true));
+            if (!empty($foundPosts)) {
+                $foundPosts = $foundPosts->get()->toArray();
+            } else {
+                $foundPosts = [];
+            }
+        }
 
-        return view('museum.posts.index', compact('items'));
+        return response(['posts' => $foundPosts ]);
+        return view('museum.posts.index', compact('foundPosts'));
     }
 
     /**

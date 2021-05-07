@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { componentsProvider } from './components-providers.js';
+import { componentsProvider } from './components-provider.js';
 import store from "./frontend/store/store";
 import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
 import 'leaflet/dist/leaflet.css';

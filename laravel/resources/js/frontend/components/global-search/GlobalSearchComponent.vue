@@ -5,7 +5,7 @@
 
 
       <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
-         <div @click="openModal" class="search"><i class="fas fa-search" style="font-size: 2rem"></i></div>
+         <div @click="openModal" class="search nav-link nav-link-hover"><i class="fas fa-search" style="font-size: 2rem"></i></div>
       </div>
 
 
@@ -14,11 +14,6 @@
 </template>
 
 <script>
-
-
-
-
-
     import SearchDialogComponent from "../../dialogs/SearchDialogComponent";
 
     export default {
@@ -35,10 +30,9 @@
         },
 
         methods: {
-           openModal() {
-
-                this.$modal.open(SearchDialogComponent);
-           }
+            openModal() {
+                this.$modal.open(SearchDialogComponent, null, { inputs: true, scrollable: false });
+            }
         }
     }
 </script>

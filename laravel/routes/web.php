@@ -14,10 +14,11 @@
 
 Auth::routes();
 
-Route::get('/','Museum\WelcomeController@index')->name('museum.welcome');
-Route::get('/categories','Museum\CategoryController@index')->name('museum.category');
+Route::get('/','Museum\WelcomeController@index')->name('museum.welcome'); // главная
+Route::get('/categories','Museum\CategoryController@index')->name('museum.category'); // раздел
+Route::post('/search','Museum\PostController@index')->name('museum.post.search'); // поиск
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home'); // профиль
 Route::patch('/home/user-profile-save/{id}', 'HomeController@update')->name('user.profile.save');
 
 

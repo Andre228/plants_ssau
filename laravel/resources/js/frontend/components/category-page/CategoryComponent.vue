@@ -2,7 +2,7 @@
     <div>
         <div class="col-lg-12 mx-auto p-3 py-md-5">
             <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
-                <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+                <a class="d-flex align-items-center text-dark text-decoration-none head-category">
                     <i class="fab fa-buffer" style="font-size: 28px"></i>
                     <h3 class="fs-4 ml-2 mb-0">Семейства экспонатов</h3>
                 </a>
@@ -25,19 +25,19 @@
 
             </div>
 
-            <hr class="col-10 col-md-11 mb-5">
+            <hr class="col-11 col-md-11 mb-5">
 
             <div class="row g-5">
                 <div class="col-md-12">
                     <div class="row align-items-center">
-                        <h2>Разделы</h2>
-                        <div class="form-check" style="margin-left: 10px" @click="changeState('new')">
+                        <h2 class="col-md-2">Разделы</h2>
+                        <div class="form-check col-md-2" style="margin-left: 10px" @click="changeState('new')">
                             <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" v-bind:checked="orderState === 'new'">
                             <label class="form-check-label" for="flexRadioDefault1">
                                 От новых к старым
                             </label>
                         </div>
-                        <div class="form-check" style="margin-left: 10px" @click="changeState('old')">
+                        <div class="form-check col-md-2" style="margin-left: 10px" @click="changeState('old')">
                             <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" v-bind:checked="orderState === 'old'">
                             <label class="form-check-label" for="flexRadioDefault2">
                                 От старых к новым
@@ -141,14 +141,14 @@
         background-color: #f8f9fa;
     }
 
-    a {
-        color: #0d6efd;
+    a:not(.category-card):not(.head-category) {
+        color: #0d6efd !important;
         cursor: pointer;
     }
 
-    a:hover {
-        text-decoration: underline;
-        color: #0056b3;
+    a:hover:not(.category-card):not(.head-category) {
+        text-decoration: underline !important;
+        color: #0056b3 !important;
     }
 
     .published {

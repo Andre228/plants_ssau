@@ -7,8 +7,8 @@ export class DateTimeParser {
 
     }
 
-    getCurrentDateTime() {
-        const d = new Date();
+    getCurrentDateTime(date = null) {
+        const d = date ? date : new Date();
         const ye = new Intl.DateTimeFormat('ru', { year: 'numeric' }).format(d);
         const mo = new Intl.DateTimeFormat('ru', { month: '2-digit' }).format(d);
         const da = new Intl.DateTimeFormat('ru', { day: '2-digit' }).format(d);

@@ -4,14 +4,14 @@
             <div class="modal-top">
                 <span></span>
             </div>
-            <div class="modal-payload">
+            <div class="modal-payload" v-bind:style="scrollModalBody">
                 <slot>
                     <component :is="component" v-bind:data="dataProps"/>
                 </slot>
             </div>
             <hr>
             <div class="modal-actions">
-                <div class="pull-left">
+                <div class="pull-left" v-if="!inputs">
                     <button @click="remove($event)" title="Удалить" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
                     <div tabindex="1" class="example-2" style="margin-left: 10px">
                         <input @change="change($event)" type="file" name="file" id="imageChange" class="input-file">
@@ -19,6 +19,10 @@
                             <i class="fas fa-clone" style="padding: .375rem 0 0 0;"></i>
                         </label>
                     </div>
+                </div>
+                <div class="pull-left" v-if="inputs">
+                    <button :disabled="buttonDisabled" @click="search" class="btn btn-outline-primary">Найти</button>
+                    <span v-if="buttonDisabled" :title="tooltipText" style="margin-left: 5%; cursor: pointer"><i class="fas fa-question-circle"></i></span>
                 </div>
                 <button title="Закрыть" @click="close" class="btn btn-outline-dark"><i class="fas fa-times"></i></button>
             </div>
@@ -40,6 +44,13 @@
                 component: this.currentComponent,
                 dataProps: this.data,
                 options: this.config,
+                inputs: false,
+                scrollable: true,
+                buttonDisabled: true,
+                tooltipText: 'Чтобы осуществить поиск необходим хотя бы один параметр отличный от "Любое"',
+                scrollModalBody: {
+                    overflow: this.config && !this.config.scrollable ? 'none' : 'scroll'
+                },
                 styleOverlay: {
                     height: document.documentElement.scrollHeight + 'px',
                     width: document.documentElement.clientWidth + 'px'
@@ -52,14 +63,20 @@
         },
 
         mounted() {
-            console.log(document.documentElement.clientHeight);
-            console.log(document.documentElement.scrollHeight);
             if (this.options && this.options.height && this.options.width) {
                 const height = this.options.height;
                 const width = this.options.width;
 
                 this.styleModal.height = height + 'px';
                 this.styleModal.width = width + 'px';
+            }
+
+            if (this.options && this.options.inputs) {
+                this.inputs = true;
+                this.$modal.subscribe(data => {
+                    this.buttonDisabled = data;
+                    this.tooltipText = this.buttonDisabled ? 'Чтобы осуществить поиск необходим хотя бы один параметр отличный от "Любое"' : 'Поиск';
+                })
             }
 
             if (DeviceHelper.isPhone()) {
@@ -74,6 +91,7 @@
 
         beforeDestroy() {
             window.removeEventListener('resize', this.onResize);
+            this.$modal.unsubscribe();
         },
 
         computed: {
@@ -100,6 +118,12 @@
             remove() {
                 if (this.currentComponent.name === 'AdminImagesDialogComponent') {
                     this.$root.$emit('AdminImagesDialogComponent', { method: 'remove', index: this.$modal.getSettings() });
+                }
+            },
+
+            search() {
+                if (this.currentComponent.name === 'SearchDialogComponent') {
+                    this.$root.$emit('SearchDialogComponent', { method: 'search' });
                 }
             },
 
@@ -139,7 +163,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        overflow: scroll;
     }
 
     .modal-actions {
@@ -150,6 +173,7 @@
     .modal-actions .pull-left {
         width: 15%;
         display: flex;
+        align-items: center;
     }
 
     .example-2 .btn-tertiary {

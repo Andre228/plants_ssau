@@ -113,7 +113,7 @@
             </div>
         </nav>
 
-        <global-search-component></global-search-component>
+        <global-search-component ></global-search-component>
 
         <div class="container main-content">
             <main class="py-4">

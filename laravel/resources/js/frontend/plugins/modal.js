@@ -7,6 +7,7 @@ const ModalPlugin = {
 
             open(component, componentProps, config = null) {
                 if (!this.instance) {
+                    this.responseDialog = function () {};
                     this.bodyElement = document.getElementsByTagName('body')[0];
                     const ComponentClass = Vue.extend(ModalComponent);
                     this.instance = new ComponentClass({
@@ -32,6 +33,18 @@ const ModalPlugin = {
 
             getSettings() {
                 return this.settings;
+            },
+
+            next(data) {
+                this.responseDialog(data);
+            },
+
+            subscribe(fn) {
+                this.responseDialog = fn;
+            },
+
+            unsubscribe() {
+                this.responseDialog = null;
             }
         }
     }

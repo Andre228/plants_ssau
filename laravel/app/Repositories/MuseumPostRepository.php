@@ -45,30 +45,10 @@ class MuseumPostRepository extends CoreRepository
 
     public function getAllWithPaginate($howMuch = null)
     {
-        $columns = [
-            'id',
-            'title',
-            'slug',
-            'author',
-            'is_published',
-            'published_at',
-            'user_id',
-            'category_id',
-
-            'barcode',
-            'adopted_name',
-            'russian_name',
-            'label_text',
-            'accuracy',
-            'collectors',
-            'determination',
-            'environmental_status',
-            'label_name',
-        ];
 
         if ($howMuch !== null) {
             $result = $this->startConditions()
-                ->select($columns)
+                ->select($this->getLotOfColumns())
                 ->orderBy('id','DESC')
                 ->with([
                     'category:id,title' ,
@@ -79,7 +59,7 @@ class MuseumPostRepository extends CoreRepository
 
         else {
             $result = $this->startConditions()
-                ->select($columns)
+                ->select($this->getLotOfColumns())
                 ->orderBy('id','DESC')
                 ->with([
                     'category:id,title' ,
@@ -106,7 +86,7 @@ class MuseumPostRepository extends CoreRepository
         }
 
         if (!empty($ids)) {
-            $result = $this->startConditions()->whereIn('id', $ids)->delete();
+            $result = $this->startConditions()->whereIn('id', $ids)->forceDelete();
         }
 
         return $result;
@@ -121,7 +101,6 @@ class MuseumPostRepository extends CoreRepository
 
     public function getLastPublishedPosts($count = 10)
     {
-
         $columns = [
             'id',
             'title',
@@ -180,6 +159,56 @@ class MuseumPostRepository extends CoreRepository
 
 
         return $posts;
+
+    }
+
+    public function search($params)
+    {
+
+//        $result = $this->startConditions()::select($this->getLotOfColumns())
+//            ->where('is_published', '=', 1)
+//            ->where('barcode', $params['barcode']['match'], $params['barcode']['value'])
+//            ->where('determination', $params['determination']['match'], $params['determination']['value'])
+//            ->where('russian_name', $params['russian_name']['match'], $params['russian_name']['value'])
+//            ->where('collection_date', $params['collection_date']['match'], $params['collection_date']['value']);
+
+        //dd($result->toSql());
+
+        $result = $this->startConditions()::select($this->getLotOfColumns())->where('is_published', '=', 1);
+        foreach ($params as $key => $value) {
+            if ($value['match'] != 'any') {
+                $result->where("{$key}", "{$value['match']}", "{$value['value']}");
+            }
+        }
+
+        return $result;
+    }
+
+    private function getLotOfColumns()
+    {
+        $columns = [
+            'id',
+            'title',
+            'slug',
+            'author',
+            'is_published',
+            'published_at',
+            'user_id',
+            'category_id',
+
+            'barcode',
+            'adopted_name',
+            'russian_name',
+            'label_text',
+            'accuracy',
+            'collectors',
+            'determination',
+            'environmental_status',
+            'label_name',
+            'collection_date'
+        ];
+
+        return $columns;
 
     }
 
