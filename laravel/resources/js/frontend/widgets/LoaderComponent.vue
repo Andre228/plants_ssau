@@ -30,7 +30,40 @@
             }
         },
 
-        mounted() {}
+        watch: {
+            h() {
+                console.log(document.documentElement.scrollHeight + 'px');
+                return document.documentElement.scrollHeight + 'px';
+            }
+        },
+
+        mounted() {
+            // console.log(window.outerHeight);
+            // console.log(window.innerHeight);
+            // console.log(document.documentElement.clientHeight);
+            // console.log(document.documentElement.scrollHeight);
+
+
+            // var body = document.body,
+            //     html = document.documentElement;
+            //
+            // var height = Math.max( body.scrollHeight, body.offsetHeight,
+            //     html.clientHeight, html.scrollHeight, html.offsetHeight, document.body.scrollHeight, document.documentElement.getBoundingClientRect().height );
+
+
+
+            var scrollHeight = Math.max(
+                document.body.scrollHeight, document.documentElement.scrollHeight,
+                document.body.offsetHeight, document.documentElement.offsetHeight,
+                document.body.clientHeight, document.documentElement.clientHeight
+            );
+
+            // var body = document.body;
+            // var html = document.documentElement;
+            // var bodyH = Math.max(body.scrollHeight, body.offsetHeight, body.getBoundingClientRect().height, html.clientHeight, html.scrollHeight, html.offsetHeight);
+
+            console.log(scrollHeight);
+        }
     }
 </script>
 

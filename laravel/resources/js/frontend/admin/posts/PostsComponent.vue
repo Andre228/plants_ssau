@@ -123,6 +123,7 @@
                     return this.computedPosts.filter((post) => {
                         return post.title.toLocaleLowerCase().match(this.searchingPost.toLocaleLowerCase()) ||
                             post.author.toLocaleLowerCase().match(this.searchingPost.toLocaleLowerCase()) ||
+                            post.id.toString().toLocaleLowerCase().match(this.searchingPost.toLocaleLowerCase()) ||
                             this.dateTimeParser.convertDateToString(post.published_at).toString().match(this.searchingPost);
                     })
                 },

@@ -31,7 +31,7 @@
 
         methods: {
             openModal() {
-                this.$modal.open(SearchDialogComponent, null, { inputs: true, scrollable: false });
+                this.$modal.open(SearchDialogComponent, null, { inputs: true, scrollable: false, scrollableWindow: true });
             }
         }
     }

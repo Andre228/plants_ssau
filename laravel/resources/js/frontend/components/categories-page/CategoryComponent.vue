@@ -135,7 +135,6 @@
     }
 
     .category-card:hover {
-
         color: #495057;
         text-decoration: none;
         background-color: #f8f9fa;

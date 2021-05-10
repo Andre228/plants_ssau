@@ -9,10 +9,16 @@ export class LoaderService {
 
     runLoader(message = 'Загрузка...') {
         this.createInstance(message);
+        console.log(this.bodyElement.clientHeight);
+        console.log(this.bodyElement.scrollHeight);
         this.bodyElement.appendChild(this.instance.$el);
     }
 
     removeLoader() {
+        // console.log(this.bodyElement.clientHeight);
+        // console.log(document.documentElement.scrollHeight);
+        // console.log(document.documentElement.clientHeight);
+        // console.log(document.documentElement.offsetHeight);
         this.bodyElement.removeChild(this.instance.$el);
     }
 

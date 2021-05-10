@@ -8,7 +8,10 @@
 
 namespace App\Repositories;
 
+use App\Models\MuseumImage;
 use App\Models\MuseumPost as Model;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 
 
 class MuseumPostRepository extends CoreRepository
@@ -172,13 +175,24 @@ class MuseumPostRepository extends CoreRepository
 //            ->where('russian_name', $params['russian_name']['match'], $params['russian_name']['value'])
 //            ->where('collection_date', $params['collection_date']['match'], $params['collection_date']['value']);
 
-        //dd($result->toSql());
 
-        $result = $this->startConditions()::select($this->getLotOfColumns())->where('is_published', '=', 1);
-        foreach ($params as $key => $value) {
-            if ($value['match'] != 'any') {
-                $result->where("{$key}", "{$value['match']}", "{$value['value']}");
+        $query = $this->startConditions()::select($this->getLotOfColumns())
+            ->with(['category:id,title'])
+            ->where('is_published', '=', 1);
+
+        foreach ($params[0] as $key => $value) {
+            if ($value->match != 'any') {
+                $query->where("{$key}", "{$value->match}", "{$value->value}");
             }
+        }
+
+        $posts = $query->get()->toArray();
+        $result = [];
+
+        for($i = 0; $i < count($posts); $i++) {
+            $image = MuseumImage::where('post_id', '=', $posts[$i]['id'])->get()->toArray();
+            $result[$i] = Arr::add($posts[$i], 'image', $image);
+            $result[$i]['collection_date'] = Carbon::parse($result[$i]['collection_date'])->format('Y-m-d');
         }
 
         return $result;

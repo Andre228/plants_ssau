@@ -34,7 +34,8 @@
                 images: this.data.images,
                 index: this.data.index,
                 styleImage: {
-                    height: (window.innerHeight * 0.75) + 'px'
+                    height: (window.innerHeight * 0.75) + 'px',
+                    width: null
                 },
                 postServices: new PostServices(),
                 loaderService: new LoaderService(),
@@ -42,6 +43,17 @@
                 dateTimeParser: new DateTimeParser(),
                 response: {}
             }
+        },
+
+        watch: {
+          // imageSize() {
+          //     const url = this.images[this.index];
+          //     var img = new Image();
+          //     img.onload = function(){
+          //         console.log( this.width + ' ' + this.height );
+          //     };
+          //     img.src = url;
+          // }
         },
 
         mounted() {
@@ -52,6 +64,9 @@
                 }
                 if (data.method === 'remove') {
                     this.remove(data);
+                }
+                if (data.method === 'fullImage') {
+                    this.fullImage(data.index);
                 }
             });
 
@@ -175,6 +190,10 @@
                 this.loaderService.removeLoader();
                 this.notifyService[this.response.type](this.response.text);
                 this.response = {};
+            },
+
+            fullImage(index) {
+                window.open(this.images[index].alias);
             }
 
         }

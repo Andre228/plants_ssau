@@ -6,8 +6,10 @@ import LoginTitleComponent from './LoginTitleComponent'
 import ImageUploadComponent from './ImageUploadComponent';
 import CarouselComponent from './CarouselComponent';
 import HomeComponent from './home-page/HomeComponent';
-import CategoryComponent from './category-page/CategoryComponent';
+import CategoryComponent from './categories-page/CategoryComponent';
 import GlobalSearchComponent from './global-search/GlobalSearchComponent';
+import FoundPostsComponent from "./posts-page/FoundPostsComponent";
+import FoundPostDetails from './posts-page/FoundPostDetails';
 
 export const componentsModule = {
     AdminCategoriesComponent,
@@ -19,5 +21,7 @@ export const componentsModule = {
     ImageUploadComponent,
     HomeComponent,
     CategoryComponent,
-    GlobalSearchComponent
+    GlobalSearchComponent,
+    FoundPostsComponent,
+    FoundPostDetails
 };

@@ -1,17 +1,17 @@
 <template>
     <div>
-        <div class="modal-window" v-bind:style="styleModal">
+        <div class="modal-window" v-bind:style="styleModal" ref="modalWindow">
             <div class="modal-top">
                 <span></span>
             </div>
-            <div class="modal-payload" v-bind:style="scrollModalBody">
+            <div v-bind:style="scrollModalBody">
                 <slot>
                     <component :is="component" v-bind:data="dataProps"/>
                 </slot>
             </div>
             <hr>
             <div class="modal-actions">
-                <div class="pull-left" v-if="!inputs">
+                <div class="pull-left" v-if="!inputs && !options">
                     <button @click="remove($event)" title="Удалить" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
                     <div tabindex="1" class="example-2" style="margin-left: 10px">
                         <input @change="change($event)" type="file" name="file" id="imageChange" class="input-file">
@@ -20,11 +20,14 @@
                         </label>
                     </div>
                 </div>
-                <div class="pull-left" v-if="inputs">
+                <div class="pull-left" v-else-if="inputs">
                     <button :disabled="buttonDisabled" @click="search" class="btn btn-outline-primary">Найти</button>
                     <span v-if="buttonDisabled" :title="tooltipText" style="margin-left: 5%; cursor: pointer"><i class="fas fa-question-circle"></i></span>
                 </div>
-                <button title="Закрыть" @click="close" class="btn btn-outline-dark"><i class="fas fa-times"></i></button>
+                <div class="pull-left" style="width: 100%" v-else-if="options && options.readonly">
+                    <a @click="openFullImage" class="simple-link">Открыть полное изображение</a>
+                </div>
+                <button title="Закрыть, или нажмите клавишу Esc" @click="close" class="btn btn-outline-dark"><i class="fas fa-times"></i></button>
             </div>
         </div>
 
@@ -45,11 +48,13 @@
                 dataProps: this.data,
                 options: this.config,
                 inputs: false,
-                scrollable: true,
                 buttonDisabled: true,
                 tooltipText: 'Чтобы осуществить поиск необходим хотя бы один параметр отличный от "Любое"',
                 scrollModalBody: {
-                    overflow: this.config && !this.config.scrollable ? 'none' : 'scroll'
+                    overflow: this.config && !this.config.scrollable ? 'none' : 'scroll',
+                    display: null,
+                    justifyContent: null,
+                    alignItems: null
                 },
                 styleOverlay: {
                     height: document.documentElement.scrollHeight + 'px',
@@ -71,7 +76,7 @@
                 this.styleModal.width = width + 'px';
             }
 
-            if (this.options && this.options.inputs) {
+            if (this.options && this.options.inputs && this.currentComponent.name === 'SearchDialogComponent') {
                 this.inputs = true;
                 this.$modal.subscribe(data => {
                     this.buttonDisabled = data;
@@ -83,8 +88,18 @@
                 this.styleModal.height = (window.screen.height * 0.85) + 'px';
             } else {
                 this.styleModal.width = window.innerWidth * 0.8 + 'px';
+                this.scrollModalBody.display = 'flex';
+                this.scrollModalBody.justifyContent = 'center';
+                this.scrollModalBody.alignItems = 'center';
             }
 
+            if (this.$modal) {
+                document.addEventListener('keydown', (event) => {
+                    if (event.keyCode === 27) {
+                        this.close();
+                    }
+                });
+            }
 
             window.addEventListener('resize', this.onResize);
         },
@@ -92,12 +107,6 @@
         beforeDestroy() {
             window.removeEventListener('resize', this.onResize);
             this.$modal.unsubscribe();
-        },
-
-        computed: {
-            height () {
-                return this.$refs.modalWindow.clientHeight;
-            }
         },
 
         methods: {
@@ -127,6 +136,12 @@
                 }
             },
 
+            openFullImage() {
+                if (this.currentComponent.name === 'AdminImagesDialogComponent') {
+                    this.$root.$emit('AdminImagesDialogComponent', { method: 'fullImage', index: this.$modal.getSettings() });
+                }
+            },
+
             onResize() {
                 this.styleOverlay.height = document.documentElement.clientHeight + 'px';
                 this.styleOverlay.width = document.documentElement.clientWidth + 'px';
@@ -147,7 +162,6 @@
     }
 
     .modal-window {
-        max-height: 750px;
         width: 80%;
         z-index: 1200;
         padding: 16px;
@@ -157,12 +171,6 @@
         transform: translateX(-50%);
         background: #ffffff;
         box-shadow: 0 0 17px 0 #e7e7e7;
-    }
-
-    .modal-payload {
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 
     .modal-actions {
@@ -207,6 +215,16 @@
         padding: 0 10px;
         cursor: pointer;
         height: 100%;
+    }
+
+    .simple-link {
+        color: #0d6efd !important;
+        cursor: pointer;
+    }
+
+    a:hover {
+        text-decoration: underline !important;
+        color: #0056b3 !important;
     }
 
 

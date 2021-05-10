@@ -2,6 +2,6 @@
 
 @section('content')
 
-<div>trtrtr</div>
+<found-posts-component :posts="{{$listPosts}}"></found-posts-component>
 
 @endsection

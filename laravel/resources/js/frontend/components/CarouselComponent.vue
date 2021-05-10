@@ -2,7 +2,7 @@
 
     <div>
 
-        <a @click="prev" class="carousel-control-prev slides-controls" style="margin-left: 5%" ref="tt">
+        <a @click="prev" class="carousel-control-prev slides-controls" style="margin-left: 5%">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
         </a>
@@ -96,10 +96,8 @@
         cursor: pointer;
         border-radius: 4px;
         background: #cccc;
-        /*height: 50%;*/
-        /*margin: auto;*/
         height: 300px;
-        margin-top: 30%;
+        margin-top: 25%;
     }
 
     .images {
