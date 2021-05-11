@@ -1,6 +1,6 @@
 <template>
 
-    <div>
+    <div style="position: relative;">
 
         <a @click="prev" class="carousel-control-prev slides-controls" style="margin-left: 5%">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -25,6 +25,7 @@
 <script>
     import ImageUploadComponent from "./ImageUploadComponent";
     import AdminImagesDialogComponent from "../dialogs/AdminImagesDialogComponent";
+    import {DeviceHelper} from "../helpers/device-helper";
     export default {
         name: "CarouselComponent",
         props: ['images'],
@@ -32,11 +33,19 @@
 
         data() {
             return {
-                index: 0
+                index: 0,
+                slidesControlStyle: {
+                    height: null
+                }
             }
         },
 
         mounted() {
+            if (DeviceHelper.isPhone()) {
+                this.slidesControlStyle.height = '60%';
+            } else {
+
+            }
         },
 
         methods: {
@@ -96,8 +105,8 @@
         cursor: pointer;
         border-radius: 4px;
         background: #cccc;
-        height: 300px;
-        margin-top: 25%;
+        height: 75%;
+        margin-top: 10%;
     }
 
     .images {
@@ -105,16 +114,17 @@
         justify-content: center;
         align-items: center;
         width: 100%;
+        min-height: 100px;
+        border-radius: 3px;
     }
 
     .images img  {
-        height: 80%;
-        max-height: 500px;
+        max-width: 100%;
+        max-height: 400px;
     }
 
     .img-cont {
         cursor: pointer;
-        height: 500px;
     }
 
 </style>

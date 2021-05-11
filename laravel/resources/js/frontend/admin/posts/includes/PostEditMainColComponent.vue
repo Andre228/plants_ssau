@@ -136,11 +136,11 @@
 
                         </div>
 
-                        <div class="tab-pane" id="mediadata" role="tabpanel">
+                        <div class="tab-pane" id="mediadata" role="tabpanel" style="position: relative;">
 
-                            <carousel-component v-if="images.length > 0" :images="images"></carousel-component>
+                            <div class="form-group"><carousel-component v-if="images.length > 0" :images="images"></carousel-component></div>
 
-                            <image-upload-component v-bind:class="[ images.length > 0 ? 'mt-15' : '' ]" v-on:imagesUpload="uploadFile"></image-upload-component>
+                            <div class="form-group"><image-upload-component v-bind:class="[ images.length > 0 ? 'mt-15' : '' ]" v-on:imagesUpload="uploadFile"></image-upload-component></div>
 
                         </div>
                     </div>
@@ -242,6 +242,6 @@
     }
 
     .mt-15 {
-        margin-top: -15%;
+        /*margin-top: -15%;*/
     }
 </style>

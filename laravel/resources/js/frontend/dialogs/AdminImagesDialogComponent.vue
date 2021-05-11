@@ -5,7 +5,7 @@
             <span class="sr-only">Previous</span>
         </a>
 
-        <div v-if="images.length > 0" class="images">
+        <div v-if="images.length > 0" class="images" :style="styleImageLandscape">
             <div class="img-content">
                 <img :src="images[index].alias" v-bind:style="styleImage">
             </div>
@@ -36,6 +36,10 @@
                 styleImage: {
                     height: (window.innerHeight * 0.75) + 'px',
                     width: null
+                },
+                styleImageLandscape: {
+                    display: DeviceHelper.isLandscape() ? 'flex' : null,
+                    justifyContent: DeviceHelper.isLandscape() ? 'center' : null
                 },
                 postServices: new PostServices(),
                 loaderService: new LoaderService(),

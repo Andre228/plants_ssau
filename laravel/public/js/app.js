@@ -4078,6 +4078,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ImageUploadComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ImageUploadComponent */ "./resources/js/frontend/components/ImageUploadComponent.vue");
 /* harmony import */ var _dialogs_AdminImagesDialogComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../dialogs/AdminImagesDialogComponent */ "./resources/js/frontend/dialogs/AdminImagesDialogComponent.vue");
+/* harmony import */ var _helpers_device_helper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../helpers/device-helper */ "./resources/js/frontend/helpers/device-helper.js");
 //
 //
 //
@@ -4102,6 +4103,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -4113,10 +4115,17 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      index: 0
+      index: 0,
+      slidesControlStyle: {
+        height: null
+      }
     };
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    if (_helpers_device_helper__WEBPACK_IMPORTED_MODULE_2__["DeviceHelper"].isPhone()) {
+      this.slidesControlStyle.height = '60%';
+    } else {}
+  },
   methods: {
     next: function next() {
       if (this.isAvailableNext()) {
@@ -4870,7 +4879,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -5117,6 +5125,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       styleImage: {
         height: window.innerHeight * 0.75 + 'px',
         width: null
+      },
+      styleImageLandscape: {
+        display: _helpers_device_helper__WEBPACK_IMPORTED_MODULE_5__["DeviceHelper"].isLandscape() ? 'flex' : null,
+        justifyContent: _helpers_device_helper__WEBPACK_IMPORTED_MODULE_5__["DeviceHelper"].isLandscape() ? 'center' : null
       },
       postServices: new _admin_posts_services_post_service__WEBPACK_IMPORTED_MODULE_1__["PostServices"](),
       loaderService: new _services_loader_service__WEBPACK_IMPORTED_MODULE_2__["LoaderService"](),
@@ -5767,8 +5779,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
 
-    if (_helpers_device_helper__WEBPACK_IMPORTED_MODULE_0__["DeviceHelper"].isPhone()) {
-      this.styleModal.height = window.screen.height * 0.85 + 'px';
+    if (_helpers_device_helper__WEBPACK_IMPORTED_MODULE_0__["DeviceHelper"].isPhone()) {// this.styleModal.height = (window.screen.height * 0.85) + 'px';
     } else {
       this.styleModal.width = window.innerWidth * 0.8 + 'px';
       this.scrollModalBody.display = 'flex';
@@ -10577,7 +10588,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../../node_module
 exports.i(__webpack_require__(/*! -!../../../../../../node_modules/css-loader??ref--6-1!../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!leaflet/dist/leaflet.css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/leaflet/dist/leaflet.css"), "");
 
 // module
-exports.push([module.i, "\n#mapContainer[data-v-073a46c9] {\n    width: 100%;\n    height: 50vh;\n}\n.mt-15[data-v-073a46c9] {\n    margin-top: -15%;\n}\n", ""]);
+exports.push([module.i, "\n#mapContainer[data-v-073a46c9] {\n    width: 100%;\n    height: 50vh;\n}\n.mt-15[data-v-073a46c9] {\n    /*margin-top: -15%;*/\n}\n", ""]);
 
 // exports
 
@@ -10615,7 +10626,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.slider[data-v-36c21f73] {\n    margin: 0 auto;\n    overflow: hidden;\n    position: relative;\n}\n.container-slides[data-v-36c21f73] {\n    display: flex;\n}\n.img-slide[data-v-36c21f73] {\n    max-width: 100%;\n    max-height: 500px;\n}\n.slides-controls[data-v-36c21f73] {\n    cursor: pointer;\n    border-radius: 4px;\n    background: #cccc;\n    height: 300px;\n    margin-top: 25%;\n}\n.images[data-v-36c21f73] {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    width: 100%;\n}\n.images img[data-v-36c21f73]  {\n    height: 80%;\n    max-height: 500px;\n}\n.img-cont[data-v-36c21f73] {\n    cursor: pointer;\n    height: 500px;\n}\n\n", ""]);
+exports.push([module.i, "\n.slider[data-v-36c21f73] {\n    margin: 0 auto;\n    overflow: hidden;\n    position: relative;\n}\n.container-slides[data-v-36c21f73] {\n    display: flex;\n}\n.img-slide[data-v-36c21f73] {\n    max-width: 100%;\n    max-height: 500px;\n}\n.slides-controls[data-v-36c21f73] {\n    cursor: pointer;\n    border-radius: 4px;\n    background: #cccc;\n    height: 75%;\n    margin-top: 10%;\n}\n.images[data-v-36c21f73] {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    width: 100%;\n    min-height: 100px;\n    border-radius: 3px;\n}\n.images img[data-v-36c21f73]  {\n    max-width: 100%;\n    max-height: 400px;\n}\n.img-cont[data-v-36c21f73] {\n    cursor: pointer;\n}\n\n", ""]);
 
 // exports
 
@@ -60663,19 +60674,35 @@ var render = function() {
               "div",
               {
                 staticClass: "tab-pane",
+                staticStyle: { position: "relative" },
                 attrs: { id: "mediadata", role: "tabpanel" }
               },
               [
-                _vm.images.length > 0
-                  ? _c("carousel-component", { attrs: { images: _vm.images } })
-                  : _vm._e(),
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _vm.images.length > 0
+                      ? _c("carousel-component", {
+                          attrs: { images: _vm.images }
+                        })
+                      : _vm._e()
+                  ],
+                  1
+                ),
                 _vm._v(" "),
-                _c("image-upload-component", {
-                  class: [_vm.images.length > 0 ? "mt-15" : ""],
-                  on: { imagesUpload: _vm.uploadFile }
-                })
-              ],
-              1
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("image-upload-component", {
+                      class: [_vm.images.length > 0 ? "mt-15" : ""],
+                      on: { imagesUpload: _vm.uploadFile }
+                    })
+                  ],
+                  1
+                )
+              ]
             )
           ])
         ])
@@ -61167,7 +61194,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
+  return _c("div", { staticStyle: { position: "relative" } }, [
     _c(
       "a",
       {
@@ -61252,7 +61279,7 @@ var render = function() {
         _c(
           "label",
           {
-            staticClass: "custom-file-label",
+            staticClass: "custom-file-label text-truncate",
             attrs: { for: "inputGroupFile04" }
           },
           [_vm._v("Выбрать файл")]
@@ -62446,7 +62473,7 @@ var render = function() {
     ),
     _vm._v(" "),
     _vm.images.length > 0
-      ? _c("div", { staticClass: "images" }, [
+      ? _c("div", { staticClass: "images", style: _vm.styleImageLandscape }, [
           _c("div", { staticClass: "img-content" }, [
             _c("img", {
               style: _vm.styleImage,
@@ -92124,6 +92151,11 @@ var DeviceHelper = /*#__PURE__*/function () {
         return navigator.userAgent.match(toMatchItem);
       });
       return isPhone;
+    }
+  }, {
+    key: "isLandscape",
+    value: function isLandscape() {
+      return window.matchMedia("(orientation: landscape)").matches;
     }
   }]);
 

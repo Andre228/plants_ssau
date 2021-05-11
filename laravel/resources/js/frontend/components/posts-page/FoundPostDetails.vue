@@ -15,7 +15,6 @@
                     </div>
                     <button class="btn btn-outline-primary" @click="next">&#8594;</button>
                 </div>
-                <!--<carousel-component :images="images"></carousel-component>-->
             </div>
             <div class="col-md-6 p-4 ps-md-0">
                 <h4 class="mt-0" style="text-decoration: underline">{{ post.russian_name }}</h4>

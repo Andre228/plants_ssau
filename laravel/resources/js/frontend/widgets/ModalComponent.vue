@@ -85,7 +85,7 @@
             }
 
             if (DeviceHelper.isPhone()) {
-                this.styleModal.height = (window.screen.height * 0.85) + 'px';
+               // this.styleModal.height = (window.screen.height * 0.85) + 'px';
             } else {
                 this.styleModal.width = window.innerWidth * 0.8 + 'px';
                 this.scrollModalBody.display = 'flex';

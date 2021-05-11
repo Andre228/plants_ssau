@@ -20,4 +20,8 @@ export class DeviceHelper {
         return isPhone;
     }
 
+    static isLandscape() {
+        return window.matchMedia("(orientation: landscape)").matches;
+    }
+
 }

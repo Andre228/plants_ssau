@@ -3,7 +3,7 @@
         <div class="input-group mt-3">
             <div class="custom-file">
                 <input type="file" class="custom-file-input" id="inputGroupFile04" multiple aria-describedby="inputGroupFileAddon04" @change="changeFile($event)">
-                <label class="custom-file-label" for="inputGroupFile04">Выбрать файл</label>
+                <label class="custom-file-label text-truncate" for="inputGroupFile04">Выбрать файл</label>
             </div>
             <div class="input-group-append">
                 <button :disabled='images.length <= 0' class="btn btn-outline-primary" type="button" id="inputGroupFileAddon04" @click="save()">Сохранить</button>
