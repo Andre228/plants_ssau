@@ -36,7 +36,7 @@
                                             <label for="name">Имя профиля</label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="inputGroup-sizing-default-name"> {{name}} </span>
+                                                    <span class="input-group-text" id="inputGroup-sizing-default-name"> {{ name }} </span>
                                                 </div>
                                                 <input v-on:input="changeName" id="name" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" maxlength="60">
                                             </div>
@@ -48,7 +48,7 @@
                                             <label for="email">Почта</label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="inputGroup-sizing-default-email"> {{email}} </span>
+                                                    <span class="input-group-text" id="inputGroup-sizing-default-email"> {{ email }} </span>
                                                 </div>
                                                 <input v-on:input="changeEmail" id="email" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                                             </div>
@@ -97,6 +97,7 @@
         },
 
         mounted() {
+            this.$store.state.userObject = JSON.parse(JSON.stringify(this.userInfo));
         },
 
         methods: {
@@ -120,7 +121,7 @@
             },
 
             cancel() {
-                this.$store.dispatch('setName', this.userInfo.name);
+                this.$store.dispatch('setUserName', this.userInfo.name);
                 this.name = this.userInfo.name;
                 this.email = this.userInfo.email;
             },
@@ -131,7 +132,7 @@
             },
 
             changeName() {
-                this.$store.dispatch('setName', event.target.value);
+                this.$store.state.userObject.name = event.target.value;
                 this.name = event.target.value;
             },
 

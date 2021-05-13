@@ -14,22 +14,6 @@ export default new Vuex.Store({
         post,
         user,
         news
-    },
-
-    state: {
-        name: ''
-    },
-
-    actions: {
-        setName(context, payload) {
-            context.commit('setName', payload)
-        }
-    },
-
-    mutations: {
-        setName(state, payload) {
-            state.name = payload;
-        }
     }
 
 });

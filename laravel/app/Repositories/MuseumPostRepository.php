@@ -219,7 +219,8 @@ class MuseumPostRepository extends CoreRepository
             'determination',
             'environmental_status',
             'label_name',
-            'collection_date'
+            'collection_date',
+            'coordinates'
         ];
 
         return $columns;

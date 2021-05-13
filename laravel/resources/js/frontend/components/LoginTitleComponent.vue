@@ -1,5 +1,5 @@
 <template>
-    <div>{{ userName }} </div>
+    <div>{{ userName }}</div>
 </template>
 
 <script>
@@ -13,14 +13,19 @@
             }
         },
 
+        created() {
+            this.$store.state.userObject = this.userInfo;
+        },
+
         mounted() {
+
         },
 
         computed: {
             userName () {
-                return this.$store.state.name || this.userInfo.name;
+                return this.$store.state.userObject.name;
             }
-        },
+        }
     }
 </script>
 

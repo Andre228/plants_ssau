@@ -9,6 +9,7 @@ use App\Repositories\MuseumPostRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Museum\BaseController as BaseController;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends BaseController
 {
@@ -90,12 +91,13 @@ class PostController extends BaseController
     {
         $item = $this->museumPostRepository->getEdit($id);
         $images = null;
+        $userInfo = Auth::user();
         if (!empty($item)) {
             $item->collection_date = Carbon::parse($item->collection_date)->format('Y-m-d');
             $images = $this->museumImageRepository->getAllImagesByPostId($id);
         }
 
-        return view('museum.posts.show', compact('item', 'images'));
+        return view('museum.posts.show')->with(['item' => $item])->with(['images' => $images])->with(['userInfo' => $userInfo]);
     }
 
     /**

@@ -5,7 +5,7 @@
                 <span class="fs-5 fw-semibold">Последние добавленные</span>
             </h3>
             <div class="list-group list-group-flush border-bottom scrollarea">
-                <a v-for="post in postsInfo" href="#" class="list-group-item list-group-item-action py-3 lh-tight">
+                <a v-for="post in postsInfo" :href="'/posts/' + post.id" class="list-group-item list-group-item-action py-3 lh-tight">
                     <div class="d-flex w-100 align-items-center justify-content-between">
                         <strong class="mb-1" style="word-break: break-word">{{ post.russian_name }}</strong>
                         <small class="text-muted" style="">Сбор: {{ getDate(post.collection_date) }}</small>

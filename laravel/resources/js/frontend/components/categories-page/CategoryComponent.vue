@@ -13,10 +13,9 @@
 
                 <div class="row justify-content-between">
 
-                    <a v-for="item in posts" href="#" class="col-3 ml-1 mt-2 category-card" v-bind:class="[item.published_at ? 'published' : 'no-published']">
+                    <a v-for="item in posts" :href="'/posts/' + item.id" class="col-3 ml-1 mt-2 category-card" v-bind:class="[item.is_published ? 'published' : 'no-published']">
                         <div class="d-flex align-items-center justify-content-between">
                             <strong class="mb-1" style="word-break: break-word">{{ item.title }}</strong>
-                            <!--<small class="text-muted" style="">Обновлено: {{ item.updated_at }}</small>-->
                         </div>
                         <div v-if="item.published_at" class="col-10 mb-1 small">Опубликовано: {{ item.published_at }}</div>
                     </a>

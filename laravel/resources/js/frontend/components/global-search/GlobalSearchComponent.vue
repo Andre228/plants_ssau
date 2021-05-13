@@ -2,12 +2,9 @@
 
    <div>
 
-
-
-      <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+      <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 500">
          <div @click="openModal" class="search nav-link nav-link-hover"><i class="fas fa-search" style="font-size: 2rem"></i></div>
       </div>
-
 
    </div>
 
