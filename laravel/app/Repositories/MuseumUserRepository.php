@@ -9,7 +9,6 @@
 namespace App\Repositories;
 
 use App\Models\User as Model;
-use PhpParser\Node\Expr\Cast\Object_;
 
 
 class MuseumUserRepository extends CoreRepository
@@ -28,13 +27,20 @@ class MuseumUserRepository extends CoreRepository
     public function getUserBaseInfo($id)
     {
         $columns = [
+            'id',
             'name',
+            'role'
         ];
 
         $result = $this
             ->startConditions()
+            ->select($columns)
             ->where('id', '=', $id)
-            ->first($columns);
+            ->with([
+                'user_favorites:id,user_id,post_id'
+            ])
+            ->get()
+            ->toArray();
 
         return $result;
     }

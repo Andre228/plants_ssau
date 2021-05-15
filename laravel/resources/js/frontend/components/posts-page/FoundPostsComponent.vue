@@ -49,7 +49,6 @@
             // barcode 210
             // раньше 2010
             // частичное совпадение сыт
-            console.log(this.listPosts);
         },
 
 

@@ -49,7 +49,7 @@ class CreateMuseumPostsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('category_id')->references('id')->on('museum_categories')->onDelete('cascade')->onUpdate('cascade');
             $table->index('is_published');
 

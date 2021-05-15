@@ -51,25 +51,25 @@
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label class="col-sm-4 col-form-label text-truncate">Текст на этикетке:</label>
+                    <label class="col-sm-4 col-form-label text-truncate" title="Текст на этикетке">Текст на этикетке:</label>
                     <div class="col-sm-8">
                         <textarea ref="labelText" disabled type="text" class="form-control" :value="post.label_text" style="height: auto"></textarea>
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label class="col-sm-4 col-form-label text-truncate">Принятое название:</label>
+                    <label class="col-sm-4 col-form-label text-truncate" title="Принятое название">Принятое название:</label>
                     <div class="col-sm-8">
                         <textarea ref="adoptedName" disabled type="text" class="form-control" :value="post.adopted_name" style="height: auto"></textarea>
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label class="col-sm-4 col-form-label text-truncate">Сборщики:</label>
+                    <label class="col-sm-4 col-form-label text-truncate" title="Сборщики">Сборщики:</label>
                     <div class="col-sm-8">
                         <textarea ref="collectors" disabled type="text" class="form-control" :value="post.collectors" style="height: auto"></textarea>
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label class="col-sm-4 col-form-label text-truncate">Определение:</label>
+                    <label class="col-sm-4 col-form-label text-truncate" title="Определение">Определение:</label>
                     <div class="col-sm-8">
                         <textarea ref="determination" disabled type="text" class="form-control" :value="post.determination" style="height: auto"></textarea>
                     </div>
@@ -77,8 +77,13 @@
             </div>
             <span v-if="hasImages()"><a class="simple-link" @click="openFullSize()">Открыть полное изображение</a></span>
             <div class="col-md-6 mb-md-0 p-md-4">
-                <label class="col-sm-4 col-form-label text-truncate">Отметка на карте:</label>
+                <label class="col-sm-4 col-form-label text-truncate" title="Отметка на карте">Отметка на карте:</label>
                 <div id="mapContainer"></div>
+            </div>
+            <div class="post-interactive">
+                <span v-if="isLoggedIn() && !isFavorite()" @click="toFavotites" title="Добавить в избранное" class="favorite"><i class="far fa-star"></i></span>
+                <span v-if="isLoggedIn() && isFavorite()" @click="deleteFromFavotites" title="Убрать из избранного" class="favorite"><i class="fas fa-star"></i></span>
+                <span title="Количество просмотров"><i class="far fa-eye"></i> {{ post.count_views }}</span>
             </div>
         </div>
     </div>
@@ -92,6 +97,7 @@
     import {DeviceHelper} from "../../helpers/device-helper";
     import {MapService} from "../../admin/posts/services/map-service";
     import NotImageYetComponent from "../not-images/NotImageYetComponent";
+    import {RequestService} from "../../request-services/request-service";
 
     export default {
         name: "FoundPostDetails",
@@ -105,7 +111,9 @@
                 userInfo: this.user,
                 notifyService: new NotifyService(),
                 loaderService: new LoaderService(),
-                mapService: new MapService()
+                response: {},
+                mapService: new MapService(),
+                rest: new RequestService()
             }
         },
 
@@ -124,7 +132,8 @@
             this.autosize('determination');
             this.initListeners();
             this.$store.state.post.postObject = this.post;
-            this.map = this.mapService.buildMap('mapContainer', this.$store, true);
+            this.setMap();
+            this.setCountViews();
         },
 
         computed: {
@@ -214,7 +223,114 @@
                 } else {
                     this.index = this.images.length - 1;
                 }
+            },
+
+            isLoggedIn() {
+                return (this.userInfo && this.userInfo.status) ? false : true;
+            },
+
+            isFavorite() {
+                return this.userInfo.user_favorites.find(item => item.post_id === this.post.id);
+            },
+
+            setMap() {
+                DeviceHelper.geo().then(item => {
+                    let lat = null;
+                    let lng = null;
+                    if (item && item.coords && item.coords.latitude && item.coords.longitude) {
+                        lat = item.coords.latitude;
+                        lng = item.coords.longitude;
+                    }
+                    const postCoord = this.$store.state.post.postObject.coordinates;
+                    if (!postCoord.lat && !postCoord.lng) {
+                        this.map = this.mapService.buildMap('mapContainer', this.$store, true, lat, lng);
+                    } else {
+                        this.map = this.mapService.buildMap('mapContainer', this.$store, true);
+                    }
+                });
+            },
+
+            setCountViews() {
+                if (this.isLoggedIn() && this.post) {
+                    const url = `/api/posts/views/${this.post.id}`;
+                    this.rest.post(url, null, null).then(res => res);
+                }
+            },
+
+            async toFavotites() {
+                this.loaderService.runLoader();
+                if (this.post && this.userInfo) {
+                    const url = `/api/user/favorite/${this.userInfo.id}/${this.post.id}`;
+                    await this.rest.post(url, null, null) .then(response => {
+                        if (response.data.status == 'OK') {
+                            this.response = {
+                                type: 'success',
+                                text: response.data.message
+                            };
+                            if (response.data.details) {
+                                this.userInfo = response.data.details;
+                            }
+                            console.log(this.userInfo);
+                        }
+                        if (response.data.status == 'ERROR') {
+                            this.response = {
+                                type: 'error',
+                                text: response.data.message
+                            };
+                        }
+                    })
+                        .catch((error) => {
+                            this.response = {
+                                type: 'error',
+                                text: error
+                            };
+                        });
+
+                    this.afterRequest();
+                }
+            },
+
+            async deleteFromFavotites() {
+                const favorite = this.userInfo.user_favorites.find(item => item.post_id === this.post.id);
+                this.loaderService.runLoader();
+                if (favorite && favorite.id) {
+                    const url = `/api/user/delete/favorite/${favorite.id}`;
+                    await this.rest.destroy(url).then(response => {
+                        if (response.data.status == 'OK') {
+                            this.response = {
+                                type: 'success',
+                                text: response.data.message
+                            };
+                            const index = this.userInfo.user_favorites.indexOf(favorite);
+                            this.userInfo.user_favorites.splice(index, 1);
+                        }
+                        if (response.data.status == 'ERROR') {
+                            this.response = {
+                                type: 'error',
+                                text: response.data.message
+                            };
+                        }
+                    })
+                        .catch((error) => {
+                            this.response = {
+                                type: 'error',
+                                text: error
+                            };
+                        });
+
+                    this.afterRequest();
+                }
+            },
+
+            afterRequest() {
+                this.loaderService.removeLoader();
+                this.notifyService[this.response.type](this.response.text);
+                this.response = {};
             }
+        },
+
+        beforeDestroy() {
+            this.$refs.imagesPreview.removeEventListener('mousewheel');
         }
     }
 </script>
@@ -239,7 +355,7 @@
     }
 
     .images-preview {
-        width: 30%;
+        width: 50%;
         display: flex;
         overflow: hidden;
     }
@@ -247,6 +363,30 @@
     .active {
         border: 2px solid #ff8088;
         border-radius: 4px;
+    }
+
+    .post-interactive {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+
+    .post-interactive span {
+        cursor: pointer;
+        font-size: 22px;
+        color: #c8cbcf;
+    }
+
+    .favorite {
+        margin-right: 2%;
+    }
+
+    i {
+        transition: .3s all;
+    }
+
+    i:hover {
+        color: #0d6efd;
     }
 
 

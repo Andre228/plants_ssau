@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MuseumPost;
 use App\Repositories\MuseumImageRepository;
 use App\Repositories\MuseumPostRepository;
+use App\Repositories\MuseumUserRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Museum\BaseController as BaseController;
 use Illuminate\Support\Carbon;
@@ -16,6 +17,7 @@ class PostController extends BaseController
 
     private $museumPostRepository;
     private $museumImageRepository;
+    private $museumUserRepository;
 
 
     public function __construct()
@@ -24,6 +26,7 @@ class PostController extends BaseController
 
         $this->museumPostRepository = app(MuseumPostRepository::class);
         $this->museumImageRepository = app(MuseumImageRepository::class);
+        $this->museumUserRepository = app(MuseumUserRepository::class);
     }
 
     /**
@@ -92,9 +95,17 @@ class PostController extends BaseController
         $item = $this->museumPostRepository->getEdit($id);
         $images = null;
         $userInfo = Auth::user();
+        $userInfo = json_encode($this->museumUserRepository->getUserBaseInfo($userInfo->id)[0]);
         if (!empty($item)) {
             $item->collection_date = Carbon::parse($item->collection_date)->format('Y-m-d');
             $images = $this->museumImageRepository->getAllImagesByPostId($id);
+        }
+
+        if (empty($userInfo)) {
+            $userInfo = json_encode((object) [
+                'user' => 'null',
+                'status' => 401
+            ]);
         }
 
         return view('museum.posts.show')->with(['item' => $item])->with(['images' => $images])->with(['userInfo' => $userInfo]);
@@ -132,5 +143,16 @@ class PostController extends BaseController
     public function destroy($id)
     {
         //
+    }
+
+    public function incrementCountViews($id)
+    {
+        $result = $this->museumPostRepository->setCountViews($id);
+        if ($result) {
+            return response(['status' => 'OK']);
+        } else {
+            return response(['status' => 'ERROR']);
+        }
+
     }
 }

@@ -19,9 +19,11 @@ export class MapService {
         this.markerLat = latInit ? latInit : null;
         this.markerLng = lngInit ? lngInit : null;
         if (store) {
-          this.store = store;
-            this.markerLat = this.store.getters.getPostObject.coordinates.lat;
-            this.markerLng = this.store.getters.getPostObject.coordinates.lng;
+            this.store = store;
+            if (!latInit && !lngInit) {
+                this.markerLat = this.store.getters.getPostObject.coordinates.lat;
+                this.markerLng = this.store.getters.getPostObject.coordinates.lng;
+            }
         }
         if (!this.markerLat || !this.markerLng) {
             this.markerLat = 51.959;

@@ -198,6 +198,20 @@ class MuseumPostRepository extends CoreRepository
         return $result;
     }
 
+    public function setCountViews($postId)
+    {
+        $post = $this->getEdit($postId);
+        $result = null;
+        if (!empty($post)) {
+            $post->count_views = $post->count_views + 1;
+            $result = $post->save();
+        } else {
+            $result = false;
+        }
+
+        return $result;
+    }
+
     private function getLotOfColumns()
     {
         $columns = [
@@ -220,7 +234,8 @@ class MuseumPostRepository extends CoreRepository
             'environmental_status',
             'label_name',
             'collection_date',
-            'coordinates'
+            'coordinates',
+            'count_views'
         ];
 
         return $columns;

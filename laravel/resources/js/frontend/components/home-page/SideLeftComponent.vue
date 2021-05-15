@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="d-flex flex-column align-items-stretch bg-white" style="height: 100vh; overflow-y: scroll">
-            <h3 href="/" class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+            <h3 class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
                 <span class="fs-5 fw-semibold">Последние добавленные</span>
             </h3>
             <div class="list-group list-group-flush border-bottom scrollarea">

@@ -29,6 +29,7 @@ export class RequestService {
 
     post(url, _body, headers) {
         if (url && _body) return axios.post(url, _body, headers);
+        else return axios.post(url, {}, {});
     }
 
 }

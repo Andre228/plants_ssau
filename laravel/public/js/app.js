@@ -4849,13 +4849,22 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../services/notify-service */ "./resources/js/frontend/services/notify-service.js");
-/* harmony import */ var _services_loader_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/loader-service */ "./resources/js/frontend/services/loader-service.js");
-/* harmony import */ var _CarouselComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CarouselComponent */ "./resources/js/frontend/components/CarouselComponent.vue");
-/* harmony import */ var _dialogs_AdminImagesDialogComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../dialogs/AdminImagesDialogComponent */ "./resources/js/frontend/dialogs/AdminImagesDialogComponent.vue");
-/* harmony import */ var _helpers_device_helper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../helpers/device-helper */ "./resources/js/frontend/helpers/device-helper.js");
-/* harmony import */ var _admin_posts_services_map_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../admin/posts/services/map-service */ "./resources/js/frontend/admin/posts/services/map-service.js");
-/* harmony import */ var _not_images_NotImageYetComponent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../not-images/NotImageYetComponent */ "./resources/js/frontend/components/not-images/NotImageYetComponent.vue");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/notify-service */ "./resources/js/frontend/services/notify-service.js");
+/* harmony import */ var _services_loader_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/loader-service */ "./resources/js/frontend/services/loader-service.js");
+/* harmony import */ var _CarouselComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../CarouselComponent */ "./resources/js/frontend/components/CarouselComponent.vue");
+/* harmony import */ var _dialogs_AdminImagesDialogComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../dialogs/AdminImagesDialogComponent */ "./resources/js/frontend/dialogs/AdminImagesDialogComponent.vue");
+/* harmony import */ var _helpers_device_helper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../helpers/device-helper */ "./resources/js/frontend/helpers/device-helper.js");
+/* harmony import */ var _admin_posts_services_map_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../admin/posts/services/map-service */ "./resources/js/frontend/admin/posts/services/map-service.js");
+/* harmony import */ var _not_images_NotImageYetComponent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../not-images/NotImageYetComponent */ "./resources/js/frontend/components/not-images/NotImageYetComponent.vue");
+/* harmony import */ var _request_services_request_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../request-services/request-service */ "./resources/js/frontend/request-services/request-service.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -4942,6 +4951,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+
 
 
 
@@ -4952,8 +4967,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "FoundPostDetails",
   components: {
-    NotImageYetComponent: _not_images_NotImageYetComponent__WEBPACK_IMPORTED_MODULE_6__["default"],
-    CarouselComponent: _CarouselComponent__WEBPACK_IMPORTED_MODULE_2__["default"]
+    NotImageYetComponent: _not_images_NotImageYetComponent__WEBPACK_IMPORTED_MODULE_7__["default"],
+    CarouselComponent: _CarouselComponent__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   props: ['post', 'postimages', 'user'],
   data: function data() {
@@ -4961,9 +4976,11 @@ __webpack_require__.r(__webpack_exports__);
       index: 0,
       images: this.postimages,
       userInfo: this.user,
-      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_0__["NotifyService"](),
-      loaderService: new _services_loader_service__WEBPACK_IMPORTED_MODULE_1__["LoaderService"](),
-      mapService: new _admin_posts_services_map_service__WEBPACK_IMPORTED_MODULE_5__["MapService"]()
+      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_1__["NotifyService"](),
+      loaderService: new _services_loader_service__WEBPACK_IMPORTED_MODULE_2__["LoaderService"](),
+      response: {},
+      mapService: new _admin_posts_services_map_service__WEBPACK_IMPORTED_MODULE_6__["MapService"](),
+      rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_8__["RequestService"]()
     };
   },
   beforeMount: function beforeMount() {},
@@ -4975,7 +4992,8 @@ __webpack_require__.r(__webpack_exports__);
     this.autosize('determination');
     this.initListeners();
     this.$store.state.post.postObject = this.post;
-    this.map = this.mapService.buildMap('mapContainer', this.$store, true);
+    this.setMap();
+    this.setCountViews();
   },
   computed: {
     image: function image() {
@@ -5039,11 +5057,11 @@ __webpack_require__.r(__webpack_exports__);
     showModal: function showModal() {
       var scrollable = false;
 
-      if (_helpers_device_helper__WEBPACK_IMPORTED_MODULE_4__["DeviceHelper"].isPhone()) {
+      if (_helpers_device_helper__WEBPACK_IMPORTED_MODULE_5__["DeviceHelper"].isPhone()) {
         scrollable = true;
       }
 
-      this.$modal.open(_dialogs_AdminImagesDialogComponent__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      this.$modal.open(_dialogs_AdminImagesDialogComponent__WEBPACK_IMPORTED_MODULE_4__["default"], {
         images: this.images,
         index: this.index
       }, {
@@ -5057,7 +5075,168 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.index = this.images.length - 1;
       }
+    },
+    isLoggedIn: function isLoggedIn() {
+      return this.userInfo && this.userInfo.status ? false : true;
+    },
+    isFavorite: function isFavorite() {
+      var _this2 = this;
+
+      return this.userInfo.user_favorites.find(function (item) {
+        return item.post_id === _this2.post.id;
+      });
+    },
+    setMap: function setMap() {
+      var _this3 = this;
+
+      _helpers_device_helper__WEBPACK_IMPORTED_MODULE_5__["DeviceHelper"].geo().then(function (item) {
+        var lat = null;
+        var lng = null;
+
+        if (item && item.coords && item.coords.latitude && item.coords.longitude) {
+          lat = item.coords.latitude;
+          lng = item.coords.longitude;
+        }
+
+        var postCoord = _this3.$store.state.post.postObject.coordinates;
+
+        if (!postCoord.lat && !postCoord.lng) {
+          _this3.map = _this3.mapService.buildMap('mapContainer', _this3.$store, true, lat, lng);
+        } else {
+          _this3.map = _this3.mapService.buildMap('mapContainer', _this3.$store, true);
+        }
+      });
+    },
+    setCountViews: function setCountViews() {
+      if (this.isLoggedIn() && this.post) {
+        var url = "/api/posts/views/".concat(this.post.id);
+        this.rest.post(url, null, null).then(function (res) {
+          return res;
+        });
+      }
+    },
+    toFavotites: function toFavotites() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var url;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this4.loaderService.runLoader();
+
+                if (!(_this4.post && _this4.userInfo)) {
+                  _context.next = 6;
+                  break;
+                }
+
+                url = "/api/user/favorite/".concat(_this4.userInfo.id, "/").concat(_this4.post.id);
+                _context.next = 5;
+                return _this4.rest.post(url, null, null).then(function (response) {
+                  if (response.data.status == 'OK') {
+                    _this4.response = {
+                      type: 'success',
+                      text: response.data.message
+                    };
+
+                    if (response.data.details) {
+                      _this4.userInfo = response.data.details;
+                    }
+
+                    console.log(_this4.userInfo);
+                  }
+
+                  if (response.data.status == 'ERROR') {
+                    _this4.response = {
+                      type: 'error',
+                      text: response.data.message
+                    };
+                  }
+                })["catch"](function (error) {
+                  _this4.response = {
+                    type: 'error',
+                    text: error
+                  };
+                });
+
+              case 5:
+                _this4.afterRequest();
+
+              case 6:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    deleteFromFavotites: function deleteFromFavotites() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var favorite, url;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                favorite = _this5.userInfo.user_favorites.find(function (item) {
+                  return item.post_id === _this5.post.id;
+                });
+
+                _this5.loaderService.runLoader();
+
+                if (!(favorite && favorite.id)) {
+                  _context2.next = 7;
+                  break;
+                }
+
+                url = "/api/user/delete/favorite/".concat(favorite.id);
+                _context2.next = 6;
+                return _this5.rest.destroy(url).then(function (response) {
+                  if (response.data.status == 'OK') {
+                    _this5.response = {
+                      type: 'success',
+                      text: response.data.message
+                    };
+
+                    var index = _this5.userInfo.user_favorites.indexOf(favorite);
+
+                    _this5.userInfo.user_favorites.splice(index, 1);
+                  }
+
+                  if (response.data.status == 'ERROR') {
+                    _this5.response = {
+                      type: 'error',
+                      text: response.data.message
+                    };
+                  }
+                })["catch"](function (error) {
+                  _this5.response = {
+                    type: 'error',
+                    text: error
+                  };
+                });
+
+              case 6:
+                _this5.afterRequest();
+
+              case 7:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    afterRequest: function afterRequest() {
+      this.loaderService.removeLoader();
+      this.notifyService[this.response.type](this.response.text);
+      this.response = {};
     }
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.$refs.imagesPreview.removeEventListener('mousewheel');
   }
 });
 
@@ -5114,11 +5293,9 @@ __webpack_require__.r(__webpack_exports__);
       postStyle: {}
     };
   },
-  mounted: function mounted() {
-    // barcode 210
+  mounted: function mounted() {// barcode 210
     // раньше 2010
     // частичное совпадение сыт
-    console.log(this.listPosts);
   },
   methods: {
     getImage: function getImage(post) {
@@ -10789,7 +10966,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 exports.i(__webpack_require__(/*! -!../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!leaflet/dist/leaflet.css */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/leaflet/dist/leaflet.css"), "");
 
 // module
-exports.push([module.i, "\n#mapContainer[data-v-60142848] {\n    width: 100%;\n    height: 50vh;\n}\n.simple-link[data-v-60142848] {\n    text-decoration: none;\n    color: #0d6efd !important;\n    cursor: pointer;\n}\na[data-v-60142848]:hover {\n    text-decoration: underline !important;\n    color: #0056b3 !important;\n}\n.images-preview[data-v-60142848] {\n    width: 30%;\n    display: flex;\n    overflow: hidden;\n}\n.active[data-v-60142848] {\n    border: 2px solid #ff8088;\n    border-radius: 4px;\n}\n\n\n", ""]);
+exports.push([module.i, "\n#mapContainer[data-v-60142848] {\n    width: 100%;\n    height: 50vh;\n}\n.simple-link[data-v-60142848] {\n    text-decoration: none;\n    color: #0d6efd !important;\n    cursor: pointer;\n}\na[data-v-60142848]:hover {\n    text-decoration: underline !important;\n    color: #0056b3 !important;\n}\n.images-preview[data-v-60142848] {\n    width: 50%;\n    display: flex;\n    overflow: hidden;\n}\n.active[data-v-60142848] {\n    border: 2px solid #ff8088;\n    border-radius: 4px;\n}\n.post-interactive[data-v-60142848] {\n    display: flex;\n    flex-direction: row;\n    justify-content: flex-end;\n}\n.post-interactive span[data-v-60142848] {\n    cursor: pointer;\n    font-size: 22px;\n    color: #c8cbcf;\n}\n.favorite[data-v-60142848] {\n    margin-right: 2%;\n}\ni[data-v-60142848] {\n    transition: .3s all;\n}\ni[data-v-60142848]:hover {\n    color: #0d6efd;\n}\n\n\n", ""]);
 
 // exports
 
@@ -62161,8 +62338,7 @@ var staticRenderFns = [
       "h3",
       {
         staticClass:
-          "d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom",
-        attrs: { href: "/" }
+          "d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom"
       },
       [
         _c("span", { staticClass: "fs-5 fw-semibold" }, [
@@ -62474,7 +62650,10 @@ var render = function() {
         _c("div", { staticClass: "mb-3 row" }, [
           _c(
             "label",
-            { staticClass: "col-sm-4 col-form-label text-truncate" },
+            {
+              staticClass: "col-sm-4 col-form-label text-truncate",
+              attrs: { title: "Текст на этикетке" }
+            },
             [_vm._v("Текст на этикетке:")]
           ),
           _vm._v(" "),
@@ -62492,7 +62671,10 @@ var render = function() {
         _c("div", { staticClass: "mb-3 row" }, [
           _c(
             "label",
-            { staticClass: "col-sm-4 col-form-label text-truncate" },
+            {
+              staticClass: "col-sm-4 col-form-label text-truncate",
+              attrs: { title: "Принятое название" }
+            },
             [_vm._v("Принятое название:")]
           ),
           _vm._v(" "),
@@ -62510,7 +62692,10 @@ var render = function() {
         _c("div", { staticClass: "mb-3 row" }, [
           _c(
             "label",
-            { staticClass: "col-sm-4 col-form-label text-truncate" },
+            {
+              staticClass: "col-sm-4 col-form-label text-truncate",
+              attrs: { title: "Сборщики" }
+            },
             [_vm._v("Сборщики:")]
           ),
           _vm._v(" "),
@@ -62528,7 +62713,10 @@ var render = function() {
         _c("div", { staticClass: "mb-3 row" }, [
           _c(
             "label",
-            { staticClass: "col-sm-4 col-form-label text-truncate" },
+            {
+              staticClass: "col-sm-4 col-form-label text-truncate",
+              attrs: { title: "Определение" }
+            },
             [_vm._v("Определение:")]
           ),
           _vm._v(" "),
@@ -62561,7 +62749,38 @@ var render = function() {
           ])
         : _vm._e(),
       _vm._v(" "),
-      _vm._m(0)
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "post-interactive" }, [
+        _vm.isLoggedIn() && !_vm.isFavorite()
+          ? _c(
+              "span",
+              {
+                staticClass: "favorite",
+                attrs: { title: "Добавить в избранное" },
+                on: { click: _vm.toFavotites }
+              },
+              [_c("i", { staticClass: "far fa-star" })]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.isLoggedIn() && _vm.isFavorite()
+          ? _c(
+              "span",
+              {
+                staticClass: "favorite",
+                attrs: { title: "Убрать из избранного" },
+                on: { click: _vm.deleteFromFavotites }
+              },
+              [_c("i", { staticClass: "fas fa-star" })]
+            )
+          : _vm._e(),
+        _vm._v(" "),
+        _c("span", { attrs: { title: "Количество просмотров" } }, [
+          _c("i", { staticClass: "far fa-eye" }),
+          _vm._v(" " + _vm._s(_vm.post.count_views))
+        ])
+      ])
     ])
   ])
 }
@@ -62571,9 +62790,14 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-6 mb-md-0 p-md-4" }, [
-      _c("label", { staticClass: "col-sm-4 col-form-label text-truncate" }, [
-        _vm._v("Отметка на карте:")
-      ]),
+      _c(
+        "label",
+        {
+          staticClass: "col-sm-4 col-form-label text-truncate",
+          attrs: { title: "Отметка на карте" }
+        },
+        [_vm._v("Отметка на карте:")]
+      ),
       _vm._v(" "),
       _c("div", { attrs: { id: "mapContainer" } })
     ])
@@ -90627,8 +90851,11 @@ var MapService = /*#__PURE__*/function () {
 
       if (store) {
         this.store = store;
-        this.markerLat = this.store.getters.getPostObject.coordinates.lat;
-        this.markerLng = this.store.getters.getPostObject.coordinates.lng;
+
+        if (!latInit && !lngInit) {
+          this.markerLat = this.store.getters.getPostObject.coordinates.lat;
+          this.markerLng = this.store.getters.getPostObject.coordinates.lng;
+        }
       }
 
       if (!this.markerLat || !this.markerLng) {
@@ -92512,6 +92739,21 @@ var DeviceHelper = /*#__PURE__*/function () {
     value: function isLandscape() {
       return window.matchMedia("(orientation: landscape)").matches;
     }
+  }, {
+    key: "geo",
+    value: function geo() {
+      var geoPos;
+      return new Promise(function (resolve, reject) {
+        try {
+          navigator.geolocation.getCurrentPosition(function (geo) {
+            geoPos = geo;
+            resolve(geoPos);
+          });
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
   }]);
 
   return DeviceHelper;
@@ -92743,7 +92985,7 @@ var RequestService = /*#__PURE__*/function () {
   }, {
     key: "post",
     value: function post(url, _body, headers) {
-      if (url && _body) return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(url, _body, headers);
+      if (url && _body) return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(url, _body, headers);else return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(url, {}, {});
     }
   }]);
 

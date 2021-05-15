@@ -24,4 +24,18 @@ export class DeviceHelper {
         return window.matchMedia("(orientation: landscape)").matches;
     }
 
+    static geo() {
+        let geoPos;
+        return new Promise((resolve, reject) => {
+            try {
+                navigator.geolocation.getCurrentPosition((geo) => {
+                    geoPos = geo;
+                    resolve(geoPos);
+                });
+            } catch(error) {
+                reject(error);
+            }
+        });
+    }
+
 }
