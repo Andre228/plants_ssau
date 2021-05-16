@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-            <div class="col" v-for="post of listPosts">
+            <div v-if="listPosts && listPosts.length > 0" class="col" v-for="post of listPosts">
                 <a :href="'/posts/' + post.id" style="text-decoration: none">
                     <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow found-card-info" :style="getBackgroundImage(post)">
                         <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
@@ -49,17 +49,18 @@
             // barcode 210
             // раньше 2010
             // частичное совпадение сыт
+            console.log(this.listPosts);
         },
 
 
         methods: {
             getImage(post) {
-                return post.image[0] && post.image[0].alias ? post.image[0].alias : '';
+                return post && post.image[0] && post.image[0].alias ? post.image[0].alias : '';
             },
 
             getBackgroundImage(post) {
                 return {
-                    backgroundImage:  post.image[0] && post.image[0].alias ? `url(${post.image[0].alias})` : ''
+                    backgroundImage: post && post.length > 0 && post.image[0] && post.image[0].alias ? `url(${post.image[0].alias})` : ''
                 }
             }
         }

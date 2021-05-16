@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Repositories\UserFavoritesRepository;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+
+    private $userFavoritesRepository;
     /**
      * Create a new controller instance.
      *
@@ -15,6 +18,8 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
+        $this->userFavoritesRepository = app(UserFavoritesRepository::class);
     }
 
     /**
@@ -25,8 +30,9 @@ class HomeController extends Controller
     public function index()
     {
         $user = \Auth::user();
+        $userFavorites = json_encode($this->userFavoritesRepository->getUserFavorites($user->id));
 
-        return view('home', compact('user'));
+        return view('home', compact('user', 'userFavorites'));
     }
 
     public function update(Request $request, $id) {
@@ -41,7 +47,6 @@ class HomeController extends Controller
             } else {
                 return response(['message' => 'Ошибка сохранения, перепроверьте данные', 'status' => 'ERROR']);
             }
-
 
 
     }

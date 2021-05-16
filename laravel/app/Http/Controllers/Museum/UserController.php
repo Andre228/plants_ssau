@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Museum;
 
-use App\Http\Controllers\Controller;
 use App\Models\UserFavorites;
+use App\Models\User;
 use App\Repositories\MuseumUserRepository;
 use App\Repositories\UserFavoritesRepository;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Museum\BaseController as BaseController;
 
 class UserController extends BaseController
 {
@@ -58,6 +59,19 @@ class UserController extends BaseController
             return response(['message' => 'Удалено из избранного', 'status' => 'OK']);
         } else {
             return response(['message' => 'Произошла ошибка', 'status' => 'ERROR']);
+        }
+
+    }
+
+
+    public function getMoreFavorites($userId)
+    {
+        $userFavorites = $this->userFavoritesRepository->getUserFavorites($userId);
+
+        if ($userFavorites) {
+            return response(['status' => 'OK', 'details' => $userFavorites]);
+        } else {
+            return response(['status' => 'ERROR']);
         }
 
     }

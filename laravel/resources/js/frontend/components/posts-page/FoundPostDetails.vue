@@ -134,6 +134,7 @@
             this.$store.state.post.postObject = this.post;
             this.setMap();
             this.setCountViews();
+            this.addToHistory();
         },
 
         computed: {
@@ -270,7 +271,6 @@
                             if (response.data.details) {
                                 this.userInfo = response.data.details;
                             }
-                            console.log(this.userInfo);
                         }
                         if (response.data.status == 'ERROR') {
                             this.response = {
@@ -326,6 +326,14 @@
                 this.loaderService.removeLoader();
                 this.notifyService[this.response.type](this.response.text);
                 this.response = {};
+            },
+
+            addToHistory() {
+                if (this.userInfo && this.post) {
+                    const url = `/api/posts/history/create/${this.userInfo.id}/${this.post.id}`;
+                    this.rest.post(url, null, null).then(res => res);
+                }
+
             }
         },
 

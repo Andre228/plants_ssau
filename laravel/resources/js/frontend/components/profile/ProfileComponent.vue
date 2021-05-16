@@ -22,7 +22,7 @@
                         </div>
 
                     <hr>
-                        <div id="demo">
+                        <div>
                             <button class="btn btn-outline-dark" v-on:click="show = !show">
                                 Подробнее
                             </button>
@@ -70,6 +70,8 @@
                         </div>
                     </div>
                 </div>
+
+                <user-actions-component class="mt-3" :favorites="favoritesList" :user="userInfo"></user-actions-component>
             </div>
         </div>
 
@@ -79,15 +81,18 @@
 
 <script>
     import axios from "axios";
+    import UserActionsComponent from "./UserActionsComponent";
 
     export default {
         name: "ProfileComponent",
-        props: ['user'],
+        components: {UserActionsComponent},
+        props: ['user', 'favorites'],
 
         data() {
             return {
                 userInfo: this.user,
                 show: false,
+                favoritesList: this.favorites,
                 name: this.user.name,
                 email: this.user.email,
                 disabled: false,

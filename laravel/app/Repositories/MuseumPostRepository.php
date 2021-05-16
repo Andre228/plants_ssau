@@ -80,7 +80,6 @@ class MuseumPostRepository extends CoreRepository
             $posts = $this->getLastPosts($count);
         }
 
-
         $ids [] = [];
         $result = null;
 

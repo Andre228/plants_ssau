@@ -22,3 +22,5 @@ Route::get('/categories/{id}/{state}','Museum\CategoryController@getPosts')->nam
 Route::post('/posts/views/{id}','Museum\PostController@incrementCountViews')->name('api.museum.post.set.views');
 Route::post('/user/favorite/{userId}/{postId}','Museum\UserController@addToFavorites')->name('api.museum.user.set.favorite');
 Route::delete('/user/delete/favorite/{id}','Museum\UserController@removeFromFavorites')->name('api.museum.user.delete.favorite');
+Route::post('/posts/history/create/{userId}/{postId}','Museum\PostController@updateHistory')->name('api.museum.post.create.history');
+Route::get('/posts/favorites/{userId}','Museum\UserController@getMoreFavorites')->name('api.museum.post.get.favorites');
