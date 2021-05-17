@@ -71,7 +71,7 @@
                     </div>
                 </div>
 
-                <user-actions-component class="mt-3" :favorites="favoritesList" :user="userInfo"></user-actions-component>
+                <user-actions-component class="mt-3" :favorites="favoritesList" :user="userInfo" :histories="historiesList"></user-actions-component>
             </div>
         </div>
 
@@ -86,13 +86,14 @@
     export default {
         name: "ProfileComponent",
         components: {UserActionsComponent},
-        props: ['user', 'favorites'],
+        props: ['user', 'favorites', 'histories'],
 
         data() {
             return {
                 userInfo: this.user,
                 show: false,
                 favoritesList: this.favorites,
+                historiesList: this.histories,
                 name: this.user.name,
                 email: this.user.email,
                 disabled: false,

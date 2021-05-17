@@ -5269,12 +5269,13 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     UserActionsComponent: _UserActionsComponent__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  props: ['user', 'favorites'],
+  props: ['user', 'favorites', 'histories'],
   data: function data() {
     return {
       userInfo: this.user,
       show: false,
       favoritesList: this.favorites,
+      historiesList: this.histories,
       name: this.user.name,
       email: this.user.email,
       disabled: false,
@@ -5401,22 +5402,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "UserActionsComponent",
-  props: ['favorites', 'user'],
+  props: ['favorites', 'user', 'histories'],
   data: function data() {
     return {
       page: 1,
       favoritesList: this.favorites,
+      historiesList: this.histories,
       hasNext: false,
+      lastActionDate: '',
       rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_0__["RequestService"](),
       loader: new _services_loader_service__WEBPACK_IMPORTED_MODULE_1__["LoaderService"]()
     };
   },
   mounted: function mounted() {
     this.hasNext = this.favoritesList.hasNext;
+    this.getLastActions();
   },
   methods: {
     getMore: function getMore(event) {
@@ -5434,11 +5447,22 @@ __webpack_require__.r(__webpack_exports__);
             }
 
             _this.hasNext = response.data.details.hasNext;
+
+            _this.getLastActions();
           }
 
           _this.loader.removeLoader();
         });
       }
+    },
+    getLastActions: function getLastActions() {
+      var histories = this.historiesList.map(function (item) {
+        return item.post;
+      });
+      var userActionsArray = this.favoritesList.posts.concat(histories);
+      this.lastActionDate = userActionsArray.sort(function (a, b) {
+        return new Date(b.updated_at) - new Date(a.updated_at);
+      })[0].updated_at;
     }
   }
 });
@@ -11138,7 +11162,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.fade-enter-active[data-v-0cd5b68b], .fade-leave-active[data-v-0cd5b68b] {\n    transition: opacity .5s;\n}\n.fade-enter[data-v-0cd5b68b], .fade-leave-to[data-v-0cd5b68b]  {\n    opacity: 0;\n}\n\n", ""]);
+exports.push([module.i, "\n.accordion-actions[data-v-0cd5b68b] {\n    height: 32vh;\n    overflow-y: auto;\n}\n.btn-user-action[data-v-0cd5b68b] {\n    color: #686868;\n}\n.btn-user-action[data-v-0cd5b68b]:hover {\n    color: black;\n}\n\n", ""]);
 
 // exports
 
@@ -61284,7 +61308,7 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-primary",
-                  staticStyle: { "margin-left": "10px" }
+                  staticStyle: { "margin-left": "10px", width: "fit-content" }
                 },
                 [_vm._v("Сохранить")]
               ),
@@ -61293,7 +61317,7 @@ var render = function() {
                 "a",
                 {
                   staticClass: "btn btn-light",
-                  staticStyle: { "margin-left": "15px" },
+                  staticStyle: { "margin-left": "15px", width: "fit-content" },
                   attrs: { href: "/admin/museum/users" }
                 },
                 [_vm._v("Назад")]
@@ -63098,7 +63122,11 @@ var render = function() {
           _vm._v(" "),
           _c("user-actions-component", {
             staticClass: "mt-3",
-            attrs: { favorites: _vm.favoritesList, user: _vm.userInfo }
+            attrs: {
+              favorites: _vm.favoritesList,
+              user: _vm.userInfo,
+              histories: _vm.historiesList
+            }
           })
         ],
         1
@@ -63134,7 +63162,9 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "card-body" }, [
         _vm._v(
-          "\n            Активности:  Последние действия - 2021-05-16\n\n            "
+          "\n            Активности:  Последние действия - " +
+            _vm._s(_vm.lastActionDate) +
+            "\n\n            "
         ),
         _c("hr"),
         _vm._v(" "),
@@ -63158,18 +63188,114 @@ var render = function() {
                       }
                     },
                     [
-                      _c("div", { staticClass: "accordion-body" }, [
-                        _c(
-                          "div",
-                          { staticClass: "list-group" },
-                          [
-                            _vm._l(_vm.favoritesList.posts, function(item) {
+                      _c(
+                        "div",
+                        { staticClass: "accordion-body accordion-actions" },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "list-group" },
+                            [
+                              _vm._l(_vm.favoritesList.posts, function(item) {
+                                return _c(
+                                  "a",
+                                  {
+                                    staticClass:
+                                      "list-group-item list-group-item-action",
+                                    attrs: { href: "/posts/" + item.id }
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "d-flex w-100 justify-content-between"
+                                      },
+                                      [
+                                        _c(
+                                          "h5",
+                                          {
+                                            staticClass: "mb-1 text-truncate",
+                                            attrs: { title: item.russian_name }
+                                          },
+                                          [_vm._v(_vm._s(item.russian_name))]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "small",
+                                          {
+                                            staticClass:
+                                              "text-muted text-truncate",
+                                            attrs: { title: item.updated_at }
+                                          },
+                                          [_vm._v(_vm._s(item.updated_at))]
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("small", { staticClass: "text-muted" }, [
+                                      _vm._v(_vm._s(item.collectors))
+                                    ])
+                                  ]
+                                )
+                              }),
+                              _vm._v(" "),
+                              _vm.hasNext
+                                ? _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn btn-outline-light btn-user-action mt-3",
+                                      on: { click: _vm.getMore }
+                                    },
+                                    [_vm._v("Загрузить ещё")]
+                                  )
+                                : _vm._e()
+                            ],
+                            2
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ])
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-6" }, [
+            _c(
+              "div",
+              { staticClass: "accordion", attrs: { id: "accordionHistory" } },
+              [
+                _c("div", { staticClass: "accordion-item" }, [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "accordion-collapse collapse show",
+                      attrs: {
+                        id: "collapseHistory",
+                        "aria-labelledby": "headingHistory",
+                        "data-bs-parent": "#accordionHistory"
+                      }
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "accordion-body accordion-actions" },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "list-group" },
+                            _vm._l(_vm.historiesList, function(item) {
                               return _c(
                                 "a",
                                 {
                                   staticClass:
                                     "list-group-item list-group-item-action",
-                                  attrs: { href: "/posts/" + item.id }
+                                  attrs: { href: "/posts/" + item.post.id }
                                 },
                                 [
                                   _c(
@@ -63180,39 +63306,29 @@ var render = function() {
                                     },
                                     [
                                       _c("h5", { staticClass: "mb-1" }, [
-                                        _vm._v(_vm._s(item.russian_name))
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "small",
-                                        { staticClass: "text-muted" },
-                                        [_vm._v(_vm._s(item.updated_at))]
-                                      )
+                                        _vm._v(_vm._s(item.post.russian_name))
+                                      ])
                                     ]
                                   ),
                                   _vm._v(" "),
                                   _c("small", { staticClass: "text-muted" }, [
-                                    _vm._v(_vm._s(item.collectors))
+                                    _vm._v(
+                                      "Просмотрено: " + _vm._s(item.seen_date)
+                                    )
                                   ])
                                 ]
                               )
                             }),
-                            _vm._v(" "),
-                            _c("button", { on: { click: _vm.getMore } }, [
-                              _vm._v("test")
-                            ])
-                          ],
-                          2
-                        )
-                      ])
+                            0
+                          )
+                        ]
+                      )
                     ]
                   )
                 ])
               ]
             )
-          ]),
-          _vm._v(" "),
-          _vm._m(1)
+          ])
         ])
       ])
     ])
@@ -63252,69 +63368,30 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6" }, [
-      _c(
-        "div",
-        { staticClass: "accordion", attrs: { id: "accordionHistory" } },
-        [
-          _c("div", { staticClass: "accordion-item" }, [
-            _c(
-              "h2",
-              {
-                staticClass: "accordion-header",
-                attrs: { id: "headingHistory" }
-              },
-              [
-                _c(
-                  "button",
-                  {
-                    staticClass: "accordion-button",
-                    attrs: {
-                      type: "button",
-                      "data-bs-toggle": "collapse",
-                      "data-bs-target": "#collapseHistory",
-                      "aria-expanded": "true",
-                      "aria-controls": "collapseHistory"
-                    }
-                  },
-                  [
-                    _vm._v(
-                      "\n                                    История\n                                "
-                    )
-                  ]
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "accordion-collapse collapse show",
-                attrs: {
-                  id: "collapseHistory",
-                  "aria-labelledby": "headingHistory",
-                  "data-bs-parent": "#accordionHistory"
-                }
-              },
-              [
-                _c("div", { staticClass: "accordion-body" }, [
-                  _c("strong", [
-                    _vm._v("This is the first item's accordion body.")
-                  ]),
-                  _vm._v(
-                    " It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the "
-                  ),
-                  _c("code", [_vm._v(".accordion-body")]),
-                  _vm._v(
-                    ", though the transition does limit overflow.\n                                "
-                  )
-                ])
-              ]
+    return _c(
+      "h2",
+      { staticClass: "accordion-header", attrs: { id: "headingHistory" } },
+      [
+        _c(
+          "button",
+          {
+            staticClass: "accordion-button",
+            attrs: {
+              type: "button",
+              "data-bs-toggle": "collapse",
+              "data-bs-target": "#collapseHistory",
+              "aria-expanded": "true",
+              "aria-controls": "collapseHistory"
+            }
+          },
+          [
+            _vm._v(
+              "\n                                    История\n                                "
             )
-          ])
-        ]
-      )
-    ])
+          ]
+        )
+      ]
+    )
   }
 ]
 render._withStripped = true

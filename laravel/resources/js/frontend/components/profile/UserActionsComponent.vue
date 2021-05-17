@@ -4,7 +4,7 @@
             <div class="card-header">Действия</div>
 
             <div class="card-body">
-                Активности:  Последние действия - 2021-05-16
+                Активности:  Последние действия - {{ lastActionDate }}
 
                 <hr>
                 <div class="row">
@@ -18,17 +18,17 @@
                                     </button>
                                 </h2>
                                 <div id="collapseFavorites" class="accordion-collapse collapse show" aria-labelledby="headingFavorites" data-bs-parent="#accordionFavorites">
-                                    <div class="accordion-body">
+                                    <div class="accordion-body accordion-actions">
                                         <div class="list-group">
                                             <a v-for="item of favoritesList.posts" :href="'/posts/' + item.id" class="list-group-item list-group-item-action">
                                                 <div class="d-flex w-100 justify-content-between">
-                                                    <h5 class="mb-1">{{ item.russian_name }}</h5>
-                                                    <small class="text-muted">{{ item.updated_at }}</small>
+                                                    <h5 class="mb-1 text-truncate" :title="item.russian_name">{{ item.russian_name }}</h5>
+                                                    <small class="text-muted text-truncate" :title="item.updated_at">{{ item.updated_at }}</small>
                                                 </div>
                                                 <!--<p class="mb-1">Some placeholder content in a paragraph.</p>-->
                                                 <small class="text-muted">{{ item.collectors }}</small>
                                             </a>
-                                            <button @click="getMore">test</button>
+                                            <button v-if="hasNext" class="btn btn-outline-light btn-user-action mt-3" @click="getMore">Загрузить ещё</button>
                                         </div>
                                     </div>
                                 </div>
@@ -45,8 +45,17 @@
                                     </button>
                                 </h2>
                                 <div id="collapseHistory" class="accordion-collapse collapse show" aria-labelledby="headingHistory" data-bs-parent="#accordionHistory">
-                                    <div class="accordion-body">
-                                        <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                    <div class="accordion-body accordion-actions">
+                                        <div class="list-group">
+                                            <a v-for="item of historiesList" :href="'/posts/' + item.post.id" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h5 class="mb-1">{{ item.post.russian_name }}</h5>
+                                                    <!--<small class="text-muted"></small>-->
+                                                </div>
+                                                <!--<p class="mb-1">Some placeholder content in a paragraph.</p>-->
+                                                <small class="text-muted">Просмотрено: {{ item.seen_date }}</small>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -66,13 +75,15 @@
 
     export default {
         name: "UserActionsComponent",
-        props: ['favorites', 'user'],
+        props: ['favorites', 'user', 'histories'],
 
         data() {
             return {
                 page: 1,
                 favoritesList: this.favorites,
+                historiesList: this.histories,
                 hasNext: false,
+                lastActionDate: '',
                 rest: new RequestService(),
                 loader: new LoaderService()
             }
@@ -80,6 +91,7 @@
 
         mounted() {
             this.hasNext = this.favoritesList.hasNext;
+            this.getLastActions();
         },
 
         methods: {
@@ -95,11 +107,20 @@
                                 this.favoritesList.posts = this.favoritesList.posts.concat(response.data.details.posts);
                             }
                             this.hasNext = response.data.details.hasNext;
+                            this.getLastActions();
                         }
                         this.loader.removeLoader();
                     });
                 }
 
+            },
+
+            getLastActions() {
+                const histories = this.historiesList.map(item => item.post);
+                const userActionsArray = this.favoritesList.posts.concat(histories);
+                this.lastActionDate = userActionsArray.sort(function(a,b){
+                    return new Date(b.updated_at) - new Date(a.updated_at);
+                })[0].updated_at;
             }
         }
     }
@@ -107,11 +128,17 @@
 
 <style scoped>
 
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .5s;
+    .accordion-actions {
+        height: 32vh;
+        overflow-y: auto;
     }
-    .fade-enter, .fade-leave-to  {
-        opacity: 0;
+
+    .btn-user-action {
+        color: #686868;
+    }
+
+    .btn-user-action:hover {
+        color: black;
     }
 
 </style>
