@@ -68,7 +68,28 @@ class PostController extends BaseController
         return view('museum.posts.index', compact('listPosts'));
     }
 
-    /**
+    public function viewPosts()
+    {
+
+        $popularPosts = $this->museumPostRepository->getPopularPost();
+        $postsList = $this->museumPostRepository->getPostsWithPagination();
+
+        return view('museum.posts.posts', compact('popularPosts', 'postsList'));
+    }
+
+    public function fetchPosts()
+    {
+
+        $posts = $this->museumPostRepository->getPostsWithPagination();
+
+        if ($posts) {
+            return response(['status' => 'OK', 'details' => $posts]);
+        } else {
+            return response(['status' => 'ERROR']);
+        }
+    }
+
+        /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

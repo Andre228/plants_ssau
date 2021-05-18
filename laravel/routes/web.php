@@ -19,6 +19,7 @@ Route::get('/categories','Museum\CategoryController@index')->name('museum.catego
 Route::get('/posts/search/{barcode}/{determination}/{russian_name}/{collection_date}/{label_text}/{accuracy}/{adopted_name}/{environmental_status}',
     'Museum\PostController@index')->name('museum.posts.search'); // поиск
 Route::get('/posts/{id}','Museum\PostController@show')->name('museum.posts.show'); // Информация о экспонате
+Route::get('/posts-view','Museum\PostController@viewPosts')->name('museum.posts.view'); // Страница со всеми экспонатами
 
 Route::get('/home', 'HomeController@index')->name('home'); // профиль
 Route::patch('/home/user-profile-save/{id}', 'HomeController@update')->name('user.profile.save');

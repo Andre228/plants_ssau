@@ -10,6 +10,7 @@ import CategoryComponent from './categories-page/CategoryComponent';
 import GlobalSearchComponent from './global-search/GlobalSearchComponent';
 import FoundPostsComponent from "./posts-page/FoundPostsComponent";
 import FoundPostDetails from './posts-page/FoundPostDetails';
+import ViewPostsComponent from './posts-page/ViewPostsComponent';
 
 export const componentsModule = {
     AdminCategoriesComponent,
@@ -23,5 +24,6 @@ export const componentsModule = {
     CategoryComponent,
     GlobalSearchComponent,
     FoundPostsComponent,
-    FoundPostDetails
+    FoundPostDetails,
+    ViewPostsComponent
 };

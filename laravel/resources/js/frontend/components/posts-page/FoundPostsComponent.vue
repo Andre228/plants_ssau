@@ -46,10 +46,6 @@
         },
 
         mounted() {
-            // barcode 210
-            // раньше 2010
-            // частичное совпадение сыт
-            console.log(this.listPosts);
         },
 
 
@@ -60,7 +56,7 @@
 
             getBackgroundImage(post) {
                 return {
-                    backgroundImage: post && post.length > 0 && post.image[0] && post.image[0].alias ? `url(${post.image[0].alias})` : ''
+                    backgroundImage: post && post.image[0] && post.image[0].alias ? `url(${post.image[0].alias})` : ''
                 }
             }
         }

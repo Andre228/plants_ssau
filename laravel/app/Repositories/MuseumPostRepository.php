@@ -166,15 +166,6 @@ class MuseumPostRepository extends CoreRepository
 
     public function search($params)
     {
-
-//        $result = $this->startConditions()::select($this->getLotOfColumns())
-//            ->where('is_published', '=', 1)
-//            ->where('barcode', $params['barcode']['match'], $params['barcode']['value'])
-//            ->where('determination', $params['determination']['match'], $params['determination']['value'])
-//            ->where('russian_name', $params['russian_name']['match'], $params['russian_name']['value'])
-//            ->where('collection_date', $params['collection_date']['match'], $params['collection_date']['value']);
-
-
         $query = $this->startConditions()::select($this->getLotOfColumns())
             ->with(['category:id,title'])
             ->where('is_published', '=', 1);
@@ -209,6 +200,43 @@ class MuseumPostRepository extends CoreRepository
         }
 
         return $result;
+    }
+
+    public function getPopularPost()
+    {
+        $result = $this->startConditions()::select(['id', 'russian_name', 'count_views', 'published_at'])
+            ->with(['category:id,title'])
+            ->where('is_published', '=', 1)
+            ->orderBy('count_views', 'desc')
+            ->take(3)
+            ->get();
+
+        return $result;
+    }
+
+    public function getPostsWithPagination()
+    {
+
+        $result [] = [];
+
+        $postsPaginated = $this->startConditions()::select($this->getLotOfColumns())
+            ->where('is_published', '=', 1)
+            ->orderBy('id', 'desc')
+            ->paginate(50)
+            ->toArray();
+
+        $hasNext = $postsPaginated['current_page'] == $postsPaginated['last_page'] ? false : true;
+
+        $posts = $postsPaginated['data'];
+
+
+        for($i = 0; $i < count($posts); $i++) {
+            $image = MuseumImage::where('post_id', '=', $posts[$i]['id'])->get()->toArray();
+            $result[$i] = Arr::add($posts[$i], 'images', $image);
+            $result[$i]['collection_date'] = Carbon::parse($result[$i]['collection_date'])->format('Y-m-d');
+        }
+
+        return json_encode([ 'posts' => $result, 'hasNext' => $hasNext]);
     }
 
     private function getLotOfColumns()
