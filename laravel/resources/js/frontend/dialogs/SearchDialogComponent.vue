@@ -4,7 +4,7 @@
 
         <form class="row mt-5" v-bind:style="styleSearchForm">
 
-            <div class="input-group mb-3">
+            <div class="input-group mb-3 mt-3">
                 <label class="col-sm-3 col-form-label" style="font-size: 1.2rem">1) Штрихкод</label>
                 <select @change="changeParam('barcode')" v-model="barcode.displayMatch" class="form-control form-select" title="Сравнение" style="flex: 0.3 1 auto;">
                     <option value="any" selected> Любое </option>

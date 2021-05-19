@@ -4392,6 +4392,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4437,6 +4453,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     _this.selectedCategory = _this.categories.find(function (item) {
                       return item.id === categoryId;
                     });
+
+                    if (_this.posts.length === 0) {
+                      _this.notifyService.info('Здесь ещё нет никаких экземпляров');
+                    }
                   }
 
                   if (response.data.status == 'ERROR') {
@@ -4473,6 +4493,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     changeState: function changeState(state) {
       this.orderState = state;
+    },
+    goToPost: function goToPost(event, id) {
+      document.location.href = "/posts/".concat(id);
     }
   }
 });
@@ -5175,6 +5198,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _request_services_request_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../request-services/request-service */ "./resources/js/frontend/request-services/request-service.js");
 /* harmony import */ var _services_loader_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/loader-service */ "./resources/js/frontend/services/loader-service.js");
+/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/notify-service */ "./resources/js/frontend/services/notify-service.js");
 //
 //
 //
@@ -5241,6 +5265,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5253,19 +5278,25 @@ __webpack_require__.r(__webpack_exports__);
       mostPopularPosts: this.popularposts,
       postsList: this.posts,
       rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_0__["RequestService"](),
-      loader: new _services_loader_service__WEBPACK_IMPORTED_MODULE_1__["LoaderService"]()
+      loader: new _services_loader_service__WEBPACK_IMPORTED_MODULE_1__["LoaderService"](),
+      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_2__["NotifyService"]()
     };
   },
   mounted: function mounted() {
     this.hasNext = this.postsList.hasNext;
   },
   methods: {
-    getMore: function getMore(event) {
+    getMore: function getMore(event, force) {
       var _this = this;
 
-      if (this.hasNext) {
-        event.stopPropagation();
+      if (this.hasNext || force) {
         this.loader.runLoader();
+
+        if (force) {
+          this.page = 0;
+          this.postsList.posts = [];
+        }
+
         this.page++;
         var url = "api/posts/view/?page=".concat(this.page);
         this.rest.get(url).then(function (response) {
@@ -5282,6 +5313,32 @@ __webpack_require__.r(__webpack_exports__);
           _this.loader.removeLoader();
         });
       }
+    },
+    getForPeriod: function getForPeriod(period) {
+      var _this2 = this;
+
+      this.loader.runLoader();
+      var url = "api/posts/view/";
+
+      if (period === 'week') {
+        url += 'week';
+      }
+
+      if (period === 'month') {
+        url += 'month';
+      }
+
+      this.rest.get(url).then(function (response) {
+        if (response && response.data.status === 'OK' && response.data.details.length > 0) {
+          _this2.postsList.posts = response.data.details;
+          _this2.hasNext = false;
+          _this2.page = 0;
+        } else {
+          _this2.notifyService.info('За указанное время не было публикаций');
+        }
+
+        _this2.loader.removeLoader();
+      });
     }
   }
 });
@@ -11167,7 +11224,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.category-card[data-v-7f88d366] {\n    padding: 10px;\n    border: 1px solid #c8cbcf;\n    border-radius: 4px;\n    color: black;\n    text-decoration: none;\n}\n.category-card[data-v-7f88d366]:hover {\n    color: #495057;\n    text-decoration: none;\n    background-color: #f8f9fa;\n}\na[data-v-7f88d366]:not(.category-card):not(.head-category) {\n    color: #0d6efd !important;\n    cursor: pointer;\n}\na[data-v-7f88d366]:hover:not(.category-card):not(.head-category) {\n    text-decoration: underline !important;\n    color: #0056b3 !important;\n}\n.published[data-v-7f88d366] {\n    border-left: 4px solid #b6d4fe;\n}\n.no-published[data-v-7f88d366] {\n    border-left: 4px solid #f0ad4e;\n}\n\n", ""]);
+exports.push([module.i, "\n.category-card[data-v-7f88d366] {\n    cursor: pointer;\n    padding: 10px;\n    border: 1px solid #c8cbcf;\n    border-radius: 4px;\n    color: black;\n    text-decoration: none;\n}\n.category-card[data-v-7f88d366]:hover {\n    color: #495057;\n    text-decoration: none;\n    background-color: #f8f9fa;\n}\na[data-v-7f88d366]:not(.category-card):not(.head-category) {\n    color: #0d6efd !important;\n    cursor: pointer;\n}\na[data-v-7f88d366]:hover:not(.category-card):not(.head-category) {\n    text-decoration: underline !important;\n    color: #0056b3 !important;\n}\n.published[data-v-7f88d366] {\n    border-left: 4px solid #b6d4fe;\n}\n.no-published[data-v-7f88d366] {\n    border-left: 4px solid #f0ad4e;\n}\n\n", ""]);
 
 // exports
 
@@ -62075,36 +62132,27 @@ var render = function() {
             { staticClass: "row justify-content-between" },
             _vm._l(_vm.posts, function(item) {
               return _c(
-                "a",
+                "div",
                 {
-                  staticClass: "col-3 ml-1 mt-2 category-card",
+                  staticClass: "card mt-3 category-card",
                   class: [item.is_published ? "published" : "no-published"],
-                  attrs: { href: "/posts/" + item.id }
+                  staticStyle: { width: "18rem" },
+                  on: {
+                    click: function($event) {
+                      return _vm.goToPost($event, item.id)
+                    }
+                  }
                 },
                 [
-                  _c(
-                    "div",
-                    {
-                      staticClass:
-                        "d-flex align-items-center justify-content-between"
-                    },
-                    [
-                      _c(
-                        "strong",
-                        {
-                          staticClass: "mb-1",
-                          staticStyle: { "word-break": "break-word" }
-                        },
-                        [_vm._v(_vm._s(item.title))]
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  item.published_at
-                    ? _c("div", { staticClass: "col-10 mb-1 small" }, [
-                        _vm._v("Опубликовано: " + _vm._s(item.published_at))
-                      ])
-                    : _vm._e()
+                  _c("div", { staticClass: "card-body" }, [
+                    _c("h5", { staticClass: "card-title" }, [
+                      _vm._v(_vm._s(item.title))
+                    ]),
+                    _vm._v(" "),
+                    _c("h6", { staticClass: "card-subtitle mb-2 text-muted" }, [
+                      _vm._v("Опубликовано: " + _vm._s(item.published_at))
+                    ])
+                  ])
                 ]
               )
             }),
@@ -62116,111 +62164,134 @@ var render = function() {
       _c("hr", { staticClass: "col-11 col-md-11 mb-5" }),
       _vm._v(" "),
       _c("div", { staticClass: "row g-5" }, [
-        _c("div", { staticClass: "col-md-12" }, [
-          _c("div", { staticClass: "row align-items-center" }, [
-            _c("h2", { staticClass: "col-md-2" }, [_vm._v("Разделы")]),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "form-check col-md-2",
-                staticStyle: { "margin-left": "10px" },
-                on: {
-                  click: function($event) {
-                    return _vm.changeState("new")
+        _c("div", { staticClass: "col-lg-12" }, [
+          _c(
+            "div",
+            { staticClass: "row align-items-center justify-content-start" },
+            [
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "form-check col-lg-4",
+                  on: {
+                    click: function($event) {
+                      return _vm.changeState("new")
+                    }
                   }
-                }
-              },
-              [
-                _c("input", {
-                  staticClass: "form-check-input",
-                  attrs: {
-                    type: "radio",
-                    name: "flexRadioDefault",
-                    id: "flexRadioDefault1"
-                  },
-                  domProps: { checked: _vm.orderState === "new" }
-                }),
-                _vm._v(" "),
-                _c(
-                  "label",
-                  {
-                    staticClass: "form-check-label",
-                    attrs: { for: "flexRadioDefault1" }
-                  },
-                  [
-                    _vm._v(
-                      "\n                            От новых к старым\n                        "
-                    )
-                  ]
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              {
-                staticClass: "form-check col-md-2",
-                staticStyle: { "margin-left": "10px" },
-                on: {
-                  click: function($event) {
-                    return _vm.changeState("old")
+                },
+                [
+                  _c("input", {
+                    staticClass: "form-check-input",
+                    attrs: {
+                      type: "radio",
+                      name: "flexRadioDefault",
+                      id: "flexRadioDefault1"
+                    },
+                    domProps: { checked: _vm.orderState === "new" }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "form-check-label",
+                      attrs: { for: "flexRadioDefault1" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            От новых к старым\n                        "
+                      )
+                    ]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "form-check col-lg-4",
+                  on: {
+                    click: function($event) {
+                      return _vm.changeState("old")
+                    }
                   }
-                }
-              },
-              [
-                _c("input", {
-                  staticClass: "form-check-input",
-                  attrs: {
-                    type: "radio",
-                    name: "flexRadioDefault",
-                    id: "flexRadioDefault2"
-                  },
-                  domProps: { checked: _vm.orderState === "old" }
-                }),
-                _vm._v(" "),
-                _c(
-                  "label",
-                  {
-                    staticClass: "form-check-label",
-                    attrs: { for: "flexRadioDefault2" }
-                  },
-                  [
-                    _vm._v(
-                      "\n                            От старых к новым\n                        "
-                    )
-                  ]
-                )
-              ]
-            )
-          ]),
+                },
+                [
+                  _c("input", {
+                    staticClass: "form-check-input",
+                    attrs: {
+                      type: "radio",
+                      name: "flexRadioDefault",
+                      id: "flexRadioDefault2"
+                    },
+                    domProps: { checked: _vm.orderState === "old" }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "form-check-label",
+                      attrs: { for: "flexRadioDefault2" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            От старых к новым\n                        "
+                      )
+                    ]
+                  )
+                ]
+              )
+            ]
+          ),
           _vm._v(" "),
           _c("p", [
             _vm._v("Выбрано: "),
             _c("span", { staticStyle: { "text-decoration": "underline" } }, [
               _vm._v(_vm._s(_vm.selectedCategory.title))
+            ]),
+            _vm._v(" "),
+            _c("span", { staticStyle: { "margin-left": "2%" } }, [
+              _vm._v(
+                "Найдено всего в разделе: " +
+                  _vm._s(_vm.posts && _vm.posts.length ? _vm.posts.length : 0)
+              )
             ])
           ]),
           _vm._v(" "),
           _c(
-            "ul",
-            { staticClass: "icon-list", staticStyle: { columns: "3" } },
-            _vm._l(_vm.categories, function(item) {
-              return _c("li", [
+            "div",
+            { staticStyle: { height: "350px", "overflow-y": "scroll" } },
+            [
+              _c("table", { staticClass: "table table-hover" }, [
+                _vm._m(2),
+                _vm._v(" "),
                 _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.getPosts(item.id)
-                      }
-                    }
-                  },
-                  [_vm._v(_vm._s(item.title))]
+                  "tbody",
+                  _vm._l(_vm.categories, function(item, index) {
+                    return _c(
+                      "tr",
+                      {
+                        staticStyle: { cursor: "pointer" },
+                        on: {
+                          click: function($event) {
+                            return _vm.getPosts(item.id)
+                          }
+                        }
+                      },
+                      [
+                        _c("th", { attrs: { scope: "row" } }, [
+                          _vm._v(_vm._s(index + 1))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(item.title))])
+                      ]
+                    )
+                  }),
+                  0
                 )
               ])
-            }),
-            0
+            ]
           )
         ])
       ])
@@ -62255,6 +62326,28 @@ var staticRenderFns = [
         )
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-lg-3" }, [
+      _c("div", { staticStyle: { "font-size": "22px" } }, [
+        _vm._v("Сортировать")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("№")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Наименование")])
+      ])
+    ])
   }
 ]
 render._withStripped = true
@@ -63033,11 +63126,49 @@ var render = function() {
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row g-5" }, [
       _c("div", { staticClass: "col-md-8" }, [
-        _c("h3", { staticClass: "pb-4 mb-4 fst-italic border-bottom" }, [
-          _vm._v("\n                From the Firehose\n            ")
+        _c("h3", { staticClass: "pb-4 mb-4 border-bottom" }, [
+          _vm._v("\n                Все экспонаты\n            ")
         ]),
         _vm._v(" "),
-        _vm._m(0),
+        _c("div", { staticClass: "row" }, [
+          _c("div", [
+            _c(
+              "a",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.getForPeriod("week")
+                  }
+                }
+              },
+              [_vm._v("За неделю")]
+            ),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.getForPeriod("month")
+                  }
+                }
+              },
+              [_vm._v("За месяц")]
+            ),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.getMore($event, true)
+                  }
+                }
+              },
+              [_vm._v("За всё время")]
+            )
+          ])
+        ]),
         _vm._v(" "),
         _c(
           "div",
@@ -63072,7 +63203,20 @@ var render = function() {
                       _vm._v(_vm._s(item.adopted_name))
                     ]),
                     _vm._v(" "),
-                    _vm._m(1, true),
+                    _c(
+                      "div",
+                      {
+                        staticClass:
+                          "d-flex justify-content-between align-items-center"
+                      },
+                      [
+                        _c("div", { staticClass: "btn-group" }, [
+                          _c("a", { attrs: { href: "/posts/" + item.id } }, [
+                            _vm._v("Подробнее")
+                          ])
+                        ])
+                      ]
+                    ),
                     _vm._v(" "),
                     _c(
                       "small",
@@ -63103,7 +63247,11 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn btn-outline-light w-100 btn-fetch-more",
-                    on: { click: _vm.getMore }
+                    on: {
+                      click: function($event) {
+                        return _vm.getMore($event)
+                      }
+                    }
                   },
                   [_vm._v("Загрузить ещё")]
                 )
@@ -63176,50 +63324,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", [
-        _c("a", { attrs: { href: "" } }, [_vm._v("За неделю")]),
-        _vm._v(" "),
-        _c("a", { attrs: { href: "" } }, [_vm._v("За месяц")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "d-flex justify-content-between align-items-center" },
-      [
-        _c("div", { staticClass: "btn-group" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-sm btn-outline-secondary",
-              attrs: { type: "button" }
-            },
-            [_vm._v("View")]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-sm btn-outline-secondary",
-              attrs: { type: "button" }
-            },
-            [_vm._v("Edit")]
-          )
-        ])
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -63863,7 +63968,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticStyle: { width: "90%" } }, [
     _c("form", { staticClass: "row mt-5", style: _vm.styleSearchForm }, [
-      _c("div", { staticClass: "input-group mb-3" }, [
+      _c("div", { staticClass: "input-group mb-3 mt-3" }, [
         _c(
           "label",
           {

@@ -25,3 +25,4 @@ Route::delete('/user/delete/favorite/{id}','Museum\UserController@removeFromFavo
 Route::post('/posts/history/create/{userId}/{postId}','Museum\PostController@updateHistory')->name('api.museum.post.create.history');
 Route::get('/posts/favorites/{userId}','Museum\UserController@getMoreFavorites')->name('api.museum.post.get.favorites');
 Route::get('/posts/view','Museum\PostController@fetchPosts')->name('api.museum.post.get.view');
+Route::get('/posts/view/{period}','Museum\PostController@fetchPostsForPeriod')->name('api.museum.post.get.view.period');

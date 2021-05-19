@@ -89,6 +89,18 @@ class PostController extends BaseController
         }
     }
 
+    public function fetchPostsForPeriod($period)
+    {
+
+        $posts = $this->museumPostRepository->getPostsOfPeriod($period);
+
+        if ($posts) {
+            return response(['status' => 'OK', 'details' => $posts]);
+        } else {
+            return response(['status' => 'ERROR']);
+        }
+    }
+
         /**
      * Show the form for creating a new resource.
      *

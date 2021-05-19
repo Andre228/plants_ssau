@@ -2,13 +2,14 @@
     <div class="container">
         <div class="row g-5">
             <div class="col-md-8">
-                <h3 class="pb-4 mb-4 fst-italic border-bottom">
-                    From the Firehose
+                <h3 class="pb-4 mb-4 border-bottom">
+                    Все экспонаты
                 </h3>
                 <div class="row">
                     <div>
-                        <a href="">За неделю</a>
-                        <a href="">За месяц</a>
+                        <a @click="getForPeriod('week')">За неделю</a>
+                        <a @click="getForPeriod('month')">За месяц</a>
+                        <a @click="getMore($event, true)">За всё время</a>
                     </div>
                 </div>
 
@@ -22,8 +23,7 @@
                                 <p class="card-text">{{ item.adopted_name }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                        <a :href="'/posts/' + item.id">Подробнее</a>
                                     </div>
                                 </div>
                                 <small class="text-muted" title="Дата публикации">{{ item.published_at }}</small>
@@ -34,7 +34,7 @@
 
 
                 <nav v-if="hasNext" class="blog-pagination mt-3 d-flex justify-content-center" aria-label="Pagination">
-                    <button @click="getMore" class="btn btn-outline-light w-100 btn-fetch-more">Загрузить ещё</button>
+                    <button @click="getMore($event)" class="btn btn-outline-light w-100 btn-fetch-more">Загрузить ещё</button>
                 </nav>
 
             </div>
@@ -67,6 +67,7 @@
 <script>
     import {RequestService} from "../../request-services/request-service";
     import {LoaderService} from "../../services/loader-service";
+    import {NotifyService} from "../../services/notify-service";
 
     export default {
         name: "ViewPostsComponent",
@@ -79,7 +80,8 @@
                 mostPopularPosts: this.popularposts,
                 postsList: this.posts,
                 rest: new RequestService(),
-                loader: new LoaderService()
+                loader: new LoaderService(),
+                notifyService: new NotifyService()
             }
         },
 
@@ -88,10 +90,13 @@
         },
 
         methods: {
-            getMore(event) {
-                if (this.hasNext) {
-                    event.stopPropagation();
+            getMore(event, force) {
+                if (this.hasNext || force) {
                     this.loader.runLoader();
+                    if (force) {
+                        this.page = 0;
+                        this.postsList.posts = [];
+                    }
                     this.page++;
                     const url = `api/posts/view/?page=${this.page}`;
                     this.rest.get(url).then(response => {
@@ -105,6 +110,29 @@
                         this.loader.removeLoader();
                     });
                 }
+            },
+
+            getForPeriod(period) {
+                this.loader.runLoader();
+                let url = `api/posts/view/`;
+                if (period === 'week') {
+                    url += 'week';
+                }
+
+                if (period === 'month') {
+                    url += 'month';
+                }
+
+                this.rest.get(url).then(response => {
+                    if (response && response.data.status === 'OK' && response.data.details.length > 0) {
+                        this.postsList.posts = response.data.details;
+                        this.hasNext = false;
+                        this.page = 0;
+                    } else {
+                        this.notifyService.info('За указанное время не было публикаций');
+                    }
+                    this.loader.removeLoader();
+                });
             }
         }
     }

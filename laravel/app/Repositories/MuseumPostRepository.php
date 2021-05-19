@@ -12,6 +12,7 @@ use App\Models\MuseumImage;
 use App\Models\MuseumPost as Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use phpDocumentor\Reflection\Types\This;
 
 
 class MuseumPostRepository extends CoreRepository
@@ -229,6 +230,42 @@ class MuseumPostRepository extends CoreRepository
 
         $posts = $postsPaginated['data'];
 
+        $result = $this->setImagesForPosts($posts);
+
+        return json_encode([ 'posts' => $result, 'hasNext' => $hasNext]);
+    }
+
+    public function getPostsOfPeriod($period)
+    {
+
+        $date = null;
+
+        if ($period == 'week') {
+            $date = Carbon::today()->subDays(7);
+        }
+
+        if ($period == 'month') {
+            $date = Carbon::now()->subDays(120)->toDateTimeString();
+        }
+
+        $posts = $this->startConditions()::select($this->getBaseColumns())
+            ->where('created_at', '>=', $date)
+            ->where('is_published', '=', 1)
+            ->orderBy('id', 'desc')
+            ->with([
+                'category:id,title' ,
+                'user:id,name'
+            ])
+            ->get()
+            ->toArray();
+
+
+        return !empty($this->setImagesForPosts($posts)[0]) ? $this->setImagesForPosts($posts) : [];
+    }
+
+    private function setImagesForPosts($posts)
+    {
+        $result [] = [];
 
         for($i = 0; $i < count($posts); $i++) {
             $image = MuseumImage::where('post_id', '=', $posts[$i]['id'])->get()->toArray();
@@ -236,8 +273,33 @@ class MuseumPostRepository extends CoreRepository
             $result[$i]['collection_date'] = Carbon::parse($result[$i]['collection_date'])->format('Y-m-d');
         }
 
-        return json_encode([ 'posts' => $result, 'hasNext' => $hasNext]);
+        return $result;
     }
+
+    private function getBaseColumns()
+    {
+        $columns = [
+            'id',
+            'is_published',
+            'published_at',
+            'created_at',
+            'user_id',
+            'category_id',
+
+            'barcode',
+            'adopted_name',
+            'russian_name',
+            'label_text',
+            'collectors',
+            'determination',
+            'label_name',
+            'collection_date',
+            'count_views'
+        ];
+
+        return $columns;
+    }
+
 
     private function getLotOfColumns()
     {

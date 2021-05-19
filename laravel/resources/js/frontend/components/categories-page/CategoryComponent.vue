@@ -13,12 +13,12 @@
 
                 <div class="row justify-content-between">
 
-                    <a v-for="item in posts" :href="'/posts/' + item.id" class="col-3 ml-1 mt-2 category-card" v-bind:class="[item.is_published ? 'published' : 'no-published']">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <strong class="mb-1" style="word-break: break-word">{{ item.title }}</strong>
+                    <div v-for="item in posts" @click="goToPost($event, item.id)" class="card mt-3 category-card" style="width: 18rem;" v-bind:class="[item.is_published ? 'published' : 'no-published']">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Опубликовано: {{ item.published_at }}</h6>
                         </div>
-                        <div v-if="item.published_at" class="col-10 mb-1 small">Опубликовано: {{ item.published_at }}</div>
-                    </a>
+                    </div>
 
                 </div>
 
@@ -27,26 +27,42 @@
             <hr class="col-11 col-md-11 mb-5">
 
             <div class="row g-5">
-                <div class="col-md-12">
-                    <div class="row align-items-center">
-                        <h2 class="col-md-2">Разделы</h2>
-                        <div class="form-check col-md-2" style="margin-left: 10px" @click="changeState('new')">
+                <div class="col-lg-12">
+                    <div class="row align-items-center justify-content-start">
+                        <div class="col-lg-3">
+                            <div style="font-size: 22px">Сортировать</div>
+                        </div>
+                        <div class="form-check col-lg-4" @click="changeState('new')">
                             <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" v-bind:checked="orderState === 'new'">
                             <label class="form-check-label" for="flexRadioDefault1">
                                 От новых к старым
                             </label>
                         </div>
-                        <div class="form-check col-md-2" style="margin-left: 10px" @click="changeState('old')">
+                        <div class="form-check col-lg-4" @click="changeState('old')">
                             <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" v-bind:checked="orderState === 'old'">
                             <label class="form-check-label" for="flexRadioDefault2">
                                 От старых к новым
                             </label>
                         </div>
                     </div>
-                    <p>Выбрано: <span style="text-decoration: underline">{{ selectedCategory.title }}</span></p>
-                    <ul class="icon-list" style="columns: 3">
-                        <li v-for="item in categories"><a @click="getPosts(item.id)">{{ item.title }}</a></li>
-                    </ul>
+                    <p>Выбрано: <span style="text-decoration: underline">{{ selectedCategory.title }}</span> <span style="margin-left: 2%">Найдено всего в разделе: {{ posts && posts.length ? posts.length : 0 }}</span></p>
+                    <div style="height: 350px; overflow-y: scroll">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">№</th>
+                                    <th scope="col">Наименование</th>
+                                </tr>
+                            </thead>
+
+                                <tbody>
+                                    <tr v-for="(item, index) in categories" style="cursor: pointer" @click="getPosts(item.id)">
+                                        <th scope="row">{{ index + 1}}</th>
+                                        <td>{{ item.title }}</td>
+                                    </tr>
+                                </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
@@ -89,6 +105,9 @@
                         if (response.data.status == 'OK') {
                             this.posts = response.data.posts;
                             this.selectedCategory = this.categories.find(item => item.id === categoryId);
+                            if (this.posts.length === 0) {
+                                this.notifyService.info('Здесь ещё нет никаких экземпляров');
+                            }
                         }
                         if (response.data.status == 'ERROR') {
                             this.response = {
@@ -118,6 +137,10 @@
 
             changeState(state) {
                 this.orderState = state;
+            },
+
+            goToPost(event, id) {
+                document.location.href = `/posts/${id}`;
             }
         }
     }
@@ -126,6 +149,7 @@
 <style scoped>
 
     .category-card {
+        cursor: pointer;
         padding: 10px;
         border: 1px solid #c8cbcf;
         border-radius: 4px;
