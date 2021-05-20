@@ -2488,6 +2488,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "NewsMainColComponent",
   props: ['news'],
@@ -58899,7 +58900,7 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-primary",
-                  staticStyle: { "margin-left": "10px" },
+                  staticStyle: { "margin-left": "10px", width: "fit-content" },
                   attrs: { disabled: _vm.isDisabled },
                   on: {
                     click: function($event) {
@@ -58914,7 +58915,7 @@ var render = function() {
                 "a",
                 {
                   staticClass: "btn btn-light",
-                  staticStyle: { "margin-left": "15px" },
+                  staticStyle: { "margin-left": "15px", width: "fit-content" },
                   attrs: { href: "/admin/museum/news" }
                 },
                 [_vm._v("Назад")]
@@ -58926,85 +58927,98 @@ var render = function() {
     ]),
     _c("br"),
     _vm._v(" "),
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-12" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-body" }, [
-            _c("ul", { staticClass: "list-unstyled" }, [
-              _c("li", [_vm._v("ID: " + _vm._s(_vm.newsInfo.id))])
+    _vm.newsInfo.id
+      ? _c("div", { staticClass: "row justify-content-center" }, [
+          _c("div", { staticClass: "col-md-12" }, [
+            _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-body" }, [
+                _c("ul", { staticClass: "list-unstyled" }, [
+                  _c("li", [_vm._v("ID: " + _vm._s(_vm.newsInfo.id))])
+                ])
+              ])
             ])
           ])
         ])
-      ])
-    ]),
+      : _vm._e(),
     _vm._v(" "),
     _c("br"),
     _vm._v(" "),
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-12" }, [
-        _c("div", { staticClass: "card" }, [
-          _c(
-            "div",
-            {
-              staticClass: "card-body admin-theme admin-field admin-table-text"
-            },
-            [
-              _c("div", { staticClass: "form-group" }, [
-                _c("label", [_vm._v("Создано")]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.newsInfo.created_at,
-                      expression: "newsInfo.created_at"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text", disabled: "" },
-                  domProps: { value: _vm.newsInfo.created_at },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+    _vm.newsInfo.created_at && _vm.newsInfo.updated_at
+      ? _c("div", { staticClass: "row justify-content-center" }, [
+          _c("div", { staticClass: "col-md-12" }, [
+            _c("div", { staticClass: "card" }, [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "card-body admin-theme admin-field admin-table-text"
+                },
+                [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", [_vm._v("Создано")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.newsInfo.created_at,
+                          expression: "newsInfo.created_at"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", disabled: "" },
+                      domProps: { value: _vm.newsInfo.created_at },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.newsInfo,
+                            "created_at",
+                            $event.target.value
+                          )
+                        }
                       }
-                      _vm.$set(_vm.newsInfo, "created_at", $event.target.value)
-                    }
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group" }, [
-                _c("label", [_vm._v("Изменено")]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.newsInfo.updated_at,
-                      expression: "newsInfo.updated_at"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text", disabled: "" },
-                  domProps: { value: _vm.newsInfo.updated_at },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", [_vm._v("Изменено")]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.newsInfo.updated_at,
+                          expression: "newsInfo.updated_at"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text", disabled: "" },
+                      domProps: { value: _vm.newsInfo.updated_at },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.newsInfo,
+                            "updated_at",
+                            $event.target.value
+                          )
+                        }
                       }
-                      _vm.$set(_vm.newsInfo, "updated_at", $event.target.value)
-                    }
-                  }
-                })
-              ])
-            ]
-          )
+                    })
+                  ])
+                ]
+              )
+            ])
+          ])
         ])
-      ])
-    ]),
+      : _vm._e(),
     _c("br")
   ])
 }
@@ -59134,7 +59148,8 @@ var render = function() {
                             e.target.value)
                         },
                         name: "excerpt",
-                        id: "excerpt"
+                        id: "excerpt",
+                        rows: "6"
                       },
                       domProps: { value: _vm.newsInfo.content_raw },
                       on: {

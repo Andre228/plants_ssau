@@ -30,6 +30,7 @@
                             <div class="form-group">
                                 <label for="excerpt">Содержание</label>
                                 <textarea :input="e => $store.state.news.newsObject.content_raw = e.target.value" name="excerpt" id="excerpt" v-model="newsInfo.content_raw"
+                                          rows="6"
                                           class="form-control">{{newsInfo.content_raw}}</textarea>
                             </div>
                             <div v-if="newsInfo.user" class="form-group">

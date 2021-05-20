@@ -7,8 +7,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <button class="btn btn-primary" style="margin-left: 10px" @click="update()" :disabled="isDisabled">Сохранить</button>
-                            <a :href="'/admin/museum/news'" class="btn btn-light" style="margin-left: 15px">Назад</a>
+                            <button class="btn btn-primary" style="margin-left: 10px; width: fit-content" @click="update()" :disabled="isDisabled">Сохранить</button>
+                            <a :href="'/admin/museum/news'" class="btn btn-light" style="margin-left: 15px; width: fit-content">Назад</a>
                         </div>
                     </div>
                 </div>
@@ -16,7 +16,7 @@
         </div><br>
 
 
-        <div class="row justify-content-center">
+        <div v-if="newsInfo.id" class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
@@ -28,7 +28,7 @@
             </div>
         </div>
         <br>
-        <div class="row justify-content-center">
+        <div v-if="newsInfo.created_at && newsInfo.updated_at" class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body admin-theme admin-field admin-table-text">

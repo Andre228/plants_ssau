@@ -245,7 +245,7 @@ class MuseumPostRepository extends CoreRepository
         }
 
         if ($period == 'month') {
-            $date = Carbon::now()->subDays(120)->toDateTimeString();
+            $date = Carbon::now()->subDays(30)->toDateTimeString();
         }
 
         $posts = $this->startConditions()::select($this->getBaseColumns())
