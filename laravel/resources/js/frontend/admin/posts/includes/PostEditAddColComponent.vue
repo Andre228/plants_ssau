@@ -22,6 +22,17 @@
                     <div class="card-body">
                         <ul class="list-unstyled">
                             <li>ID: {{ postInfo.id }}</li>
+                            <li>
+                                <div class="form-check">
+                                    <input  class="form-check-input"
+                                            v-on:input="changePublishedAt"
+                                            name="is_published"
+                                            type="checkbox"
+                                            v-model="$store.state.post.postObject.is_published"
+                                            id="publishCheck">
+                                    <label class="form-check-label" for="publishCheck">Опубликовано</label>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -56,13 +67,16 @@
 </template>
 
 <script>
+    import {DateTimeParser} from "../../../parsers/datetime-parser";
+
     export default {
         name: "PostEditAddColComponent",
         props: ['post'],
 
         data() {
             return {
-                postInfo: this.post
+                postInfo: this.post,
+                dateTimeParser: new DateTimeParser()
             }
         },
 
@@ -70,7 +84,15 @@
 
             update() {
                 this.$emit('update');
-            }
+            },
+
+            changePublishedAt(event) {
+                console.log(this.$store.state.post.postObject);
+                if (!this.$store.state.post.postObject.is_published)
+                    this.$store.state.post.postObject.published_at = this.dateTimeParser.getCurrentDateTime();
+                else this.$store.state.post.postObject.published_at = null;
+            },
+
         }
     }
 </script>

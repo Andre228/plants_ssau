@@ -8,6 +8,7 @@ use App\Repositories\MuseumCategoryRepository;
 use App\Repositories\MuseumImageRepository;
 use App\Repositories\MuseumPostRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -103,6 +104,7 @@ class PostController extends BaseAdminController
     public function edit($id)
     {
         $item = $this->museumPostRepository->getEdit($id);
+        $item['collection_date'] = Carbon::parse($item['collection_date'])->format('Y-m-d');
         $categoryList = $this->museumCategoryRepository->getForComboBox();
         $imageList = $this->museumImageRepository->getAllImagesByPostId($id);
 

@@ -12,7 +12,7 @@
             <hr>
             <div class="modal-actions">
                 <div class="pull-left" v-if="!inputs && !options">
-                    <button @click="remove($event)" title="Удалить" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                    <button style="line-height: 28px;" @click="remove($event)" title="Удалить" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
                     <div tabindex="1" class="example-2" style="margin-left: 10px">
                         <input @change="change($event)" type="file" name="file" id="imageChange" class="input-file">
                         <label title="Заменить" for="imageChange" class="btn btn-outline-dark btn-tertiary js-labelFile">

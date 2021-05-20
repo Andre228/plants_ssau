@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Главная</title>
+    <title>Виртуальный гербарий Самарского университета</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -70,9 +70,6 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a href="#" class="nav-link nav-login-link"><i class="far fa-user" style="font-size: 18px;"></i></a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Войти') }}</a>
                             </li>
                             @if (Route::has('register'))
@@ -89,17 +86,17 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('home') }}">
-                                        {{ __('Профиль') }}
+                                        <i class="fas fa-user" style="font-size: 18px; margin-right: 8px;"></i>{{ __('Профиль') }}
                                     </a>
 
                                     <a class="dropdown-item" href="{{ route('museum.admin_dashboard.index') }}">
-                                        {{ __('Управление') }}
+                                        <i class="fas fa-clipboard-list" style="font-size: 18px; margin-right: 8px;"></i>{{ __('Управление') }}
                                     </a>
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Выйти') }}
+                                        <i class="fas fa-sign-out-alt" style="font-size: 18px; margin-right: 8px;"></i>{{ __('Выйти') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

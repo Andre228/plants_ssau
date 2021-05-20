@@ -76,7 +76,7 @@
                 </div>
             </div>
             <span v-if="hasImages()"><a class="simple-link" @click="openFullSize()">Открыть полное изображение</a></span>
-            <div class="col-md-6 mb-md-0 p-md-4">
+            <div class="col-md-12 mb-md-0 p-md-4">
                 <label class="col-sm-4 col-form-label text-truncate" title="Отметка на карте">Отметка на карте:</label>
                 <div id="mapContainer"></div>
             </div>

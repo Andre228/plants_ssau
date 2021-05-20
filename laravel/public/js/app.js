@@ -2578,6 +2578,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_post_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/post-service */ "./resources/js/frontend/admin/posts/services/post-service.js");
 /* harmony import */ var _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../parsers/datetime-parser */ "./resources/js/frontend/parsers/datetime-parser.js");
 /* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../services/notify-service */ "./resources/js/frontend/services/notify-service.js");
+/* harmony import */ var _services_loader_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../services/loader-service */ "./resources/js/frontend/services/loader-service.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2630,23 +2631,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 
@@ -2665,17 +2650,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       categoriesInfo: this.categorylist,
       images: this.imageslist,
       dateTimeParser: new _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_4__["DateTimeParser"](),
-      is_publishedAfterUpdate: false,
       postServices: new _services_post_service__WEBPACK_IMPORTED_MODULE_3__["PostServices"](),
-      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_5__["NotifyService"]()
+      notifyService: new _services_notify_service__WEBPACK_IMPORTED_MODULE_5__["NotifyService"](),
+      loader: new _services_loader_service__WEBPACK_IMPORTED_MODULE_6__["LoaderService"]()
     };
   },
   created: function created() {
     this.initCoordinates();
   },
   mounted: function mounted() {
-    this.$store.state.post.postObject = this.postInfo;
-    this.is_publishedAfterUpdate = this.postInfo.is_published; // this.$store.dispatch('setPostObject', this.postInfo);
+    this.$store.state.post.postObject = this.postInfo; //this.is_publishedAfterUpdate = this.postInfo.is_published;
+    // this.$store.dispatch('setPostObject', this.postInfo);
   },
   methods: {
     initCoordinates: function initCoordinates() {
@@ -2701,27 +2686,48 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     update: function update() {
       var _this = this;
 
-      var postId = this.$store.getters.getPostObject.id;
-      var body = this.$store.getters.getPostObject;
-      body.updated_at = this.dateTimeParser.getCurrentDateTime();
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var postId, body;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this.loader.runLoader();
 
-      if (!postId || !body) {
-        this.errors = 'Указанный объект не найден';
-      }
+                postId = _this.$store.getters.getPostObject.id;
+                body = _this.$store.getters.getPostObject;
+                body.updated_at = _this.dateTimeParser.getCurrentDateTime();
 
-      this.postServices.update(postId, body).then(function (response) {
-        if (response.data.status == 'OK') {
-          _this.is_publishedAfterUpdate = response.data.is_published;
+                if (!postId || !body) {
+                  _this.errors = 'Указанный объект не найден';
+                }
 
-          _this.notifyService.success(response.data.message);
-        }
+                _context.next = 7;
+                return _this.postServices.update(postId, body).then(function (response) {
+                  if (response.data.status == 'OK') {
+                    // this.is_publishedAfterUpdate = response.data.is_published;
+                    _this.$store.state.post.postObject.is_published = response.data.is_published;
 
-        if (response.data.status == 'ERROR') {
-          _this.notifyService.error(response.data.message);
-        }
-      })["catch"](function (error) {
-        _this.notifyService.error(error);
-      });
+                    _this.notifyService.success(response.data.message);
+                  }
+
+                  if (response.data.status == 'ERROR') {
+                    _this.notifyService.error(response.data.message);
+                  }
+                })["catch"](function (error) {
+                  _this.notifyService.error(error);
+                });
+
+              case 7:
+                _this.loader.removeLoader();
+
+              case 8:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
     },
     destroy: function destroy() {
       var _this2 = this;
@@ -2747,16 +2753,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     imagesUpload: function imagesUpload(event) {
       var _this3 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         var postId, body, files, updatedAt, i;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
+                _this3.loader.runLoader();
+
                 postId = _this3.$store.getters.getPostObject.id;
 
                 if (!(event && event.length > 0)) {
-                  _context.next = 10;
+                  _context2.next = 11;
                   break;
                 }
 
@@ -2765,11 +2773,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 updatedAt = _this3.dateTimeParser.getCurrentDateTime();
 
                 for (i = 0; i < files.length; i++) {
-                  body.append('file' + i, files[i], files[i].name);
+                  if (files[i].name.toLowerCase().includes('jpg') || files[i].name.toLowerCase().includes('jpeg') || files[i].name.toLowerCase().includes('png')) {
+                    body.append('file' + i, files[i], files[i].name);
+                  }
                 }
 
                 body.append('updated_at', updatedAt);
-                _context.next = 9;
+                _context2.next = 10;
                 return _this3.postServices.upload(postId, body).then(function (response) {
                   if (response.data.status == 'OK') {
                     _this3.notifyService.success(response.data.message);
@@ -2784,15 +2794,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this3.notifyService.error(error);
                 });
 
-              case 9:
+              case 10:
                 event = null;
 
-              case 10:
+              case 11:
+                _this3.loader.removeLoader();
+
+              case 12:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee);
+        }, _callee2);
       }))();
     }
   }
@@ -3457,6 +3470,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../parsers/datetime-parser */ "./resources/js/frontend/parsers/datetime-parser.js");
 //
 //
 //
@@ -3514,17 +3528,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostEditAddColComponent",
   props: ['post'],
   data: function data() {
     return {
-      postInfo: this.post
+      postInfo: this.post,
+      dateTimeParser: new _parsers_datetime_parser__WEBPACK_IMPORTED_MODULE_0__["DateTimeParser"]()
     };
   },
   methods: {
     update: function update() {
       this.$emit('update');
+    },
+    changePublishedAt: function changePublishedAt(event) {
+      console.log(this.$store.state.post.postObject);
+      if (!this.$store.state.post.postObject.is_published) this.$store.state.post.postObject.published_at = this.dateTimeParser.getCurrentDateTime();else this.$store.state.post.postObject.published_at = null;
     }
   }
 });
@@ -3676,30 +3707,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -3708,7 +3715,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostEditMainColComponent",
-  props: ['post', 'categorylist', 'is_publishedAfterUpdate', 'images'],
+  props: ['post', 'categorylist', 'images'],
   components: {
     ImageUploadComponent: _components_ImageUploadComponent__WEBPACK_IMPORTED_MODULE_5__["default"],
     CarouselComponent: _components_CarouselComponent__WEBPACK_IMPORTED_MODULE_3__["default"],
@@ -3731,8 +3738,10 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-  watch: {
-    is_publishedAfterUpdate: function is_publishedAfterUpdate(newVal, oldVal) {}
+  computed: {
+    isPublished: function isPublished() {
+      return this.$store.state.post.postObject.is_published;
+    }
   },
   mounted: function mounted() {
     this.categoriesInfo = this.categorylist;
@@ -3758,9 +3767,6 @@ __webpack_require__.r(__webpack_exports__);
         return category.id_title === event.target.value;
       });
       this.$store.state.post.postObject.category_id = foundCategory.id;
-    },
-    changePublishedAt: function changePublishedAt(event) {
-      if (!this.$store.state.post.postObject.is_published) this.$store.state.post.postObject.published_at = this.dateTimeParser.getCurrentDateTime();else this.$store.state.post.postObject.published_at = null;
     },
     uploadFile: function uploadFile(event) {
       this.$emit('imagesUpload', event);
@@ -4170,6 +4176,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../services/notify-service */ "./resources/js/frontend/services/notify-service.js");
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -4195,12 +4202,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ImageUploadComponent",
   data: function data() {
     return {
       fileEvent: null,
-      images: []
+      images: [],
+      notify: new _services_notify_service__WEBPACK_IMPORTED_MODULE_0__["NotifyService"]()
     };
   },
   methods: {
@@ -4222,7 +4231,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         try {
           for (_iterator.s(); !(_step = _iterator.n()).done;) {
             var item = _step.value;
-            this.images.push(URL.createObjectURL(item));
+
+            if (item.name.toLowerCase().includes('jpg') || item.name.toLowerCase().includes('jpeg') || item.name.toLowerCase().includes('png')) {
+              this.images.push(URL.createObjectURL(item));
+            } else {
+              this.notify.warning('Пожалуйста, загружайте только изображения');
+            }
           }
         } catch (err) {
           _iterator.e(err);
@@ -11205,7 +11219,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.preview[data-v-dd5332ca] {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    width: 100%;\n    min-height: 100px;\n    border-radius: 3px;\n    border: 2px dashed #dddddd;\n    margin-top: 15px;\n}\n.preview img[data-v-dd5332ca]  {\n    max-width: 100%;\n    max-height: 500px;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.preview[data-v-dd5332ca] {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    width: 100%;\n    min-height: 100px;\n    border-radius: 3px;\n    border: 2px dashed #dddddd;\n    margin-top: 15px;\n}\n.preview img[data-v-dd5332ca]  {\n    max-width: 100%;\n    max-height: 500px;\n}\n.custom-file-label[data-v-dd5332ca]::after {\n    content: \"\\41E\\431\\437\\43E\\440\" !important;\n}\n\n\n", ""]);
 
 // exports
 
@@ -59362,7 +59376,6 @@ var render = function() {
           [
             _c("post-edit-main-col-component", {
               attrs: {
-                is_publishedAfterUpdate: _vm.is_publishedAfterUpdate,
                 post: _vm.postInfo,
                 categorylist: _vm.categoriesInfo,
                 images: _vm.images
@@ -60538,7 +60551,80 @@ var render = function() {
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-body" }, [
             _c("ul", { staticClass: "list-unstyled" }, [
-              _c("li", [_vm._v("ID: " + _vm._s(_vm.postInfo.id))])
+              _c("li", [_vm._v("ID: " + _vm._s(_vm.postInfo.id))]),
+              _vm._v(" "),
+              _c("li", [
+                _c("div", { staticClass: "form-check" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.$store.state.post.postObject.is_published,
+                        expression: "$store.state.post.postObject.is_published"
+                      }
+                    ],
+                    staticClass: "form-check-input",
+                    attrs: {
+                      name: "is_published",
+                      type: "checkbox",
+                      id: "publishCheck"
+                    },
+                    domProps: {
+                      checked: Array.isArray(
+                        _vm.$store.state.post.postObject.is_published
+                      )
+                        ? _vm._i(
+                            _vm.$store.state.post.postObject.is_published,
+                            null
+                          ) > -1
+                        : _vm.$store.state.post.postObject.is_published
+                    },
+                    on: {
+                      input: _vm.changePublishedAt,
+                      change: function($event) {
+                        var $$a = _vm.$store.state.post.postObject.is_published,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              _vm.$set(
+                                _vm.$store.state.post.postObject,
+                                "is_published",
+                                $$a.concat([$$v])
+                              )
+                          } else {
+                            $$i > -1 &&
+                              _vm.$set(
+                                _vm.$store.state.post.postObject,
+                                "is_published",
+                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                              )
+                          }
+                        } else {
+                          _vm.$set(
+                            _vm.$store.state.post.postObject,
+                            "is_published",
+                            $$c
+                          )
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "form-check-label",
+                      attrs: { for: "publishCheck" }
+                    },
+                    [_vm._v("Опубликовано")]
+                  )
+                ])
+              ])
             ])
           ])
         ])
@@ -60674,18 +60760,16 @@ var render = function() {
           "div",
           {
             staticClass: "card-header",
-            class: [
-              _vm.is_publishedAfterUpdate ? "alert-primary" : "alert-warning"
-            ]
+            class: [_vm.isPublished ? "alert-primary" : "alert-warning"]
           },
           [
-            _vm.is_publishedAfterUpdate
+            _vm.isPublished
               ? _c("span", [
                   _vm._v("\n                    Опубликовано\n                ")
                 ])
               : _vm._e(),
             _vm._v(" "),
-            !_vm.is_publishedAfterUpdate
+            !_vm.isPublished
               ? _c("span", [
                   _vm._v("\n                    Черновик\n                ")
                 ])
@@ -60711,47 +60795,7 @@ var render = function() {
               },
               [
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "title" } }, [
-                    _vm._v("Заголовок")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.postInfo.title,
-                        expression: "postInfo.title"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      input: function(e) {
-                        return (_vm.$store.state.post.postObject.title =
-                          e.target.value)
-                      },
-                      name: "title",
-                      id: "title",
-                      type: "text",
-                      minlength: "3",
-                      required: ""
-                    },
-                    domProps: { value: _vm.postInfo.title },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.postInfo, "title", $event.target.value)
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "title" } }, [
-                    _vm._v("Принятое название")
-                  ]),
+                  _c("label", [_vm._v("Принятое название")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -60790,9 +60834,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "title" } }, [
-                    _vm._v("Русское название")
-                  ]),
+                  _c("label", [_vm._v("Русское название")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -60831,11 +60873,9 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "title" } }, [
-                    _vm._v("Текст на этикетке")
-                  ]),
+                  _c("label", [_vm._v("Текст на этикетке")]),
                   _vm._v(" "),
-                  _c("input", {
+                  _c("textarea", {
                     directives: [
                       {
                         name: "model",
@@ -60851,9 +60891,7 @@ var render = function() {
                           e.target.value)
                       },
                       name: "label_text",
-                      type: "text",
-                      minlength: "3",
-                      required: ""
+                      type: "text"
                     },
                     domProps: { value: _vm.postInfo.label_text },
                     on: {
@@ -60965,8 +61003,8 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "slug" } }, [
-                    _vm._v("Индетификатор")
+                  _c("label", { attrs: { for: "collection_date" } }, [
+                    _vm._v("Дата сбора")
                   ]),
                   _vm._v(" "),
                   _c("input", {
@@ -60974,36 +61012,38 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.postInfo.slug,
-                        expression: "postInfo.slug"
+                        value: _vm.postInfo.collection_date,
+                        expression: "postInfo.collection_date"
                       }
                     ],
                     staticClass: "form-control",
                     attrs: {
                       input: function(e) {
-                        return (_vm.$store.state.post.postObject.slug =
+                        return (_vm.$store.state.post.postObject.collection_date =
                           e.target.value)
                       },
-                      name: "slug",
-                      id: "slug",
-                      type: "text"
+                      name: "collection_date",
+                      id: "collection_date",
+                      type: "date"
                     },
-                    domProps: { value: _vm.postInfo.slug },
+                    domProps: { value: _vm.postInfo.collection_date },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
-                        _vm.$set(_vm.postInfo, "slug", $event.target.value)
+                        _vm.$set(
+                          _vm.postInfo,
+                          "collection_date",
+                          $event.target.value
+                        )
                       }
                     }
                   })
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "slug" } }, [
-                    _vm._v("Точность, м.")
-                  ]),
+                  _c("label", [_vm._v("Точность, м.")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -61036,7 +61076,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "slug" } }, [_vm._v("Сборщики")]),
+                  _c("label", [_vm._v("Сборщики")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -61073,9 +61113,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "slug" } }, [
-                    _vm._v("Определение")
-                  ]),
+                  _c("label", [_vm._v("Определение")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -61112,9 +61150,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "slug" } }, [
-                    _vm._v("Природоохранный статус")
-                  ]),
+                  _c("label", [_vm._v("Природоохранный статус")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -61151,9 +61187,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "slug" } }, [
-                    _vm._v("Имя на этикетке")
-                  ]),
+                  _c("label", [_vm._v("Имя на этикетке")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -61190,9 +61224,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "slug" } }, [
-                    _vm._v("Автор статьи")
-                  ]),
+                  _c("label", [_vm._v("Автор статьи")]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -61223,156 +61255,6 @@ var render = function() {
                       }
                     }
                   })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "content_raw" } }, [
-                    _vm._v("Статья")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "textarea",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.postInfo.content_raw,
-                          expression: "postInfo.content_raw"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        input: function(e) {
-                          return (_vm.$store.state.post.postObject.content_raw =
-                            e.target.value)
-                        },
-                        name: "content_raw",
-                        id: "content_raw",
-                        rows: "20"
-                      },
-                      domProps: { value: _vm.postInfo.content_raw },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.postInfo,
-                            "content_raw",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.postInfo.content_raw))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "excerpt" } }, [
-                    _vm._v("Выдержка")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "textarea",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.postInfo.excerpt,
-                          expression: "postInfo.excerpt"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { name: "excerpt", id: "excerpt" },
-                      domProps: { value: _vm.postInfo.excerpt },
-                      on: {
-                        input: [
-                          function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(
-                              _vm.postInfo,
-                              "excerpt",
-                              $event.target.value
-                            )
-                          },
-                          _vm.changeExcerpt
-                        ]
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.postInfo.excerpt))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-check" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.$store.state.post.postObject.is_published,
-                        expression: "$store.state.post.postObject.is_published"
-                      }
-                    ],
-                    staticClass: "form-check-input",
-                    attrs: { name: "is_published", type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(
-                        _vm.$store.state.post.postObject.is_published
-                      )
-                        ? _vm._i(
-                            _vm.$store.state.post.postObject.is_published,
-                            null
-                          ) > -1
-                        : _vm.$store.state.post.postObject.is_published
-                    },
-                    on: {
-                      input: _vm.changePublishedAt,
-                      change: function($event) {
-                        var $$a = _vm.$store.state.post.postObject.is_published,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(
-                                _vm.$store.state.post.postObject,
-                                "is_published",
-                                $$a.concat([$$v])
-                              )
-                          } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                _vm.$store.state.post.postObject,
-                                "is_published",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
-                          }
-                        } else {
-                          _vm.$set(
-                            _vm.$store.state.post.postObject,
-                            "is_published",
-                            $$c
-                          )
-                        }
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "label",
-                    {
-                      staticClass: "form-check-label",
-                      attrs: { for: "is_published" }
-                    },
-                    [_vm._v("Опубликовано")]
-                  )
                 ])
               ]
             ),
@@ -61969,13 +61851,8 @@ var render = function() {
     _c("div", { staticClass: "input-group mt-3" }, [
       _c("div", { staticClass: "custom-file" }, [
         _c("input", {
-          staticClass: "custom-file-input",
-          attrs: {
-            type: "file",
-            id: "inputGroupFile04",
-            multiple: "",
-            "aria-describedby": "inputGroupFileAddon04"
-          },
+          staticClass: "form-control custom-file-input",
+          attrs: { type: "file", multiple: "" },
           on: {
             change: function($event) {
               return _vm.changeFile($event)
@@ -61983,14 +61860,9 @@ var render = function() {
           }
         }),
         _vm._v(" "),
-        _c(
-          "label",
-          {
-            staticClass: "custom-file-label text-truncate",
-            attrs: { for: "inputGroupFile04" }
-          },
-          [_vm._v("Выбрать файл")]
-        )
+        _c("label", { staticClass: "form-label custom-file-label" }, [
+          _vm._v("Выбрать файл")
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "input-group-append" }, [
@@ -62976,7 +62848,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6 mb-md-0 p-md-4" }, [
+    return _c("div", { staticClass: "col-md-12 mb-md-0 p-md-4" }, [
       _c(
         "label",
         {
@@ -64817,6 +64689,7 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn btn-outline-danger",
+                    staticStyle: { "line-height": "28px" },
                     attrs: { title: "Удалить" },
                     on: {
                       click: function($event) {

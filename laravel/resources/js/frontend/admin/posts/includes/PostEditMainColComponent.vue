@@ -4,11 +4,11 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header" v-bind:class="[is_publishedAfterUpdate ? 'alert-primary' : 'alert-warning']">
-                    <span v-if="is_publishedAfterUpdate">
+                <div class="card-header" v-bind:class="[isPublished ? 'alert-primary' : 'alert-warning']">
+                    <span v-if="isPublished">
                         Опубликовано
                     </span>
-                    <span v-if="!is_publishedAfterUpdate">
+                    <span v-if="!isPublished">
                         Черновик
                     </span>
                 </div>
@@ -30,24 +30,19 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="maindata" role="tabpanel">
                             <div class="form-group">
-                                <label for="title">Заголовок</label>
-                                <input :input="e => $store.state.post.postObject.title = e.target.value" name="title" id="title" type="text" v-model="postInfo.title"
-                                       class="form-control" minlength="3" required/>
-                            </div>
-                            <div class="form-group">
-                                <label for="title">Принятое название</label>
+                                <label>Принятое название</label>
                                 <input :input="e => $store.state.post.postObject.adopted_name = e.target.value" name="adopted_name" type="text" v-model="postInfo.adopted_name"
                                        class="form-control" minlength="3" required/>
                             </div>
                             <div class="form-group">
-                                <label for="title">Русское название</label>
+                                <label>Русское название</label>
                                 <input :input="e => $store.state.post.postObject.russian_name = e.target.value" name="russian_name" type="text" v-model="postInfo.russian_name"
                                        class="form-control" minlength="3" required/>
                             </div>
                             <div class="form-group">
-                                <label for="title">Текст на этикетке</label>
-                                <input :input="e => $store.state.post.postObject.label_text = e.target.value" name="label_text" type="text" v-model="postInfo.label_text"
-                                       class="form-control" minlength="3" required/>
+                                <label>Текст на этикетке</label>
+                                <textarea :input="e => $store.state.post.postObject.label_text = e.target.value" name="label_text" type="text" v-model="postInfo.label_text"
+                                          class="form-control"></textarea>
                             </div>
                             <div class="form-group">
                                 <div id="mapContainer"></div>
@@ -74,64 +69,45 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="slug">Индетификатор</label>
-                                <input :input="e => $store.state.post.postObject.slug = e.target.value" name="slug" id="slug" v-model="postInfo.slug" type="text"
+                                <label for="collection_date">Дата сбора</label>
+                                <input :input="e => $store.state.post.postObject.collection_date = e.target.value" name="collection_date" id="collection_date" v-model="postInfo.collection_date" type="date"
                                        class="form-control">
                             </div>
 
                             <div class="form-group">
-                                <label for="slug">Точность, м.</label>
+                                <label>Точность, м.</label>
                                 <input :input="e => $store.state.post.postObject.accuracy = e.target.value" name="accuracy" v-model="postInfo.accuracy" type="text"
                                        class="form-control">
                             </div>
 
                             <div class="form-group">
-                                <label for="slug">Сборщики</label>
+                                <label>Сборщики</label>
                                 <input :input="e => $store.state.post.postObject.collectors = e.target.value" name="collectors" v-model="postInfo.collectors" type="text"
                                        class="form-control">
                             </div>
 
                             <div class="form-group">
-                                <label for="slug">Определение</label>
+                                <label>Определение</label>
                                 <input :input="e => $store.state.post.postObject.determination = e.target.value" name="determination" v-model="postInfo.determination" type="text"
                                        class="form-control">
                             </div>
 
                             <div class="form-group">
-                                <label for="slug">Природоохранный статус</label>
+                                <label>Природоохранный статус</label>
                                 <input :input="e => $store.state.post.postObject.environmental_status = e.target.value" name="environmental_status" v-model="postInfo.environmental_status" type="text"
                                        class="form-control">
                             </div>
 
                             <div class="form-group">
-                                <label for="slug">Имя на этикетке</label>
+                                <label>Имя на этикетке</label>
                                 <input :input="e => $store.state.post.postObject.label_name = e.target.value" name="label_name" v-model="postInfo.label_name" type="text"
                                        class="form-control">
                             </div>
 
                             <div class="form-group">
-                                <label for="slug">Автор статьи</label>
+                                <label>Автор статьи</label>
                                 <input :input="e => $store.state.post.postObject.author = e.target.value" name="author" id="author" v-model="postInfo.author" type="text"
                                        class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="content_raw">Статья</label>
-                                <textarea :input="e => $store.state.post.postObject.content_raw = e.target.value" name="content_raw" id="content_raw" v-model="postInfo.content_raw"
-                                class="form-control" rows="20">{{postInfo.content_raw}}</textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="excerpt">Выдержка</label>
-                                <textarea v-on:input="changeExcerpt" name="excerpt" id="excerpt" v-model="postInfo.excerpt"
-                                          class="form-control">{{postInfo.excerpt}}</textarea>
-                            </div>
-
-                            <div class="form-check">
-                                <input  v-on:input="changePublishedAt"
-                                        name="is_published" type="checkbox" class="form-check-input"
-                                        v-model="$store.state.post.postObject.is_published">
-                                <label class="form-check-label" for="is_published">Опубликовано</label>
                             </div>
 
                         </div>
@@ -162,7 +138,7 @@
 
     export default {
         name: "PostEditMainColComponent",
-        props: ['post', 'categorylist', 'is_publishedAfterUpdate', 'images'],
+        props: ['post', 'categorylist', 'images'],
         components: {
             ImageUploadComponent,
             CarouselComponent,
@@ -187,8 +163,9 @@
             }
         },
 
-        watch: {
-            is_publishedAfterUpdate: function(newVal, oldVal) {
+        computed: {
+            isPublished() {
+                return this.$store.state.post.postObject.is_published;
             }
         },
 
@@ -217,13 +194,6 @@
             changeCategory(event) {
                 let foundCategory = this.categoriesInfo.find(category => category.id_title === event.target.value);
                 this.$store.state.post.postObject.category_id = foundCategory.id;
-            },
-
-            changePublishedAt(event) {
-                if (!this.$store.state.post.postObject.is_published)
-                    this.$store.state.post.postObject.published_at = this.dateTimeParser.getCurrentDateTime();
-                else this.$store.state.post.postObject.published_at = null;
-
             },
 
             uploadFile(event) {

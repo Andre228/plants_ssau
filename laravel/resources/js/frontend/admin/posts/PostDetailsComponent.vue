@@ -3,28 +3,11 @@
     <div>
 
         <div class="container">
-
-
-            <!--<div v-if="responseMessages" class="alert alert-success alert-dismissible" role="alert">-->
-                <!--{{responseMessages}}-->
-                <!--<button @click="clearResponseMessage()" type="button" class="close" data-dismiss="alert" aria-label="Close">-->
-                    <!--<span aria-hidden="true">&times;</span>-->
-                <!--</button>-->
-            <!--</div>-->
-
-            <!--<div v-if="errors" class="alert alert-danger alert-dismissible" role="alert">-->
-                <!--{{errors}}-->
-                <!--<button @click="clearResponseMessage()" type="button" class="close" data-dismiss="alert" aria-label="Close">-->
-                    <!--<span aria-hidden="true">&times;</span>-->
-                <!--</button>-->
-            <!--</div>-->
-
             <div class="row justify-content-center">
 
                 <div class="col-md-8">
                     <post-edit-main-col-component
                             v-on:imagesUpload="imagesUpload"
-                            :is_publishedAfterUpdate="is_publishedAfterUpdate"
                             :post="postInfo"
                             :categorylist="categoriesInfo"
                             :images="images">
@@ -67,6 +50,7 @@
     import {PostServices} from './services/post-service';
     import {DateTimeParser} from "../../parsers/datetime-parser";
     import {NotifyService} from "../../services/notify-service";
+    import {LoaderService} from "../../services/loader-service";
     export default {
         name: "PostDetailsComponent",
         components: {PostEditAddColComponent, PostEditMainColComponent},
@@ -78,9 +62,9 @@
                 categoriesInfo: this.categorylist,
                 images: this.imageslist,
                 dateTimeParser: new DateTimeParser(),
-                is_publishedAfterUpdate: false,
                 postServices: new PostServices(),
-                notifyService: new NotifyService()
+                notifyService: new NotifyService(),
+                loader: new LoaderService()
             }
         },
 
@@ -90,7 +74,7 @@
 
         mounted() {
             this.$store.state.post.postObject = this.postInfo;
-            this.is_publishedAfterUpdate = this.postInfo.is_published;
+            //this.is_publishedAfterUpdate = this.postInfo.is_published;
             // this.$store.dispatch('setPostObject', this.postInfo);
         },
 
@@ -116,8 +100,9 @@
                 }
             },
 
-            update() {
+            async update() {
 
+                this.loader.runLoader();
                 const postId = this.$store.getters.getPostObject.id;
                 const body = this.$store.getters.getPostObject;
                 body.updated_at = this.dateTimeParser.getCurrentDateTime();
@@ -126,10 +111,11 @@
                     this.errors = 'Указанный объект не найден';
                 }
 
-                this.postServices.update(postId, body)
+                await this.postServices.update(postId, body)
                     .then(response => {
                       if (response.data.status == 'OK') {
-                        this.is_publishedAfterUpdate = response.data.is_published;
+                       // this.is_publishedAfterUpdate = response.data.is_published;
+                        this.$store.state.post.postObject.is_published = response.data.is_published;
                         this.notifyService.success(response.data.message);
                       }
                       if (response.data.status == 'ERROR') {
@@ -139,6 +125,7 @@
                     .catch((error) => {
                         this.notifyService.error(error);
                     });
+                this.loader.removeLoader();
 
             },
 
@@ -163,6 +150,7 @@
 
             async imagesUpload(event) {
 
+                this.loader.runLoader();
                 const postId = this.$store.getters.getPostObject.id;
 
                 if (event && event.length > 0) {
@@ -170,7 +158,9 @@
                     const files = event;
                     const updatedAt = this.dateTimeParser.getCurrentDateTime();
                     for (let i = 0; i < files.length; i++) {
-                        body.append('file' + i, files[i], files[i].name);
+                        if (files[i].name.toLowerCase().includes('jpg') || files[i].name.toLowerCase().includes('jpeg') || files[i].name.toLowerCase().includes('png')) {
+                            body.append('file' + i, files[i], files[i].name);
+                        }
                     }
                     body.append('updated_at', updatedAt);
 
@@ -189,6 +179,8 @@
                         });
                     event = null;
                 }
+
+                this.loader.removeLoader();
 
             }
         }
