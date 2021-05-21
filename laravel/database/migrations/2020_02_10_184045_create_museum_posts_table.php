@@ -20,14 +20,7 @@ class CreateMuseumPostsTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('inventory_number');
 
-            $table->string('slug')->unique();
             $table->json('coordinates');
-
-            $table->string('title');
-            $table->text('excerpt')->nullable();
-
-            $table->text('content_raw');
-            $table->text('content_html');
 
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();

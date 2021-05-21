@@ -1,4 +1,4 @@
-import AdminCategoriesComponent from './AdminCategoriesComponent';
+import AdminCategoriesComponent from '../admin/categories/AdminCategoriesComponent';
 import ButtonComponent from './ButtonComponent';
 import TableItemComponent from './TableItemComponent';
 import ProfileComponent from './profile/ProfileComponent';

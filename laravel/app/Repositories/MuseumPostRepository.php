@@ -50,6 +50,7 @@ class MuseumPostRepository extends CoreRepository
     public function getAllWithPaginate($howMuch = null)
     {
 
+        $hasNext = null;
         if ($howMuch !== null) {
             $result = $this->startConditions()
                 ->select($this->getLotOfColumns())
@@ -58,7 +59,9 @@ class MuseumPostRepository extends CoreRepository
                     'category:id,title' ,
                     'user:id,name'
                 ])
-                ->paginate($howMuch);
+                ->paginate($howMuch)
+                ->toArray();
+            $hasNext = $result['current_page'] == $result['last_page'] ? false : true;
         }
 
         else {
@@ -70,9 +73,17 @@ class MuseumPostRepository extends CoreRepository
                     'user:id,name'
                 ])
                 ->get();
+
+            return $result;
         }
 
-        return $result;
+
+        for ($i = 0; $i < count($result['data']); $i++) {
+            if ($result['data'][$i]['published_at'] != null)
+            $result['data'][$i]['published_at'] = Carbon::parse($result['data'][$i]['published_at'])->format('Y-m-d H:i:s');
+        }
+
+        return $howMuch != null ? json_encode([ 'posts' => $result['data'], 'hasNext' => $hasNext, 'test' => $result]) : $result;
     }
 
     public function deleteMore($count, $posts = null)
@@ -106,8 +117,6 @@ class MuseumPostRepository extends CoreRepository
     {
         $columns = [
             'id',
-            'title',
-            'author',
             'is_published',
             'published_at',
             'russian_name',
@@ -134,8 +143,6 @@ class MuseumPostRepository extends CoreRepository
 
         $columns = [
             'id',
-            'title',
-            'author',
             'is_published',
             'published_at',
             'russian_name',
@@ -165,6 +172,34 @@ class MuseumPostRepository extends CoreRepository
 
     }
 
+    public function getPostsIdsByCategoryIdAll($categoryId, $onlyIds = false)
+    {
+        $columns = [];
+
+        if ($onlyIds) {
+            $columns = ['id'];
+        } else {
+            $columns = [
+                'id',
+                'is_published',
+                'published_at',
+                'russian_name',
+                'determination',
+                'collectors',
+                'collection_date'
+            ];
+        }
+
+        $posts = $this->startConditions()
+            ->select($columns)
+            ->where('category_id', '=', $categoryId)
+            ->get()
+            ->toArray();
+
+
+        return $posts;
+    }
+
     public function search($params)
     {
         $query = $this->startConditions()::select($this->getLotOfColumns())
@@ -187,6 +222,27 @@ class MuseumPostRepository extends CoreRepository
         }
 
         return $result;
+    }
+
+    public function searchForAdmin($params)
+    {
+        $query = $this->startConditions()::select($this->getLotOfColumns())
+            ->with([
+                'category:id,title' ,
+                'user:id,name'
+            ])
+            ->where('russian_name', 'LIKE', '%' . $params . '%')
+            ->orWhere('id', 'LIKE', '%' . $params . '%')
+            ->orWhere('adopted_name', 'LIKE', '%' . $params . '%')
+            ->orWhere('label_text', 'LIKE', '%' . $params . '%')
+            ->orWhere('determination', 'LIKE', '%' . $params . '%')
+            ->orWhere('published_at', 'LIKE', '%' . $params . '%')
+            ->orWhere('determination', 'LIKE', '%' . $params . '%');
+
+
+        $posts = $query->get()->toArray();
+
+        return $posts;
     }
 
     public function setCountViews($postId)
@@ -305,9 +361,6 @@ class MuseumPostRepository extends CoreRepository
     {
         $columns = [
             'id',
-            'title',
-            'slug',
-            'author',
             'is_published',
             'published_at',
             'user_id',

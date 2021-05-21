@@ -6,7 +6,7 @@
                 <label class="form-label custom-file-label">Выбрать файл</label>
             </div>
             <div class="input-group-append">
-                <button :disabled='images.length <= 0' class="btn btn-outline-primary" type="button" id="inputGroupFileAddon04" @click="save()">Сохранить</button>
+                <button :disabled='images.length <= 0' class="btn btn-outline-primary" type="button" id="inputGroupFileAddon04" @click="save()">Загрузить</button>
             </div>
         </div>
         <div v-if="images.length > 0" class="preview">

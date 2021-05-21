@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Museum\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\MuseumCategory;
 use App\Repositories\MuseumCategoryRepository;
+use App\Repositories\MuseumImageRepository;
+use App\Repositories\MuseumPostRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
@@ -17,12 +19,16 @@ class CategoryController extends BaseAdminController
 //    protected $headers = Request::HEADER_X_FORWARDED_ALL;
 
     private $museumCategoryRepository;
+    private $museumPostRepository;
+    private $museumImageRepository;
 
 
     public function __construct()
     {
         parent::__construct();
         $this->museumCategoryRepository = app(MuseumCategoryRepository::class);
+        $this->museumPostRepository = app(MuseumPostRepository::class);
+        $this->museumImageRepository = app(MuseumImageRepository::class);
 
     }
 
@@ -100,8 +106,10 @@ class CategoryController extends BaseAdminController
      */
     public function edit($id, MuseumCategoryRepository $museumCategoryRepository)
     {
-       $item =  $museumCategoryRepository->getEdit($id);
+       $item = $museumCategoryRepository->getEdit($id);
        $categoryList = $museumCategoryRepository->getForComboBox();
+
+       $countPosts = count($this->museumPostRepository->getPostsIdsByCategoryIdAll($item->id));
 
        if(empty($item)) {
           return back(['msg' => 'Запись не найдена']);
@@ -111,7 +119,7 @@ class CategoryController extends BaseAdminController
             return back(['msg' => 'В списке нет ни одной категории']);
         }
 
-        return view('museum.admin.category.edit', compact('item', 'categoryList'));
+        return view('museum.admin.category.edit', compact('item', 'categoryList', 'countPosts'));
 
     }
 
@@ -159,10 +167,14 @@ class CategoryController extends BaseAdminController
     {
 
         $category = MuseumCategory::find($id);
+
+        $postIds = $this->museumPostRepository->getPostsIdsByCategoryIdAll($category->id, true);
+        $isDeletedImages = $this->museumImageRepository->deleteMoreImagesFromFileSystem($postIds);
+
         $result = $category->forceDelete();
 
 
-        if ($result) {
+        if ($result && $isDeletedImages) {
             return redirect()->route('museum.admin.categories.index', 'all')
                 ->with(['success' => 'Запись успешно удалена']);
         } else {
@@ -182,8 +194,8 @@ class CategoryController extends BaseAdminController
 
     public function search(Request $request)
     {
-        $search = Request::input('search');
-        $categoryList = $this->museumCategoryRepository->getSearchingCategories($search);
+        $search = $request->search;
+        $categoryList = $this->museumCategoryRepository->getSearchingCategories($request->search);
 
         return view('museum.admin.category.index', compact('categoryList', 'search'));
     }

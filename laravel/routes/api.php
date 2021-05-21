@@ -26,3 +26,6 @@ Route::post('/posts/history/create/{userId}/{postId}','Museum\PostController@upd
 Route::get('/posts/favorites/{userId}','Museum\UserController@getMoreFavorites')->name('api.museum.post.get.favorites');
 Route::get('/posts/view','Museum\PostController@fetchPosts')->name('api.museum.post.get.view');
 Route::get('/posts/view/{period}','Museum\PostController@fetchPostsForPeriod')->name('api.museum.post.get.view.period');
+
+Route::get('/batch/posts/admin','Museum\Admin\PostController@fetchMorePosts')->name('api.museum.admin.posts.batch.get');
+Route::post('/admin/posts/search','Museum\Admin\PostController@search')->name('api.museum.admin.posts.search');

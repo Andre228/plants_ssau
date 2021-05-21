@@ -38,7 +38,7 @@ class PostController extends BaseAdminController
      */
     public function index()
     {
-        $postsList = $this->museumPostRepository->getAllWithPaginate();
+        $postsList = $this->museumPostRepository->getAllWithPaginate(50);
 
         return view('museum.admin.post.index', compact('postsList'));
     }
@@ -67,10 +67,6 @@ class PostController extends BaseAdminController
 
         $data = $request->input();
         $data['user_id'] = Auth::id();
-
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['title']);
-        }
 
         $item = new MuseumPost($data);
 
@@ -127,10 +123,6 @@ class PostController extends BaseAdminController
 
         if (empty($item)) {
             return response(['message' => 'Сохраняемая категория не существует']);
-        }
-
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['title']);
         }
 
         $result = $item
@@ -299,6 +291,28 @@ class PostController extends BaseAdminController
 
         } else {
             return response(['message' => 'Ошибка удаления', 'status' => 'ERROR']);
+        }
+    }
+
+    public function fetchMorePosts()
+    {
+        $posts = $this->museumPostRepository->getAllWithPaginate(50);
+
+        if (!empty($posts)) {
+            return response(['status' => 'OK', 'details' => $posts]);
+        } else {
+            return response(['message' => 'Ошибка', 'status' => 'ERROR']);
+        }
+    }
+
+    public function search(Request $request)
+    {
+        $posts = $this->museumPostRepository->searchForAdmin($request->params);
+
+        if (count($posts) > 0) {
+            return response(['status' => 'OK', 'details' => $posts]);
+        } else {
+            return response(['message' => 'Поиск не дал результатов', 'status' => 'OK']);
         }
     }
 }

@@ -76,7 +76,7 @@
 
                             <div class="form-group">
                                 <label>Точность, м.</label>
-                                <input :input="e => $store.state.post.postObject.accuracy = e.target.value" name="accuracy" v-model="postInfo.accuracy" type="text"
+                                <input :input="e => $store.state.post.postObject.accuracy = e.target.value" name="accuracy" v-model="postInfo.accuracy" type="number"
                                        class="form-control">
                             </div>
 
@@ -94,19 +94,13 @@
 
                             <div class="form-group">
                                 <label>Природоохранный статус</label>
-                                <input :input="e => $store.state.post.postObject.environmental_status = e.target.value" name="environmental_status" v-model="postInfo.environmental_status" type="text"
+                                <input :input="e => $store.state.post.postObject.environmental_status = e.target.value" name="environmental_status" v-model="postInfo.environmental_status" type="number"
                                        class="form-control">
                             </div>
 
                             <div class="form-group">
                                 <label>Имя на этикетке</label>
                                 <input :input="e => $store.state.post.postObject.label_name = e.target.value" name="label_name" v-model="postInfo.label_name" type="text"
-                                       class="form-control">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Автор статьи</label>
-                                <input :input="e => $store.state.post.postObject.author = e.target.value" name="author" id="author" v-model="postInfo.author" type="text"
                                        class="form-control">
                             </div>
 

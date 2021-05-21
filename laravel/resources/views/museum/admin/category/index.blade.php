@@ -64,7 +64,7 @@
                         <form method="GET" action="{{route('museum.admin.categories.search')}}" class="form-inline my-2 my-lg-0">
                             @csrf
                             <input name="search" value="{{ $search ?? '' }}" class="form-control mr-sm-2" type="search" placeholder="Введите для поиска" aria-label="Search">
-                            <button-component :type="'submit'" :loading="true" :delay="500" :text="'Поиск'"></button-component>
+                            <button type="submit" class="btn btn-outline-secondary">Поиск</button>
                         </form>
                     </div>
                 </nav>
@@ -91,7 +91,7 @@
                                             </a>
                                         </td>
                                         <td @if(in_array($item->parent_id, [0,1])) style="color:#ccc" @endif>
-                                            {{$item->parent_id}}  {{-- {{$item->parentCategory->title}} --}}
+                                           {{$item->parentCategory->title ?? '?' }}
                                         </td>
                                     </tr>
                             @endforeach

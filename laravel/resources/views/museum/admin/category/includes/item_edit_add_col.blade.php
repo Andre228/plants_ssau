@@ -6,8 +6,8 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <button type="submit" class="btn btn-primary" style="margin-left: 6px">Сохранить</button>
-                    <a href="{{ route('museum.admin.categories.index', 'per-page')  }}" class="btn btn-light" style="margin-left: 15px">Категории</a>
+                    <button type="submit" class="btn btn-primary" style="margin-left: 6px; width: 110px;">Сохранить</button>
+                    <a href="{{ route('museum.admin.categories.index', 'per-page')  }}" class="btn btn-light" style="margin-left: 6px; width: 110px;">Категории</a>
                 </div>
             </div>
         </div>
@@ -32,15 +32,11 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="title">Создано</label>
-                        <input type="text" value="{{ $item->created_at }}" class="form-control" disabled>
+                        <input type="text" value="{{ $item->created_at }}" class="form-control" title="{{ $item->created_at }}" disabled>
                     </div>
                     <div class="form-group">
                         <label for="title">Изменено</label>
-                        <input type="text" value="{{ $item->updated_at }}" class="form-control" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="title">Удалено</label>
-                        <input type="text" value="{{ $item->deleted_at }}" class="form-control" disabled>
+                        <input type="text" value="{{ $item->updated_at }}" class="form-control" title="{{ $item->updated_at }}" disabled>
                     </div>
                 </div>
             </div>

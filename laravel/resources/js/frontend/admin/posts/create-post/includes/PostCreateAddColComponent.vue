@@ -7,8 +7,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <button class="btn btn-primary" style="margin-left: 10px" @click="store()" :disabled="isDisabled">Добавить</button>
-                            <a :href="'/admin/museum/posts'" class="btn btn-light" style="margin-left: 15px">Назад</a>
+                            <button class="btn btn-primary" style="margin-left: 10px; width: 110px;" @click="store()" :disabled="isDisabled">Добавить</button>
+                            <a :href="'/admin/museum/posts'" class="btn btn-light" style="margin-left: 8px; width: 110px;">Назад</a>
                         </div>
                     </div>
                 </div>
@@ -40,11 +40,8 @@
 
         computed: {
             isDisabled() {
-                if ( this.$store.state.post.postObject.title
-                    && this.$store.state.post.postObject.content_raw
-                    && this.$store.state.post.postObject.category_id
-                    && this.$store.state.post.postObject.author
-                    && this.$store.state.post.postObject.excerpt ) return false;
+                if ( this.$store.state.post.postObject.russian_name
+                    && this.$store.state.post.postObject.adopted_name ) return false;
                 else return true;
             }
         }

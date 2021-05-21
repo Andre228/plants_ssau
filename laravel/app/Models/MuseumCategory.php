@@ -15,4 +15,8 @@ class MuseumCategory extends Model
         'parent_id',
         'description'
     ];
+
+    public function parentCategory() {
+        return $this->belongsTo(MuseumCategory::class, 'parent_id', 'id');
+    }
 }

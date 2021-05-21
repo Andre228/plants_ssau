@@ -4,8 +4,8 @@
 
         <div class="post-card-component">
 
-            <div style="height: 35%; overflow: hidden;" :title="post.title" v-bind:class="[!post.is_published ? 'text-muted' : '']">
-                <h3>{{post.title}}</h3>
+            <div style="height: 35%; overflow: hidden;" :title="post.russian_name" v-bind:class="[!post.is_published ? 'text-muted' : '']">
+                <h3>{{post.russian_name}}</h3>
             </div>
 
             <div class="post-card-component-container">
@@ -15,7 +15,7 @@
             <div class="post-card-footer">
 
                 <p style="border-radius: 2px; padding: 5px;" v-bind:class="[post.is_published ? 'alert-primary' : 'alert-warning']"> Автор:
-                    <small style="text-decoration: underline">{{post.author}}</small>
+                    <small style="text-decoration: underline">{{post.user.name}}</small>
                 </p>
 
             </div>

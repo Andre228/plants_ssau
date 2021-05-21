@@ -61,8 +61,9 @@
                 @csrf
                 <div class="row justify-content-center">
                     <div class="col-md-8">
-                        <div class="card card-block">
-                            <div class="card-body ml-auto">
+                        <div class="card card-block" style="display: flex; flex-direction: row; align-items: center;">
+                            @if($countPosts > 0) <div class="ml-1">Количество всех экспонатов для данной категории: {{$countPosts}}</div> @endif
+                            <div class="card-body" style="display: flex; justify-content: flex-end">
                                 <button type="submit" class="btn btn-outline-danger"><i class="fas fa-trash" style="margin-right: 5px;"></i>Удалить</button>
                             </div>
                         </div>

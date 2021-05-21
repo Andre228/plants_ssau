@@ -31,7 +31,6 @@ class PostsImport implements ToCollection
 
     public function collection(Collection $collection)
     {
-
         foreach ($collection as $key => $value) {
             if ($key > 0) {
                 $coordinates = [
@@ -45,9 +44,6 @@ class PostsImport implements ToCollection
                 DB::table('museum_posts')->insert([
                     'user_id' => Auth::id(),
                     'inventory_number' => $value[0],
-                    'slug' => Str::slug($value[3]),
-                    'author' => Auth::getUser()->name,
-                    'title' => $value[1],
                     'barcode' => $value[0],
                     'adopted_name' => $value[1],
                     'label_name' => $value[2],

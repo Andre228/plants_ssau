@@ -99,7 +99,7 @@ export class MapService {
         this.store.state.post.postObject.coordinates = {
             lat: marker.getLatLng().lat,
             lng: marker.getLatLng().lng,
-            title: marker.getPopup().getContent()
+            title: marker.getPopup() && marker.getPopup().getContent() ? marker.getPopup().getContent() : ''
         };
     }
 
