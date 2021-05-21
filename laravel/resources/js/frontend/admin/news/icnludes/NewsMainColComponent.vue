@@ -35,7 +35,7 @@
                             </div>
                             <div v-if="newsInfo.user" class="form-group">
                                 <label for="owner">Изменил</label>
-                                <input disabled name="owner" id="owner" type="text" v-model="newsInfo.user.name" class="form-control"/>
+                                <input disabled name="owner" id="owner" type="text" v-model="newsInfo.user[0].name" class="form-control"/>
                             </div>
                             <div class="form-check">
                                 <input name="is_published" type="checkbox" class="form-check-input"

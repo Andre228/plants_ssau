@@ -29,4 +29,15 @@ class WelcomeController extends Controller
 
         return view('welcome',  compact('newsList', 'postsList'));
     }
+
+    public function fetchNewsMore()
+    {
+        $newsList = $this->museumNewsRepository->getLastNews();
+
+        if (!empty($newsList)) {
+            return response(['status' => 'OK', 'details' => $newsList]);
+        } else {
+            return response(['message' => 'Пока новостей больше нет', 'status' => 'OK']);
+        }
+    }
 }

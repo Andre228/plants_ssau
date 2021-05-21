@@ -11,6 +11,7 @@ import GlobalSearchComponent from './global-search/GlobalSearchComponent';
 import FoundPostsComponent from "./posts-page/FoundPostsComponent";
 import FoundPostDetails from './posts-page/FoundPostDetails';
 import ViewPostsComponent from './posts-page/ViewPostsComponent';
+import ContactComponent from './contacts-page/ContactComponent';
 
 export const componentsModule = {
     AdminCategoriesComponent,
@@ -25,5 +26,6 @@ export const componentsModule = {
     GlobalSearchComponent,
     FoundPostsComponent,
     FoundPostDetails,
-    ViewPostsComponent
+    ViewPostsComponent,
+    ContactComponent
 };

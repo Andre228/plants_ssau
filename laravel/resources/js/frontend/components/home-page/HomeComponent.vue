@@ -1,7 +1,7 @@
 <template>
 
     <div class="row justify-content-around">
-        <div class="col-md-7">
+        <div class="col-md-7" style="padding-left: 20px">
             <side-right-component :news="newsList"></side-right-component>
         </div>
         <div class="col-md-5">
@@ -27,9 +27,7 @@
                 rest: new RequestService()
             }
         },
-        mounted() {
-            console.log(this.posts);
-        }
+        mounted() {}
     }
 </script>
 

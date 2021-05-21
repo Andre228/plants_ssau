@@ -16,6 +16,7 @@ Auth::routes();
 
 Route::get('/','Museum\WelcomeController@index')->name('museum.welcome'); // главная
 Route::get('/categories','Museum\CategoryController@index')->name('museum.category'); // раздел
+Route::get('/contacts','Museum\ContactController@index')->name('museum.contacts'); // контакты
 Route::get('/posts/search/{barcode}/{determination}/{russian_name}/{collection_date}/{label_text}/{accuracy}/{adopted_name}/{environmental_status}',
     'Museum\PostController@index')->name('museum.posts.search'); // поиск
 Route::get('/posts/{id}','Museum\PostController@show')->name('museum.posts.show'); // Информация о экспонате

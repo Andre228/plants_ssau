@@ -14,10 +14,11 @@ export class MapService {
         this.readonly = false;
     }
 
-    buildMap(containerName, store, readonly = false, latInit = null, lngInit = null) {
+    buildMap(containerName, store, readonly = false, latInit = null, lngInit = null, distanceView = 12) {
         this.readonly = readonly;
         this.markerLat = latInit ? latInit : null;
         this.markerLng = lngInit ? lngInit : null;
+
         if (store) {
             this.store = store;
             if (!latInit && !lngInit) {
@@ -25,11 +26,13 @@ export class MapService {
                 this.markerLng = this.store.getters.getPostObject.coordinates.lng;
             }
         }
+
         if (!this.markerLat || !this.markerLng) {
             this.markerLat = 51.959;
             this.markerLng = -8.623;
         }
-        this.map = L.map(containerName).setView([this.markerLat, this.markerLng], 12);
+
+        this.map = L.map(containerName).setView([this.markerLat, this.markerLng], distanceView);
         this.mapLayer = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
             attribution:
                 '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -84,9 +87,11 @@ export class MapService {
     }
 
     bindPopupListener(marker) {
-        let title = this.store.getters.getPostObject.coordinates.title;
-        if (title)
-        marker.bindPopup(title).openPopup();
+        if (this.store) {
+            let title = this.store.getters.getPostObject.coordinates.title;
+            if (title)
+                marker.bindPopup(title).openPopup();
+        }
     }
 
     unbindPopupListener(marker) {

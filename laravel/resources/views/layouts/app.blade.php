@@ -57,11 +57,8 @@
                         <li class="nav-item">
                             <a href="{{ route('museum.category') }}" class="nav-link nav-link-hover">Раздел</a>
                         </li>
-                        {{--<li class="nav-item">--}}
-                            {{--<a href="#" class="nav-link nav-link-hover">О нас</a>--}}
-                        {{--</li>--}}
                         <li class="nav-item">
-                            <a href="#" class="nav-link nav-link-hover">Контакты</a>
+                            <a href="{{ route('museum.contacts') }}" class="nav-link nav-link-hover">Контакты</a>
                         </li>
                     </ul>
 

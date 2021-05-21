@@ -83,7 +83,7 @@ class MuseumPostRepository extends CoreRepository
             $result['data'][$i]['published_at'] = Carbon::parse($result['data'][$i]['published_at'])->format('Y-m-d H:i:s');
         }
 
-        return $howMuch != null ? json_encode([ 'posts' => $result['data'], 'hasNext' => $hasNext, 'test' => $result]) : $result;
+        return $howMuch != null ? json_encode([ 'posts' => $result['data'], 'hasNext' => $hasNext ]) : $result;
     }
 
     public function deleteMore($count, $posts = null)
@@ -122,7 +122,8 @@ class MuseumPostRepository extends CoreRepository
             'russian_name',
             'determination',
             'collectors',
-            'collection_date'
+            'collection_date',
+            'adopted_name'
         ];
 
         $posts = $this->startConditions()

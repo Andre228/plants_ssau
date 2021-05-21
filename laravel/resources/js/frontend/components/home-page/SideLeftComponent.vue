@@ -10,7 +10,7 @@
                         <strong class="mb-1" style="word-break: break-word">{{ post.russian_name }}</strong>
                         <small class="text-muted" style="">Сбор: {{ getDate(post.collection_date) }}</small>
                     </div>
-                    <div class="col-10 mb-1 small">{{ post.title }}</div>
+                    <div class="col-10 mb-1 small">{{ post.adopted_name }}</div>
                 </a>
             </div>
         </div>

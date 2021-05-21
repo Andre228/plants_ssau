@@ -62,7 +62,7 @@ class MuseumNewsRepository extends CoreRepository
     }
 
 
-    public function getLastNews($count = 5)
+    public function getLastNews()
     {
         $columns = [
             'id',
@@ -80,12 +80,13 @@ class MuseumNewsRepository extends CoreRepository
             ->with([
                 'user:id,name'
             ])
-            ->take($count)
-            ->get()
-            ->toBase();
+            ->paginate(5)
+            ->toArray();
+
+        $hasNext = $news['current_page'] == $news['last_page'] ? false : true;
 
 
-        return $news;
+        return json_encode([ 'news' => $news['data'], 'hasNext' => $hasNext ]);
     }
 
 }
