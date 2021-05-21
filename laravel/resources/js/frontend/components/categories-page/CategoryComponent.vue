@@ -15,7 +15,7 @@
 
                     <div v-for="item in posts" @click="goToPost($event, item.id)" class="card mt-3 category-card" style="width: 18rem;" v-bind:class="[item.is_published ? 'published' : 'no-published']">
                         <div class="card-body">
-                            <h5 class="card-title">{{ item.title }}</h5>
+                            <h5 class="card-title">{{ item.russian_name || item.adopted_name }}</h5>
                             <h6 class="card-subtitle mb-2 text-muted">Опубликовано: {{ item.published_at }}</h6>
                         </div>
                     </div>

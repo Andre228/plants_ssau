@@ -37,7 +37,8 @@ class MuseumUserRepository extends CoreRepository
             ->select($columns)
             ->where('id', '=', $id)
             ->with([
-                'user_favorites:id,user_id,post_id'
+                'user_favorites:id,user_id,post_id',
+                'user_reading:id,user_id,news_id'
             ])
             ->get()
             ->toArray();

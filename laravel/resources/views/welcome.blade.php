@@ -2,6 +2,6 @@
 
 @section('content')
 
-    <home-component :news="{{$newsList}}" :posts="{{$postsList}}"></home-component>
+    <home-component :news="{{$newsList}}" :posts="{{$postsList}}" :usernews="{{$user}}"></home-component>
 
 @endsection

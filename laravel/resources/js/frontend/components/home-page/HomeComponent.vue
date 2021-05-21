@@ -2,7 +2,7 @@
 
     <div class="row justify-content-around">
         <div class="col-md-7" style="padding-left: 20px">
-            <side-right-component :news="newsList"></side-right-component>
+            <side-right-component :news="newsList" :usernews="userInfo"></side-right-component>
         </div>
         <div class="col-md-5">
             <side-left-component :posts="postsList"></side-left-component>
@@ -18,10 +18,11 @@
     export default {
         name: "HomeComponent",
         components: {SideRightComponent, SideLeftComponent},
-        props: ['news','posts'],
+        props: ['news','posts', 'usernews'],
 
         data() {
             return {
+                userInfo: this.usernews[0],
                 newsList: this.news,
                 postsList: this.posts,
                 rest: new RequestService()

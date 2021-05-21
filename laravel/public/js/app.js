@@ -4742,9 +4742,10 @@ __webpack_require__.r(__webpack_exports__);
     SideRightComponent: _SideRightComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
     SideLeftComponent: _SideLeftComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['news', 'posts'],
+  props: ['news', 'posts', 'usernews'],
   data: function data() {
     return {
+      userInfo: this.usernews[0],
       newsList: this.news,
       postsList: this.posts,
       rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_2__["RequestService"]()
@@ -4813,9 +4814,20 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _services_loader_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../services/loader-service */ "./resources/js/frontend/services/loader-service.js");
-/* harmony import */ var _request_services_request_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../request-services/request-service */ "./resources/js/frontend/request-services/request-service.js");
-/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/notify-service */ "./resources/js/frontend/services/notify-service.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _services_loader_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/loader-service */ "./resources/js/frontend/services/loader-service.js");
+/* harmony import */ var _request_services_request_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../request-services/request-service */ "./resources/js/frontend/request-services/request-service.js");
+/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/notify-service */ "./resources/js/frontend/services/notify-service.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
 //
 //
 //
@@ -4845,16 +4857,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "SideRightComponent",
-  props: ['news'],
+  props: ['news', 'usernews'],
   data: function data() {
     return {
       title: 'Виртуальный гербарий Самарского университета',
       newsInfo: this.news.news,
+      userInfo: this.usernews,
       page: 1,
       hasNext: false,
-      rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_1__["RequestService"](),
-      loader: new _services_loader_service__WEBPACK_IMPORTED_MODULE_0__["LoaderService"](),
-      notify: new _services_notify_service__WEBPACK_IMPORTED_MODULE_2__["NotifyService"]()
+      rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_2__["RequestService"](),
+      loader: new _services_loader_service__WEBPACK_IMPORTED_MODULE_1__["LoaderService"](),
+      notify: new _services_notify_service__WEBPACK_IMPORTED_MODULE_3__["NotifyService"](),
+      response: {}
     };
   },
   mounted: function mounted() {
@@ -4871,7 +4885,6 @@ __webpack_require__.r(__webpack_exports__);
         this.rest.get(url).then(function (response) {
           if (response && response.data.status === 'OK') {
             var details = JSON.parse(response.data.details);
-            console.log(details);
 
             if (response.data.details && details.news) {
               _this.newsInfo = _this.newsInfo.concat(details.news);
@@ -4885,6 +4898,134 @@ __webpack_require__.r(__webpack_exports__);
           _this.loader.removeLoader();
         });
       }
+    },
+    isFavoriteNews: function isFavoriteNews(news) {
+      if (this.userInfo && this.userInfo.user_reading) {
+        return this.userInfo.user_reading.some(function (item) {
+          return item.news_id === news.id;
+        });
+      } else {
+        return false;
+      }
+    },
+    toReadingList: function toReadingList(event, id) {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var url;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this2.loader.runLoader();
+
+                if (!_this2.userInfo) {
+                  _context.next = 6;
+                  break;
+                }
+
+                url = "/api/user/favorite/news/".concat(_this2.userInfo.id, "/").concat(id);
+                _context.next = 5;
+                return _this2.rest.post(url, null, null).then(function (response) {
+                  if (response.data.status == 'OK') {
+                    _this2.response = {
+                      type: 'success',
+                      text: response.data.message
+                    };
+
+                    if (response.data.details) {
+                      _this2.userInfo = response.data.details;
+                    }
+                  }
+
+                  if (response.data.status == 'ERROR') {
+                    _this2.response = {
+                      type: 'error',
+                      text: response.data.message
+                    };
+                  }
+                })["catch"](function (error) {
+                  _this2.response = {
+                    type: 'error',
+                    text: error
+                  };
+                });
+
+              case 5:
+                _this2.afterRequest();
+
+              case 6:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    deleteFromReadingList: function deleteFromReadingList(event, id) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var reading, url;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                reading = _this3.userInfo.user_reading.find(function (item) {
+                  return item.news_id === id;
+                });
+
+                _this3.loader.runLoader();
+
+                console.log(reading);
+
+                if (!(reading && reading.id)) {
+                  _context2.next = 8;
+                  break;
+                }
+
+                url = "/api/user/favorite/news/delete/".concat(reading.id);
+                _context2.next = 7;
+                return _this3.rest.destroy(url).then(function (response) {
+                  if (response.data.status == 'OK') {
+                    _this3.response = {
+                      type: 'success',
+                      text: response.data.message
+                    };
+
+                    var index = _this3.userInfo.user_reading.indexOf(reading);
+
+                    _this3.userInfo.user_reading.splice(index, 1);
+                  }
+
+                  if (response.data.status == 'ERROR') {
+                    _this3.response = {
+                      type: 'error',
+                      text: response.data.message
+                    };
+                  }
+                })["catch"](function (error) {
+                  _this3.response = {
+                    type: 'error',
+                    text: error
+                  };
+                });
+
+              case 7:
+                _this3.afterRequest();
+
+              case 8:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    afterRequest: function afterRequest() {
+      this.loader.removeLoader();
+      this.notify[this.response.type](this.response.text);
+      this.response = {};
     }
   }
 });
@@ -11484,7 +11625,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.btn-fetch-more[data-v-7a73d1f8] {\n    color: #686868 !important;\n}\n.btn-fetch-more[data-v-7a73d1f8]:hover {\n    color: black;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.btn-fetch-more[data-v-7a73d1f8] {\n    color: #686868 !important;\n}\n.btn-fetch-more[data-v-7a73d1f8]:hover {\n    color: black;\n}\n.interactive[data-v-7a73d1f8] {\n    margin-left: 17%;\n    cursor: pointer;\n    font-size: 22px;\n    color: #c8cbcf;\n}\ni[data-v-7a73d1f8] {\n    transition: .3s all;\n}\ni[data-v-7a73d1f8]:hover {\n    color: #0d6efd;\n}\n\n\n", ""]);
 
 // exports
 
@@ -62304,7 +62445,7 @@ var render = function() {
                 [
                   _c("div", { staticClass: "card-body" }, [
                     _c("h5", { staticClass: "card-title" }, [
-                      _vm._v(_vm._s(item.title))
+                      _vm._v(_vm._s(item.russian_name || item.adopted_name))
                     ]),
                     _vm._v(" "),
                     _c("h6", { staticClass: "card-subtitle mb-2 text-muted" }, [
@@ -62680,7 +62821,11 @@ var render = function() {
     _c(
       "div",
       { staticClass: "col-md-7", staticStyle: { "padding-left": "20px" } },
-      [_c("side-right-component", { attrs: { news: _vm.newsList } })],
+      [
+        _c("side-right-component", {
+          attrs: { news: _vm.newsList, usernews: _vm.userInfo }
+        })
+      ],
       1
     ),
     _vm._v(" "),
@@ -62843,7 +62988,35 @@ var render = function() {
               ),
               _c("span", { staticStyle: { "text-decoration": "underline" } }, [
                 _vm._v(_vm._s(item.user.name))
-              ])
+              ]),
+              _vm._v(" "),
+              _vm.isFavoriteNews(item)
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "interactive",
+                      attrs: { title: "Убрать из списка для чтения" },
+                      on: {
+                        click: function($event) {
+                          return _vm.deleteFromReadingList($event, item.id)
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fas fa-bookmark" })]
+                  )
+                : _c(
+                    "span",
+                    {
+                      staticClass: "interactive",
+                      attrs: { title: "Добавить в список для чтения" },
+                      on: {
+                        click: function($event) {
+                          return _vm.toReadingList($event, item.id)
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "far fa-bookmark" })]
+                  )
             ]),
             _vm._v(" "),
             _c("hr"),

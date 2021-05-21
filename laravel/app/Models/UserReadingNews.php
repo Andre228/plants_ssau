@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: Андрей
- * Date: 16.05.2021
- * Time: 11:49
+ * Date: 22.05.2021
+ * Time: 0:01
  */
 
 namespace App\Models;
@@ -11,17 +11,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserHistory extends Model
+class UserReadingNews extends Model
 {
 
     protected $fillable = [
         'user_id',
-        'post_id'
+        'news_id'
     ];
 
-    public function user_histories()
+    public function user_reading()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
 }

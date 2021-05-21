@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Museum;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserReadingNews;
 use App\Repositories\MuseumNewsRepository;
 use App\Repositories\MuseumPostRepository;
+use App\Repositories\MuseumUserRepository;
+use App\Repositories\UserFavoritesRepository;
+use App\Repositories\UserReadingRepository;
 use Illuminate\Http\Request;
 
 class WelcomeController extends Controller
@@ -12,11 +16,15 @@ class WelcomeController extends Controller
 
     private $museumPostRepository;
     private $museumNewsRepository;
+    private $museumUserRepository;
+    private $userReadingNewsRepository;
 
     public function __construct()
     {
         $this->museumPostRepository = app(MuseumPostRepository::class);
         $this->museumNewsRepository = app(MuseumNewsRepository::class);
+        $this->userReadingNewsRepository = app(UserReadingRepository::class);
+        $this->museumUserRepository = app(MuseumUserRepository::class);
     }
 
     /**
@@ -26,8 +34,10 @@ class WelcomeController extends Controller
     {
         $newsList = $this->museumNewsRepository->getLastNews();
         $postsList = $this->museumPostRepository->getLastPublishedPosts(12);
+        $userId = \Auth::id();
+        $user = json_encode($this->museumUserRepository->getUserBaseInfo($userId));
 
-        return view('welcome',  compact('newsList', 'postsList'));
+        return view('welcome',  compact('newsList', 'postsList', 'user'));
     }
 
     public function fetchNewsMore()
