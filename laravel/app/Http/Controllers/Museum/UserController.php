@@ -120,4 +120,16 @@ class UserController extends BaseController
         }
 
     }
+
+    public function getMoreNews()
+    {
+        $userNews = $this->userReadingNewsRepository->getUserReadingNews(Auth::id());
+
+        if ($userNews) {
+            return response(['status' => 'OK', 'details' => $userNews]);
+        } else {
+            return response(['status' => 'ERROR']);
+        }
+
+    }
 }

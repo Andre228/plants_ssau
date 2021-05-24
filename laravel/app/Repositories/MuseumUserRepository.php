@@ -122,4 +122,20 @@ class MuseumUserRepository extends CoreRepository
         return $result;
     }
 
+    public function getSearchingUsers($query)
+    {
+        $usersList = null;
+
+        if (!empty($query)) {
+            $usersList = Model::where('name', 'LIKE', '%' . $query . '%')
+                ->orWhere('email', 'LIKE', "%{$query}%")
+                ->get();
+        } else {
+            $usersList = Model::paginate(15);
+        }
+
+        return $usersList;
+
+    }
+
 }

@@ -5,7 +5,7 @@
                 {{ title }}
             </h4>
 
-            <article v-for="item in newsInfo" class="blog-post">
+            <article v-for="item in newsInfo" class="blog-post mt-2">
                 <div style="word-break: break-word;">
                     <h5 class="blog-post-title" style="font-weight: bold">{{ item.title }}</h5>
                 </div>
@@ -52,6 +52,10 @@
             this.hasNext = this.news.hasNext;
         },
 
+        computed: {
+
+        },
+
         methods: {
             getMore(event) {
                 if (this.hasNext) {
@@ -77,8 +81,7 @@
             isFavoriteNews(news) {
                 if (this.userInfo && this.userInfo.user_reading) {
                     return this.userInfo.user_reading.some(item => item.news_id === news.id);
-                }
-                else {
+                } else {
                     return false;
                 }
             },
@@ -125,7 +128,7 @@
                                 type: 'success',
                                 text: response.data.message
                             };
-                            const index = this.userInfo.user_reading.indexOf(reading);
+                            const index = this.userInfo.user_reading.indexOf(this.userInfo.user_reading.find(item => item.news_id === id));
                             this.userInfo.user_reading.splice(index, 1);
                         }
                         if (response.data.status == 'ERROR') {

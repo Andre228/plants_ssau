@@ -4022,12 +4022,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {},
-  methods: {
-    getUsersWithPaginate: function getUsersWithPaginate() {
-      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-    },
-    makePagination: function makePagination(paginationParams) {}
-  }
+  methods: {}
 });
 
 /***/ }),
@@ -4041,6 +4036,17 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _request_services_request_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../request-services/request-service */ "./resources/js/frontend/request-services/request-service.js");
+/* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../services/notify-service */ "./resources/js/frontend/services/notify-service.js");
+/* harmony import */ var _services_loader_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../services/loader-service */ "./resources/js/frontend/services/loader-service.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -4094,15 +4100,74 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "UserEditAddColComponent",
   props: ['user'],
   data: function data() {
     return {
-      userInfo: this.user
+      userInfo: this.user,
+      rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_1__["RequestService"](),
+      notify: new _services_notify_service__WEBPACK_IMPORTED_MODULE_2__["NotifyService"](),
+      loader: new _services_loader_service__WEBPACK_IMPORTED_MODULE_3__["LoaderService"](),
+      response: {}
     };
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {},
+  methods: {
+    save: function save() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var url;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this.loader.runLoader();
+
+                url = "/admin/museum/users/save/".concat(_this.$store.getters.UserEditObject.id);
+                _context.next = 4;
+                return _this.rest.update(url, _this.$store.getters.UserEditObject).then(function (response) {
+                  if (response.data.status == 'OK') {
+                    _this.response = {
+                      type: 'success',
+                      text: response.data.message
+                    };
+                  }
+
+                  if (response.data.status == 'ERROR') {
+                    _this.response = {
+                      type: 'error',
+                      text: response.data.message
+                    };
+                  }
+                })["catch"](function (error) {
+                  _this.response = {
+                    type: 'error',
+                    text: error
+                  };
+                });
+
+              case 4:
+                _this.afterRequest();
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    afterRequest: function afterRequest() {
+      this.loader.removeLoader();
+      this.notify[this.response.type](this.response.text);
+      this.response = {};
+    }
+  }
 });
 
 /***/ }),
@@ -4165,16 +4230,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "UserEditMainColComponent",
   props: ['user'],
   data: function data() {
     return {
-      userInfo: this.user
+      userInfo: this.user,
+      roles: [{
+        id: 1,
+        name: 'admin',
+        displayText: 'Администратор'
+      }, {
+        id: 2,
+        name: 'user',
+        displayText: 'Пользователь'
+      }]
     };
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    this.$store.getters.UserEditObject = this.userInfo;
+  },
+  methods: {
+    changeRole: function changeRole(event) {
+      var option = this.roles.find(function (item) {
+        return item.displayText === event.target.value;
+      });
+
+      if (option && option.name) {
+        this.$store.getters.UserEditObject.role = option.name;
+      }
+
+      console.log(this.$store.getters.UserEditObject);
+    }
+  }
 });
 
 /***/ }),
@@ -4938,6 +5026,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function mounted() {
     this.hasNext = this.news.hasNext;
   },
+  computed: {},
   methods: {
     getMore: function getMore(event) {
       var _this = this;
@@ -5051,7 +5140,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       text: response.data.message
                     };
 
-                    var index = _this3.userInfo.user_reading.indexOf(reading);
+                    var index = _this3.userInfo.user_reading.indexOf(_this3.userInfo.user_reading.find(function (item) {
+                      return item.news_id === id;
+                    }));
 
                     _this3.userInfo.user_reading.splice(index, 1);
                   }
@@ -6194,6 +6285,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -6201,13 +6296,14 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     UserActionsComponent: _UserActionsComponent__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  props: ['user', 'favorites', 'histories'],
+  props: ['user', 'favorites', 'histories', 'news'],
   data: function data() {
     return {
       userInfo: this.user,
       show: false,
       favoritesList: this.favorites,
       historiesList: this.histories,
+      newsList: this.news,
       name: this.user.name,
       email: this.user.email,
       disabled: false,
@@ -6343,17 +6439,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "UserActionsComponent",
-  props: ['favorites', 'user', 'histories'],
+  props: ['favorites', 'user', 'histories', 'news'],
   data: function data() {
     return {
       page: 1,
+      pageNews: 1,
       favoritesList: this.favorites,
       historiesList: this.histories,
+      newsList: this.news,
       hasNext: false,
+      hasNextNews: false,
       lastActionDate: '',
       rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_0__["RequestService"](),
       loader: new _services_loader_service__WEBPACK_IMPORTED_MODULE_1__["LoaderService"]()
@@ -6361,7 +6485,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.hasNext = this.favoritesList.hasNext;
+    this.hasNextNews = this.newsList.hasNext;
     this.getLastActions();
+    console.log(this.newsList);
   },
   methods: {
     getMore: function getMore(event) {
@@ -6387,14 +6513,49 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
     },
+    getMoreNews: function getMoreNews(event) {
+      var _this2 = this;
+
+      if (this.hasNextNews) {
+        event.stopPropagation();
+        this.loader.runLoader();
+        this.pageNews++;
+        var url = "/news/reading/?page=".concat(this.pageNews);
+        this.rest.get(url).then(function (response) {
+          if (response && response.data.status === 'OK') {
+            if (response.data.details && response.data.details.posts) {
+              _this2.newsList.posts = _this2.newsList.posts.concat(response.data.details.posts);
+            }
+
+            _this2.hasNextNews = response.data.details.hasNext;
+
+            _this2.getLastActions();
+          }
+
+          _this2.loader.removeLoader();
+        });
+      }
+    },
     getLastActions: function getLastActions() {
-      var histories = this.historiesList.map(function (item) {
-        return item.post;
-      });
-      var userActionsArray = this.favoritesList.posts.concat(histories);
-      this.lastActionDate = userActionsArray.sort(function (a, b) {
-        return new Date(b.updated_at) - new Date(a.updated_at);
-      })[0].updated_at;
+      if (this.hasFavorites() && this.hasHistories() && this.hasNews()) {
+        var histories = this.historiesList.map(function (item) {
+          return item.post;
+        });
+        console.log(this.newsList.posts);
+        var userActionsArray = this.favoritesList.posts.concat(histories).concat(this.newsList.posts);
+        this.lastActionDate = userActionsArray.sort(function (a, b) {
+          return new Date(b.updated_at) - new Date(a.updated_at);
+        })[0].updated_at;
+      }
+    },
+    hasFavorites: function hasFavorites() {
+      return this.favoritesList && this.favoritesList.posts && this.favoritesList.posts.length > 0;
+    },
+    hasHistories: function hasHistories() {
+      return this.historiesList && this.historiesList.length > 0;
+    },
+    hasNews: function hasNews() {
+      return this.newsList && this.newsList.posts && this.newsList.posts.length > 0;
     }
   }
 });
@@ -62255,7 +62416,8 @@ var render = function() {
                 "button",
                 {
                   staticClass: "btn btn-primary",
-                  staticStyle: { "margin-left": "10px", width: "fit-content" }
+                  staticStyle: { "margin-left": "10px", width: "110px" },
+                  on: { click: _vm.save }
                 },
                 [_vm._v("Сохранить")]
               ),
@@ -62264,7 +62426,7 @@ var render = function() {
                 "a",
                 {
                   staticClass: "btn btn-light",
-                  staticStyle: { "margin-left": "15px", width: "fit-content" },
+                  staticStyle: { "margin-left": "8px", width: "110px" },
                   attrs: { href: "/admin/museum/users" }
                 },
                 [_vm._v("Назад")]
@@ -62415,7 +62577,8 @@ var render = function() {
                     staticClass: "form-control",
                     attrs: {
                       input: function(e) {
-                        return (_vm.userInfo.name = e.target.value)
+                        return (_vm.$store.state.userEdit.userEditObject.name =
+                          e.target.value)
                       },
                       name: "name",
                       id: "name",
@@ -62452,7 +62615,8 @@ var render = function() {
                     staticClass: "form-control",
                     attrs: {
                       input: function(e) {
-                        return (_vm.userInfo.email = e.target.value)
+                        return (_vm.$store.state.userEdit.userEditObject.email =
+                          e.target.value)
                       },
                       name: "email",
                       id: "email",
@@ -62471,36 +62635,35 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "role" } }, [_vm._v("Роль")]),
+                  _c("label", [_vm._v("Роль")]),
                   _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.userInfo.role,
-                        expression: "userInfo.role"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      input: function(e) {
-                        return (_vm.userInfo.role = e.target.value)
-                      },
-                      name: "role",
-                      id: "role",
-                      type: "text"
+                  _c(
+                    "select",
+                    {
+                      staticClass: "form-control",
+                      attrs: { placeholder: "Выберете роль", required: "" },
+                      on: { change: _vm.changeRole }
                     },
-                    domProps: { value: _vm.userInfo.role },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.userInfo, "role", $event.target.value)
-                      }
-                    }
-                  })
+                    _vm._l(_vm.roles, function(option) {
+                      return _c(
+                        "option",
+                        {
+                          key: option.id,
+                          domProps: {
+                            selected: option.name === _vm.userInfo.role
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(option.displayText) +
+                              "\n                                "
+                          )
+                        ]
+                      )
+                    }),
+                    0
+                  )
                 ])
               ]
             )
@@ -63344,7 +63507,7 @@ var render = function() {
         ]),
         _vm._v(" "),
         _vm._l(_vm.newsInfo, function(item) {
-          return _c("article", { staticClass: "blog-post" }, [
+          return _c("article", { staticClass: "blog-post mt-2" }, [
             _c("div", { staticStyle: { "word-break": "break-word" } }, [
               _c(
                 "h5",
@@ -64740,6 +64903,7 @@ var render = function() {
             attrs: {
               favorites: _vm.favoritesList,
               user: _vm.userInfo,
+              news: _vm.newsList,
               histories: _vm.historiesList
             }
           })
@@ -64771,183 +64935,347 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-header" }, [_vm._v("Действия")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _vm._v(
-          "\n            Активности:  Последние действия - " +
-            _vm._s(_vm.lastActionDate) +
-            "\n\n            "
-        ),
-        _c("hr"),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col-md-6" }, [
-            _c(
-              "div",
-              { staticClass: "accordion", attrs: { id: "accordionFavorites" } },
-              [
-                _c("div", { staticClass: "accordion-item" }, [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass: "accordion-collapse collapse show",
-                      attrs: {
-                        id: "collapseFavorites",
-                        "aria-labelledby": "headingFavorites",
-                        "data-bs-parent": "#accordionFavorites"
-                      }
-                    },
-                    [
-                      _c(
-                        "div",
-                        { staticClass: "accordion-body accordion-actions" },
-                        [
-                          _c(
-                            "div",
-                            { staticClass: "list-group" },
-                            [
-                              _vm._l(_vm.favoritesList.posts, function(item) {
-                                return _c(
-                                  "a",
-                                  {
-                                    staticClass:
-                                      "list-group-item list-group-item-action",
-                                    attrs: { href: "/posts/" + item.id }
-                                  },
-                                  [
-                                    _c(
-                                      "div",
-                                      {
-                                        staticClass:
-                                          "d-flex w-100 justify-content-between"
-                                      },
-                                      [
-                                        _c(
-                                          "h5",
-                                          {
-                                            staticClass: "mb-1 text-truncate",
-                                            attrs: { title: item.russian_name }
-                                          },
-                                          [_vm._v(_vm._s(item.russian_name))]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "small",
-                                          {
-                                            staticClass:
-                                              "text-muted text-truncate",
-                                            attrs: { title: item.updated_at }
-                                          },
-                                          [_vm._v(_vm._s(item.updated_at))]
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c("small", { staticClass: "text-muted" }, [
-                                      _vm._v(_vm._s(item.collectors))
-                                    ])
-                                  ]
-                                )
-                              }),
-                              _vm._v(" "),
-                              _vm.hasNext
-                                ? _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn btn-outline-light btn-user-action mt-3",
-                                      on: { click: _vm.getMore }
-                                    },
-                                    [_vm._v("Загрузить ещё")]
-                                  )
-                                : _vm._e()
-                            ],
-                            2
-                          )
-                        ]
-                      )
-                    ]
-                  )
-                ])
-              ]
-            )
-          ]),
+  return _vm.hasHistories() || _vm.hasFavorites()
+    ? _c("div", [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [_vm._v("Действия")]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-md-6" }, [
-            _c(
-              "div",
-              { staticClass: "accordion", attrs: { id: "accordionHistory" } },
-              [
-                _c("div", { staticClass: "accordion-item" }, [
-                  _vm._m(1),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass: "accordion-collapse collapse show",
-                      attrs: {
-                        id: "collapseHistory",
-                        "aria-labelledby": "headingHistory",
-                        "data-bs-parent": "#accordionHistory"
-                      }
-                    },
-                    [
-                      _c(
-                        "div",
-                        { staticClass: "accordion-body accordion-actions" },
-                        [
+          _c("div", { staticClass: "card-body" }, [
+            _vm._v(
+              "\n            Активности:  Последние действия - " +
+                _vm._s(_vm.lastActionDate) +
+                "\n\n            "
+            ),
+            _c("hr"),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _vm.hasFavorites()
+                ? _c("div", { staticClass: "col-md-6 mt-3" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "accordion",
+                        attrs: { id: "accordionFavorites" }
+                      },
+                      [
+                        _c("div", { staticClass: "accordion-item" }, [
+                          _vm._m(0),
+                          _vm._v(" "),
                           _c(
                             "div",
-                            { staticClass: "list-group" },
-                            _vm._l(_vm.historiesList, function(item) {
-                              return _c(
-                                "a",
+                            {
+                              staticClass: "accordion-collapse collapse show",
+                              attrs: {
+                                id: "collapseFavorites",
+                                "aria-labelledby": "headingFavorites",
+                                "data-bs-parent": "#accordionFavorites"
+                              }
+                            },
+                            [
+                              _c(
+                                "div",
                                 {
                                   staticClass:
-                                    "list-group-item list-group-item-action",
-                                  attrs: { href: "/posts/" + item.post.id }
+                                    "accordion-body accordion-actions"
                                 },
                                 [
                                   _c(
                                     "div",
-                                    {
-                                      staticClass:
-                                        "d-flex w-100 justify-content-between"
-                                    },
+                                    { staticClass: "list-group" },
                                     [
-                                      _c("h5", { staticClass: "mb-1" }, [
-                                        _vm._v(_vm._s(item.post.russian_name))
-                                      ])
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("small", { staticClass: "text-muted" }, [
-                                    _vm._v(
-                                      "Просмотрено: " + _vm._s(item.seen_date)
-                                    )
-                                  ])
+                                      _vm._l(_vm.favoritesList.posts, function(
+                                        item
+                                      ) {
+                                        return _c(
+                                          "a",
+                                          {
+                                            staticClass:
+                                              "list-group-item list-group-item-action",
+                                            attrs: { href: "/posts/" + item.id }
+                                          },
+                                          [
+                                            _c(
+                                              "div",
+                                              {
+                                                staticClass:
+                                                  "d-flex w-100 justify-content-between"
+                                              },
+                                              [
+                                                _c(
+                                                  "h5",
+                                                  {
+                                                    staticClass:
+                                                      "mb-1 text-truncate",
+                                                    attrs: {
+                                                      title: item.russian_name
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      _vm._s(item.russian_name)
+                                                    )
+                                                  ]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "small",
+                                                  {
+                                                    staticClass:
+                                                      "text-muted text-truncate",
+                                                    attrs: {
+                                                      title: item.updated_at
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      _vm._s(item.updated_at)
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "small",
+                                              { staticClass: "text-muted" },
+                                              [_vm._v(_vm._s(item.collectors))]
+                                            )
+                                          ]
+                                        )
+                                      }),
+                                      _vm._v(" "),
+                                      _vm.hasNext
+                                        ? _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn btn-outline-light btn-user-action mt-3",
+                                              on: { click: _vm.getMore }
+                                            },
+                                            [_vm._v("Загрузить ещё")]
+                                          )
+                                        : _vm._e()
+                                    ],
+                                    2
+                                  )
                                 ]
                               )
-                            }),
-                            0
+                            ]
                           )
-                        ]
-                      )
-                    ]
-                  )
-                ])
-              ]
-            )
+                        ])
+                      ]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.hasHistories()
+                ? _c("div", { staticClass: "col-md-6 mt-3" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "accordion",
+                        attrs: { id: "accordionHistory" }
+                      },
+                      [
+                        _c("div", { staticClass: "accordion-item" }, [
+                          _vm._m(1),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "accordion-collapse collapse show",
+                              attrs: {
+                                id: "collapseHistory",
+                                "aria-labelledby": "headingHistory",
+                                "data-bs-parent": "#accordionHistory"
+                              }
+                            },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "accordion-body accordion-actions"
+                                },
+                                [
+                                  _c(
+                                    "div",
+                                    { staticClass: "list-group" },
+                                    _vm._l(_vm.historiesList, function(item) {
+                                      return _c(
+                                        "a",
+                                        {
+                                          staticClass:
+                                            "list-group-item list-group-item-action",
+                                          attrs: {
+                                            href: "/posts/" + item.post.id
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "div",
+                                            {
+                                              staticClass:
+                                                "d-flex w-100 justify-content-between"
+                                            },
+                                            [
+                                              _c(
+                                                "h5",
+                                                {
+                                                  staticClass: "mb-1",
+                                                  staticStyle: {
+                                                    "word-break": "break-word"
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    _vm._s(
+                                                      item.post.russian_name
+                                                    )
+                                                  )
+                                                ]
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "small",
+                                            { staticClass: "text-muted" },
+                                            [
+                                              _vm._v(
+                                                "Просмотрено: " +
+                                                  _vm._s(item.seen_date)
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    }),
+                                    0
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ])
+                      ]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.hasNews()
+                ? _c("div", { staticClass: "col-md-6 mt-3" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "accordion",
+                        attrs: { id: "accordionNews" }
+                      },
+                      [
+                        _c("div", { staticClass: "accordion-item" }, [
+                          _vm._m(2),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "accordion-collapse collapse show",
+                              attrs: {
+                                id: "collapseNews",
+                                "aria-labelledby": "headingNews",
+                                "data-bs-parent": "#accordionNews"
+                              }
+                            },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "accordion-body accordion-actions"
+                                },
+                                [
+                                  _c(
+                                    "div",
+                                    { staticClass: "list-group" },
+                                    [
+                                      _vm._l(_vm.newsList.posts, function(
+                                        item
+                                      ) {
+                                        return _c(
+                                          "a",
+                                          {
+                                            staticClass:
+                                              "list-group-item list-group-item-action",
+                                            attrs: {
+                                              href: "/news/" + item.post.id
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "div",
+                                              {
+                                                staticClass:
+                                                  "d-flex w-100 justify-content-between"
+                                              },
+                                              [
+                                                _c(
+                                                  "h5",
+                                                  { staticClass: "mb-1" },
+                                                  [
+                                                    _vm._v(
+                                                      _vm._s(item.post.title)
+                                                    )
+                                                  ]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "small",
+                                                  {
+                                                    staticClass:
+                                                      "text-muted text-truncate",
+                                                    attrs: {
+                                                      title: item.updated_at
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      _vm._s(item.updated_at)
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      }),
+                                      _vm._v(" "),
+                                      _vm.hasNextNews
+                                        ? _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn btn-outline-light btn-user-action mt-3",
+                                              on: { click: _vm.getMoreNews }
+                                            },
+                                            [_vm._v("Загрузить ещё")]
+                                          )
+                                        : _vm._e()
+                                    ],
+                                    2
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ])
+                      ]
+                    )
+                  ])
+                : _vm._e()
+            ])
           ])
         ])
       ])
-    ])
-  ])
+    : _vm._e()
 }
 var staticRenderFns = [
   function() {
@@ -65002,6 +65330,35 @@ var staticRenderFns = [
           [
             _vm._v(
               "\n                                    История\n                                "
+            )
+          ]
+        )
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "h2",
+      { staticClass: "accordion-header", attrs: { id: "headingNews" } },
+      [
+        _c(
+          "button",
+          {
+            staticClass: "accordion-button",
+            attrs: {
+              type: "button",
+              "data-bs-toggle": "collapse",
+              "data-bs-target": "#collapseNews",
+              "aria-expanded": "true",
+              "aria-controls": "collapseNews"
+            }
+          },
+          [
+            _vm._v(
+              "\n                                    Новости\n                                "
             )
           ]
         )
@@ -95697,6 +96054,38 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/frontend/store/admin/user-edit.js":
+/*!********************************************************!*\
+  !*** ./resources/js/frontend/store/admin/user-edit.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: {
+    userEditObject: {}
+  },
+  actions: {
+    setUserEditObject: function setUserEditObject(context, payload) {
+      context.commit('setUserEditObject', payload);
+    }
+  },
+  mutations: {
+    setUserEditObject: function setUserEditObject(state, payload) {
+      state.userEditObject = payload;
+    }
+  },
+  getters: {
+    getUserEditObject: function getUserEditObject(state) {
+      return state.userEditObject;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/frontend/store/admin/user.js":
 /*!***************************************************!*\
   !*** ./resources/js/frontend/store/admin/user.js ***!
@@ -95750,6 +96139,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _admin_post__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./admin/post */ "./resources/js/frontend/store/admin/post.js");
 /* harmony import */ var _admin_user__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./admin/user */ "./resources/js/frontend/store/admin/user.js");
 /* harmony import */ var _admin_news__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./admin/news */ "./resources/js/frontend/store/admin/news.js");
+/* harmony import */ var _admin_user_edit__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./admin/user-edit */ "./resources/js/frontend/store/admin/user-edit.js");
+
 
 
 
@@ -95760,7 +96151,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
   modules: {
     post: _admin_post__WEBPACK_IMPORTED_MODULE_2__["default"],
     user: _admin_user__WEBPACK_IMPORTED_MODULE_3__["default"],
-    news: _admin_news__WEBPACK_IMPORTED_MODULE_4__["default"]
+    news: _admin_news__WEBPACK_IMPORTED_MODULE_4__["default"],
+    userEdit: _admin_user_edit__WEBPACK_IMPORTED_MODULE_5__["default"]
   }
 }));
 

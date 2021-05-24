@@ -2,6 +2,6 @@
 
 @section('content')
 
-    <profile-component :user="{{$user}}" :favorites="{{$userFavorites}}" :histories="{{$userHistories}}"></profile-component>
+    <profile-component :user="{{$user}}" :favorites="{{$userFavorites}}" :histories="{{$userHistories}}" :news="{{$userNews}}"></profile-component>
 
 @endsection

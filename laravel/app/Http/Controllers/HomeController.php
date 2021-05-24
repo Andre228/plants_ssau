@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserReadingNews;
 use App\Repositories\UserFavoritesRepository;
 use App\Repositories\UserHistoryRepository;
+use App\Repositories\UserReadingRepository;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -12,6 +14,7 @@ class HomeController extends Controller
 
     private $userFavoritesRepository;
     private $userHistoryRepository;
+    private $userNewsRepository;
     /**
      * Create a new controller instance.
      *
@@ -23,6 +26,7 @@ class HomeController extends Controller
 
         $this->userFavoritesRepository = app(UserFavoritesRepository::class);
         $this->userHistoryRepository = app(UserHistoryRepository::class);
+        $this->userNewsRepository = app(UserReadingRepository::class);
     }
 
     /**
@@ -35,8 +39,9 @@ class HomeController extends Controller
         $user = \Auth::user();
         $userFavorites = json_encode($this->userFavoritesRepository->getUserFavorites($user->id));
         $userHistories = json_encode($this->userHistoryRepository->getHistories($user->id));
+        $userNews = json_encode($this->userNewsRepository->getUserReadingNews($user->id));
 
-        return view('home', compact('user', 'userFavorites', 'userHistories'));
+        return view('home', compact('user', 'userFavorites', 'userHistories', 'userNews'));
     }
 
     public function update(Request $request, $id) {

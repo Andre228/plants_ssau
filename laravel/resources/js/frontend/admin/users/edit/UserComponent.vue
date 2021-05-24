@@ -42,15 +42,6 @@
         },
 
         methods: {
-
-            getUsersWithPaginate(url = '') {
-
-            },
-
-            makePagination(paginationParams) {
-
-
-            }
         }
     }
 </script>

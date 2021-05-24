@@ -31,7 +31,7 @@ class UserReadingRepository extends CoreRepository
         $columns = [
             'user_id',
             'news_id',
-            'created_at'
+            'updated_at'
         ];
 
         if ($all) {
@@ -61,36 +61,34 @@ class UserReadingRepository extends CoreRepository
 
     private function getNews($favorites)
     {
-        $newsIds = [];
-        foreach ($favorites as $item) {
-            $newsIds [] = [
-                'news_id' => $item['news_id']
-            ];
-        }
-
         $news = [];
+        $newsList = [];
 
-        foreach ($newsIds as $id) {
-            $news [] = MuseumNews::select(['id', 'user_id', 'title'])->where('id', '=', $id)->get()->toArray();
+        $newsIds = [];
+        if (!empty($favorites)) {
+            foreach ($favorites as $item) {
+                $newsIds [] = [
+                    'news_id' => $item['news_id'],
+                    'updated_at' => $item['updated_at']
+                ];
+            }
+
+            foreach ($newsIds as $item) {
+                $news = MuseumNews::select(['id', 'user_id', 'title', 'updated_at'])->where('id', '=', $item['news_id'])->get()->toArray();
+
+                if ($news) {
+                    $newsList [] = [
+                        'post' => array_merge(...$news),
+                        'updated_at' => $item['updated_at'],
+                    ];
+                }
+
+            }
+
         }
 
-        return array_merge(...$news);
+        return $newsList ? $newsList : [];
     }
 
-//    public function getUserFavoritesNews($userId)
-//    {
-//        $columns = [
-//            'news_id'
-//        ];
-//
-//        $favorites = $this->startConditions()
-//            ->select($columns)
-//            ->where('user_id', '=', $userId)
-//            ->orderBy('id', 'desc')
-//            ->get()
-//            ->toArray();
-//
-//        return json_encode($favorites);
-//    }
 
 }

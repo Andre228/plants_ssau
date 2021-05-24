@@ -19,6 +19,7 @@ Route::post('/news/comments/set/{newsId}/{newsInfoId}/{replyId?}','Museum\NewsCo
 
 // писок для чтения
 Route::post('/user/favorite/news/{newsId}','Museum\UserController@addToReadingNews')->name('museum.user.set.reading');
+Route::get('/news/reading','Museum\UserController@getMoreNews')->name('museum.news.get.batch');
 Route::delete('/user/favorite/news/delete/{id}','Museum\UserController@removeFromReadingList')->name('museum.user.set.reading');
 Route::post('/user/news/like/{id}','Museum\NewsController@likeNews')->name('museum.news.like');
 
@@ -91,7 +92,9 @@ Route::group($groupDataAdmin, function () {
     Route::delete('/posts/delete/{count}','PostController@deletePosts')->name('museum.admin.posts.delete.more');
 
 
+    Route::patch('/users/save/{id}','UserController@update')->name('museum.admin.users.update');
     Route::get('/users','UserController@index')->name('museum.admin.users.index');
+    Route::get('/users/search','UserController@search')->name('museum.admin.users.search');
     Route::get('/users/{id}/edit','UserController@edit')->name('museum.admin.users.edit');
    // Route::get('/getusers/per-page','UserController@getUsersOnPage')->name('museum.admin.users.on-page');
 

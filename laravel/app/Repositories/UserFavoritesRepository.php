@@ -49,19 +49,24 @@ class UserFavoritesRepository extends CoreRepository
 
     private function getPosts($favorites)
     {
-        foreach ($favorites as $item) {
-            $postIds [] = [
-                'post_id' => $item['post_id']
-            ];
-        }
-
         $posts = [];
 
-        foreach ($postIds as $id) {
-            $posts [] = MuseumPost::select(['id', 'russian_name', 'updated_at', 'collectors'])->where('id', '=', $id)->get()->toArray();
+        if (!empty($favorites)) {
+            foreach ($favorites as $item) {
+                $postIds [] = [
+                    'post_id' => $item['post_id']
+                ];
+            }
+
+            $posts = [];
+
+            foreach ($postIds as $id) {
+                $posts [] = MuseumPost::select(['id', 'russian_name', 'updated_at', 'collectors'])->where('id', '=', $id)->get()->toArray();
+            }
         }
 
-        return array_merge(...$posts);
+
+        return $posts ? array_merge(...$posts) : [];
     }
 
 

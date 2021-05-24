@@ -75,22 +75,25 @@ class UserHistoryRepository extends CoreRepository
 
     private function getPosts($histories)
     {
-        foreach ($histories as $item) {
-            $postIds [] = [
-                'post_id' => $item['post_id'],
-                'seen_date' => $item['created_at']
-            ];
-        }
-
         $posts = [];
 
-        foreach ($postIds as $id) {
-            $post = MuseumPost::select(['id', 'russian_name', 'updated_at', 'collectors'])->where('id', '=', $id['post_id'])->get()->toArray();
-            $posts [] = [
-                'post' => array_merge(...$post),
-                'seen_date' => $id['seen_date'],
-            ];
+        if (!empty($histories)) {
+            foreach ($histories as $item) {
+                $postIds [] = [
+                    'post_id' => $item['post_id'],
+                    'seen_date' => $item['created_at']
+                ];
+            }
+
+            foreach ($postIds as $id) {
+                $post = MuseumPost::select(['id', 'russian_name', 'updated_at', 'collectors'])->where('id', '=', $id['post_id'])->get()->toArray();
+                $posts [] = [
+                    'post' => array_merge(...$post),
+                    'seen_date' => $id['seen_date'],
+                ];
+            }
         }
+
 
         return $posts;
     }

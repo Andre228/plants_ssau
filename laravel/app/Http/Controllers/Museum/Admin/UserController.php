@@ -90,7 +90,21 @@ class UserController extends BaseAdminController
      */
     public function update(Request $request, $id)
     {
-        //
+        $item = $this->museumUserRepository->getEdit($id);
+        $data = $request->all();
+
+
+        if (empty($item)) {
+            return response(['message' => 'Сохраняемая пользователь не существует']);
+        }
+
+        $result = User::where('id', '=', $id)->update($data);
+
+        if ($result) {
+            return response(['message' => 'Успешно сохранено', 'status' => 'OK']);
+        } else {
+            return response(['message' => 'Ошибка сохранения, перепроверьте данные', 'status' => 'ERROR']);
+        }
     }
 
     /**
@@ -109,5 +123,13 @@ class UserController extends BaseAdminController
     public function getUsersOnPage()
     {
 
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->search;
+        $users = $this->museumUserRepository->getSearchingUsers($request->search);
+
+        return view('museum.admin.user.index', compact('users', 'search'));
     }
 }

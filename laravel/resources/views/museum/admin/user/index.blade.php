@@ -46,9 +46,10 @@
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTableToggler" aria-controls="navbarTableToggler" aria-expanded="false" aria-label="Toggle navigation">
                         <i style="font-size: 30px;" class="fas fa-caret-square-down"></i>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarTableToggler">
-                        <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Введите для поиска" aria-label="Search">
+                    <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarTableToggler">
+                        <form method="GET" action="{{route('museum.admin.users.search')}}" class="form-inline my-2 my-lg-0">
+                            @csrf
+                            <input name="search" class="form-control mr-sm-2" value="{{ $search ?? '' }}" type="search" placeholder="Введите для поиска" aria-label="Search">
                             <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Поиск</button>
                         </form>
                     </div>
