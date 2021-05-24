@@ -18,14 +18,14 @@ class CreateMuseumNewsTable extends Migration
             $table->bigInteger('user_id')->unsigned();
 
             $table->string('title');
-            $table->text('content_raw')->default(null);;
-            $table->text('content_html')->default(null);;
+            $table->text('content_raw')->default(null);
+            $table->text('content_html')->default(null);
             $table->boolean('is_published')->default(false);
 
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');;
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

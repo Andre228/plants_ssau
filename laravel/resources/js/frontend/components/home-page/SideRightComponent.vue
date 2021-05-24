@@ -10,11 +10,12 @@
                     <h5 class="blog-post-title" style="font-weight: bold">{{ item.title }}</h5>
                 </div>
                 <p class="blog-post-meta">Последнее изменение: {{ item.updated_at }}, написал(а): <span style="text-decoration: underline">{{ item.user.name }}</span>
-                    <span v-if="isFavoriteNews(item)" @click="deleteFromReadingList($event, item.id)" title="Убрать из списка для чтения" class="interactive"><i class="fas fa-bookmark"></i></span>
-                    <span v-else @click="toReadingList($event, item.id)" title="Добавить в список для чтения" class="interactive"><i class="far fa-bookmark"></i></span>
+                    <span v-if="isFavoriteNews(item) && userInfo" @click="deleteFromReadingList($event, item.id)" title="Убрать из списка для чтения" class="interactive"><i class="fas fa-bookmark"></i></span>
+                    <span v-if="!isFavoriteNews(item) && userInfo" @click="toReadingList($event, item.id)" title="Добавить в список для чтения" class="interactive"><i class="far fa-bookmark"></i></span>
                 </p>
                 <hr>
                <p>{{ item.content_raw }}</p>
+                <div class="d-flex justify-content-end"><a :href="'/news/' + item.id">Подробнее</a></div>
             </article>
 
             <nav v-if="hasNext" class="blog-pagination" aria-label="Pagination">
@@ -85,7 +86,7 @@
             async toReadingList(event, id) {
                 this.loader.runLoader();
                 if (this.userInfo) {
-                    const url = `/api/user/favorite/news/${this.userInfo.id}/${id}`;
+                    const url = `/user/favorite/news/${id}`;
                     await this.rest.post(url, null, null).then(response => {
                         if (response.data.status == 'OK') {
                             this.response = {
@@ -115,11 +116,9 @@
             },
 
             async deleteFromReadingList(event, id) {
-                const reading = this.userInfo.user_reading.find(item => item.news_id === id);
                 this.loader.runLoader();
-                console.log(reading);
-                if (reading && reading.id) {
-                    const url = `/api/user/favorite/news/delete/${reading.id}`;
+                if (id >= 0) {
+                    const url = `/user/favorite/news/delete/${id}`;
                     await this.rest.destroy(url).then(response => {
                         if (response.data.status == 'OK') {
                             this.response = {
@@ -179,6 +178,17 @@
 
     i:hover {
         color: #0d6efd;
+    }
+
+    a {
+        text-decoration: none;
+        color: #0d6efd !important;
+        cursor: pointer;
+    }
+
+    a:hover {
+        text-decoration: underline !important;
+        color: #0056b3 !important;
     }
 
 

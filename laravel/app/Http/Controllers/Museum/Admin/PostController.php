@@ -312,7 +312,7 @@ class PostController extends BaseAdminController
         if (count($posts) > 0) {
             return response(['status' => 'OK', 'details' => $posts]);
         } else {
-            return response(['message' => 'Поиск не дал результатов', 'status' => 'OK']);
+            return response(['message' => 'Поиск не дал результатов', 'status' => 'ERROR']);
         }
     }
 }

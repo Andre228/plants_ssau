@@ -9,8 +9,8 @@
 namespace App\Repositories;
 
 use App\Models\MuseumNews as Model;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use App\Models\MuseumNewsComment;
+use App\Models\User;
 
 
 class MuseumNewsRepository extends CoreRepository
@@ -24,6 +24,35 @@ class MuseumNewsRepository extends CoreRepository
     public function getEdit($id)
     {
         return $this->startConditions()->find($id);
+    }
+
+    public function getNewsWithAllInfo($id)
+    {
+        $columns = [
+            'id',
+            'user_id',
+            'title',
+            'content_raw',
+            'content_html',
+            'is_published',
+            'updated_at'
+        ];
+
+        $result = $this->startConditions()
+            ->select($columns)
+            ->where('id', '=', $id)
+            ->with(['news_info:news_id,likes'])
+            ->with(['news_info.news_comments'])
+            ->with(['news_info.news_comments.reply'])
+            ->get()
+            ->toArray();
+
+        $user = User::select(['id', 'name'])->where('id', '=', $result[0]['user_id'])->first()->toArray();
+        $result [0]['user'] = $user;
+
+        return json_encode($result[0]);
+
+
     }
 
     public function getAllWithPaginate($howMuch = null)
@@ -87,6 +116,29 @@ class MuseumNewsRepository extends CoreRepository
 
 
         return json_encode([ 'news' => $news['data'], 'hasNext' => $hasNext ]);
+    }
+
+    public function createNewComment($data, $newsId, $newsInfoId, $replyId, $userId, $username)
+    {
+
+        $data ['news_id'] = $newsId;
+        $data ['news_info_id'] = $newsInfoId;
+        if ($replyId) {
+            $data ['reply_id'] = $replyId;
+        }
+        $data ['user_id'] = $userId;
+        $data ['username'] = $username;
+
+        $item = new MuseumNewsComment($data);
+        $result = $item->save();
+
+        if ($result) {
+            $newsInfo = $this->getNewsWithAllInfo($newsId);
+            return $newsInfo;
+        } else {
+            return false;
+        }
+
     }
 
 }

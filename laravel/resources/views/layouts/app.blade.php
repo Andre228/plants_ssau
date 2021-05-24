@@ -48,9 +48,9 @@
                         <li class="nav-item active">
                             <a href="{{ route('museum.welcome') }}" class="nav-link nav-link-hover">Главная</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link nav-link-hover">Новости</a>
-                        </li>
+                        {{--<li class="nav-item">--}}
+                            {{--<a href="#" class="nav-link nav-link-hover">Новости</a>--}}
+                        {{--</li>--}}
                         <li class="nav-item">
                             <a href="{{ route('museum.posts.view') }}" class="nav-link nav-link-hover">Экспонаты</a>
                         </li>

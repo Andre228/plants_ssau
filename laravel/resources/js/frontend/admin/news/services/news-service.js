@@ -18,5 +18,9 @@ export class NewsService {
     }
 
 
+    destroy(newsId) {
+        const url = `/admin/museum/news/delete/${newsId}`;
+        return this.requestService.destroy(url);
+    }
 
 }

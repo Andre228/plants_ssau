@@ -138,12 +138,12 @@
                                  window.location.assign('/admin/museum/posts?success_deleted=Успешно удалено');
                             }
                             if (response.data.status == 'ERROR') {
-                                this.errors = response.data.message;
+                                this.notifyService.error(response.data.message);
                             }
                         })
-                        .catch((error) => this.errors = error);
+                        .catch((error) => this.notifyService.error(error));
                 } else {
-                    this.errors = 'Ошибка удаления экспоната, данный экспонат не существует';
+                    this.notifyService.error('Ошибка удаления экспоната, данный экспонат не существует');
                 }
 
             },

@@ -72,11 +72,6 @@
         },
 
         methods: {
-            destroy() {
-
-
-            },
-
             async update() {
 
                 this.loaderService.runLoader();
@@ -107,6 +102,40 @@
 
                 this.afterRequest();
 
+            },
+
+            async destroy() {
+                const newsId = this.$store.getters.getNewsObject.id;
+                if (newsId) {
+                    await this.newsService.destroy(newsId).then(response => {
+                        if (response.data.status == 'OK') {
+                            this.response = {
+                                type: 'success',
+                                text: response.data.message
+                            };
+                        }
+                        if (response.data.status == 'ERROR') {
+                            this.response = {
+                                type: 'error',
+                                text: response.data.message
+                            };
+                        }
+                    })
+                        .catch((error) =>  {
+                            this.response = {
+                                type: 'error',
+                                text: error
+                            }
+                        });
+
+                    if (this.response.type === 'success') {
+                        window.location.assign('/admin/museum/news?deleted=1');
+                    } else {
+                        window.location.assign('/admin/museum/news?deleted=0');
+                    }
+                    localStorage.setItem('deleted-news-response', this.response.text);
+
+                }
             },
 
             afterRequest() {

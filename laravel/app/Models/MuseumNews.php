@@ -21,4 +21,9 @@ class MuseumNews extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function news_info()
+    {
+        return $this->hasOne(MuseumNewsInfo::class,'news_id','id');
+    }
 }

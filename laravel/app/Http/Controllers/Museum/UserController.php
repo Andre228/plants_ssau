@@ -51,19 +51,19 @@ class UserController extends BaseController
 
     }
 
-    public function addToReadingNews($userId, $newsId)
+    public function addToReadingNews($newsId)
     {
         $data [] = [
-            'user_id' => $userId,
+            'user_id' => Auth::id(),
             'news_id' => $newsId
         ];
 
         $item = new UserReadingNews($data);
-        $item->user_id = $userId;
+        $item->user_id = Auth::id();
         $item->news_id = $newsId;
         $result = $item->save();
 
-        $user = $this->museumUserRepository->getUserBaseInfo($userId)[0];
+        $user = $this->museumUserRepository->getUserBaseInfo(Auth::id())[0];
 
         if ($result) {
             return response(['message' => 'Добавлено в список для чтения', 'status' => 'OK', 'details' => $user]);
@@ -91,11 +91,14 @@ class UserController extends BaseController
 
     public function removeFromReadingList($id)
     {
+        $userId = Auth::id();
 
-        $userFavorite = $this->userReadingNewsRepository->getEdit($id);
+        $userFavorite = UserReadingNews::where('news_id', '=', $id)->where('user_id', '=', $userId)->first();
 
-        $result = $userFavorite->delete();
-
+        $result = null;
+        if ($userFavorite) {
+            $result = $userFavorite->delete();
+        }
 
         if ($result) {
             return response(['message' => 'Удалено из списка для чтения', 'status' => 'OK']);

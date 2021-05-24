@@ -14,7 +14,18 @@
 
 Auth::routes();
 
+
+Route::post('/news/comments/set/{newsId}/{newsInfoId}/{replyId?}','Museum\NewsController@addComment')->name('museum.news.comment.set')->middleware('auth:web'); // оставить комментарий
+
+// писок для чтения
+Route::post('/user/favorite/news/{newsId}','Museum\UserController@addToReadingNews')->name('museum.user.set.reading');
+Route::delete('/user/favorite/news/delete/{id}','Museum\UserController@removeFromReadingList')->name('museum.user.set.reading');
+Route::post('/user/news/like/{id}','Museum\NewsController@likeNews')->name('museum.news.like');
+
+
 Route::get('/','Museum\WelcomeController@index')->name('museum.welcome'); // главная
+Route::get('/news/{id}','Museum\NewsController@show')->name('museum.news.show'); // раздел
+
 Route::get('/categories','Museum\CategoryController@index')->name('museum.category'); // раздел
 Route::get('/contacts','Museum\ContactController@index')->name('museum.contacts'); // контакты
 Route::get('/posts/search/{barcode}/{determination}/{russian_name}/{collection_date}/{label_text}/{accuracy}/{adopted_name}/{environmental_status}',
@@ -52,7 +63,8 @@ Route::group($groupDataAdminDashboard, function (){
 //Admin categories controllers
 $groupDataAdmin = [
     'namespace' => 'Museum\Admin',
-    'prefix' => '/admin/museum'
+    'prefix' => '/admin/museum',
+    'middleware' => 'auth'
 ];
 Route::group($groupDataAdmin, function () {
 
@@ -89,6 +101,7 @@ Route::group($groupDataAdmin, function () {
     Route::post('/news','NewsController@store')->name('museum.admin.news.store');
     Route::get('/news/{id}/edit','NewsController@edit')->name('museum.admin.news.edit');
     Route::patch('/news/{id}','NewsController@update')->name('museum.admin.news.update');
+    Route::delete('/news/delete/{id}','NewsController@destroy')->name('museum.admin.news.destroy');
 
 });
 
