@@ -6,7 +6,6 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <!--<a class="navbar-brand" href="#">Navbar</a>-->
 
             <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
@@ -19,7 +18,7 @@
                                 <input @change="changeFile($event)" type="file" name="file" id="fileExportFromCSV" class="input-file">
                                 <label for="fileExportFromCSV" class="btn btn-tertiary js-labelFile">
                                     <i class="icon fa fa-check"></i>
-                                    <span class="js-fileName">Експорт</span>
+                                    <span class="js-fileName">Импорт</span>
                                 </label>
                             </div>
                         </div>

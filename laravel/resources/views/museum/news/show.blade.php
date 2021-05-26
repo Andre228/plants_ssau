@@ -2,6 +2,6 @@
 
 @section('content')
 
-    <show-news-component :news="{{$newsInfo}}" :reading="{{$readingNews}}" :likeit="{{$like}}"></show-news-component>
+    <show-news-component :news="{{$newsInfo}}" :reading="{{$readingNews}}" :likeit="{{$like}}" :islogin="{{$isLoggedIn}}"></show-news-component>
 
 @endsection

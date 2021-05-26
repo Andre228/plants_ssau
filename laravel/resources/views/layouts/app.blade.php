@@ -85,10 +85,11 @@
                                     <a class="dropdown-item" href="{{ route('home') }}">
                                         <i class="fas fa-user" style="font-size: 18px; margin-right: 8px;"></i>{{ __('Профиль') }}
                                     </a>
-
-                                    <a class="dropdown-item" href="{{ route('museum.admin_dashboard.index') }}">
-                                        <i class="fas fa-clipboard-list" style="font-size: 18px; margin-right: 8px;"></i>{{ __('Управление') }}
-                                    </a>
+                                    @if( Auth::user()->role == 'admin' )
+                                        <a class="dropdown-item" href="{{ route('museum.admin_dashboard.index') }}">
+                                            <i class="fas fa-clipboard-list" style="font-size: 18px; margin-right: 8px;"></i>{{ __('Управление') }}
+                                        </a>
+                                    @endif
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();

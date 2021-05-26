@@ -3058,7 +3058,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 
 
 
@@ -5277,12 +5276,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ShowNewsComponent",
-  props: ['news', 'reading', 'likeit'],
+  props: ['news', 'reading', 'likeit', 'islogin'],
   data: function data() {
     return {
       likes: this.news && this.news.news_info ? this.news.news_info.likes : 0,
       isLikeIt: this.likeit,
       read: this.reading,
+      isLoggedIn: this.islogin,
       isReading: false,
       newsList: this.news,
       answer: {
@@ -60805,7 +60805,7 @@ var staticRenderFns = [
       [
         _c("i", { staticClass: "icon fa fa-check" }),
         _vm._v(" "),
-        _c("span", { staticClass: "js-fileName" }, [_vm._v("Експорт")])
+        _c("span", { staticClass: "js-fileName" }, [_vm._v("Импорт")])
       ]
     )
   }
@@ -63656,39 +63656,41 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "mr-2" }, [
-                  _vm.isReading
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "interactive",
-                          attrs: { title: "Убрать из списка для чтения" },
-                          on: {
-                            click: function($event) {
-                              return _vm.deleteFromReadingList($event)
-                            }
-                          }
-                        },
-                        [_c("i", { staticClass: "fas fa-bookmark" })]
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  !_vm.isReading
-                    ? _c(
-                        "span",
-                        {
-                          staticClass: "interactive",
-                          attrs: { title: "Добавить в список для чтения" },
-                          on: {
-                            click: function($event) {
-                              return _vm.toReadingList($event)
-                            }
-                          }
-                        },
-                        [_c("i", { staticClass: "far fa-bookmark" })]
-                      )
-                    : _vm._e()
-                ])
+                _vm.isLoggedIn
+                  ? _c("div", { staticClass: "mr-2" }, [
+                      _vm.isReading
+                        ? _c(
+                            "span",
+                            {
+                              staticClass: "interactive",
+                              attrs: { title: "Убрать из списка для чтения" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteFromReadingList($event)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fas fa-bookmark" })]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      !_vm.isReading
+                        ? _c(
+                            "span",
+                            {
+                              staticClass: "interactive",
+                              attrs: { title: "Добавить в список для чтения" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.toReadingList($event)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "far fa-bookmark" })]
+                          )
+                        : _vm._e()
+                    ])
+                  : _vm._e()
               ]
             ),
             _vm._v(" "),
@@ -63696,30 +63698,32 @@ var render = function() {
             _vm._v(" "),
             _c("p", [_vm._v(_vm._s(_vm.newsList.content_raw))]),
             _vm._v(" "),
-            _c("div", [
-              _c(
-                "span",
-                {
-                  staticClass: "interactive",
-                  staticStyle: { "margin-left": "unset" },
-                  attrs: { title: "Оценить" },
-                  on: { click: _vm.likeNews }
-                },
-                [
-                  _vm.isLikeIt
-                    ? _c("i", { staticClass: "fas fa-heart" })
-                    : _vm._e(),
-                  _vm._v(" "),
-                  !_vm.isLikeIt
-                    ? _c("i", { staticClass: "far fa-heart" })
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.likes > 0
-                    ? _c("span", [_vm._v(_vm._s(_vm.likes))])
-                    : _vm._e()
-                ]
-              )
-            ])
+            _vm.isLoggedIn
+              ? _c("div", [
+                  _c(
+                    "span",
+                    {
+                      staticClass: "interactive",
+                      staticStyle: { "margin-left": "unset" },
+                      attrs: { title: "Оценить" },
+                      on: { click: _vm.likeNews }
+                    },
+                    [
+                      _vm.isLikeIt
+                        ? _c("i", { staticClass: "fas fa-heart" })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      !_vm.isLikeIt
+                        ? _c("i", { staticClass: "far fa-heart" })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.likes > 0
+                        ? _c("span", [_vm._v(_vm._s(_vm.likes))])
+                        : _vm._e()
+                    ]
+                  )
+                ])
+              : _vm._e()
           ])
         : _vm._e(),
       _vm._v(" "),
@@ -63841,50 +63845,52 @@ var render = function() {
           ])
         : _vm._e(),
       _vm._v(" "),
-      _c("div", { staticClass: "mb-3" }, [
-        _c("label", { staticClass: "form-label mt-3" }, [
-          _vm._v("Напишите ваш комментарий")
-        ]),
-        _vm._v(" "),
-        _c("textarea", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.answer.text,
-              expression: "answer.text"
-            }
-          ],
-          ref: "replyArea",
-          staticClass: "form-control",
-          attrs: { rows: "3" },
-          domProps: { value: _vm.answer.text },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.$set(_vm.answer, "text", $event.target.value)
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "d-flex justify-content-end" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-outline-primary mt-2",
-              attrs: { disabled: _vm.isDisabled, type: "button" },
+      _vm.isLoggedIn
+        ? _c("div", { staticClass: "mb-3" }, [
+            _c("label", { staticClass: "form-label mt-3" }, [
+              _vm._v("Напишите ваш комментарий")
+            ]),
+            _vm._v(" "),
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.answer.text,
+                  expression: "answer.text"
+                }
+              ],
+              ref: "replyArea",
+              staticClass: "form-control",
+              attrs: { rows: "3" },
+              domProps: { value: _vm.answer.text },
               on: {
-                click: function($event) {
-                  return _vm.sendAnswer($event)
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.answer, "text", $event.target.value)
                 }
               }
-            },
-            [_vm._v("Отправить")]
-          )
-        ])
-      ])
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "d-flex justify-content-end" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-outline-primary mt-2",
+                  attrs: { disabled: _vm.isDisabled, type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.sendAnswer($event)
+                    }
+                  }
+                },
+                [_vm._v("Отправить")]
+              )
+            ])
+          ])
+        : _vm._e()
     ])
   ])
 }

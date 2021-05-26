@@ -34,10 +34,18 @@ class NewsController extends BaseController
 
     public function show($id)
     {
+        $readingNews = null;
+        $like = null;
         $userId = Auth::id();
+        $isLoggedIn = "false";
         $newsInfo = $this->museumNewsRepository->getNewsWithAllInfo($id);
-        $readingNews = $this->museumUserRepository->isReadingNews($id, $userId);
-        $like = in_array($id, $this->museumUserRepository->getEdit($userId)->likes);
+        if (!empty($userId)) {
+            $isLoggedIn = "true";
+            $readingNews = $this->museumUserRepository->isReadingNews($id, $userId);
+            $like = in_array($id, $this->museumUserRepository->getEdit($userId)->likes);
+        } else {
+            $isLoggedIn = "false";
+        }
 
         if ($like) {
             $like = "true";
@@ -45,11 +53,13 @@ class NewsController extends BaseController
             $like = "false";
         }
 
+
+
         if (!$readingNews) {
             $readingNews = "false";
         }
 
-        return view('museum.news.show', compact('newsInfo', 'readingNews', 'like'));
+        return view('museum.news.show', compact('newsInfo', 'readingNews', 'like', 'isLoggedIn'));
     }
 
     public function addComment(Request $request, $newsId, $newsInfoId, $replyId = null)

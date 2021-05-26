@@ -9,14 +9,14 @@
                     <div>
                         Последнее изменение: {{ newsList.updated_at }}, написал(а): <span style="text-decoration: underline">{{ newsList.user.name }}</span>
                     </div>
-                    <div class="mr-2">
+                    <div v-if="isLoggedIn" class="mr-2">
                         <span v-if="isReading" @click="deleteFromReadingList($event)" title="Убрать из списка для чтения" class="interactive"><i class="fas fa-bookmark"></i></span>
                         <span v-if="!isReading" @click="toReadingList($event)" title="Добавить в список для чтения" class="interactive"><i class="far fa-bookmark"></i></span>
                     </div>
                 </div>
                 <hr>
                 <p>{{ newsList.content_raw }}</p>
-                <div>
+                <div v-if="isLoggedIn">
                     <span @click="likeNews" title="Оценить" class="interactive" style="margin-left: unset">
                         <i v-if="isLikeIt" class="fas fa-heart"></i>
                         <i v-if="!isLikeIt" class="far fa-heart"></i>
@@ -57,7 +57,7 @@
                     </div>
                 </div>
             </div>
-            <div class="mb-3">
+            <div v-if="isLoggedIn" class="mb-3">
                 <label class="form-label mt-3">Напишите ваш комментарий</label>
                 <textarea v-model="answer.text" ref="replyArea" class="form-control" rows="3"></textarea>
                 <div class="d-flex justify-content-end">
@@ -76,13 +76,14 @@
 
     export default {
         name: "ShowNewsComponent",
-        props: ['news', 'reading', 'likeit'],
+        props: ['news', 'reading', 'likeit', 'islogin'],
 
         data() {
             return {
                 likes: this.news && this.news.news_info ? this.news.news_info.likes : 0,
                 isLikeIt: this.likeit,
                 read: this.reading,
+                isLoggedIn: this.islogin,
                 isReading: false,
                 newsList: this.news,
                 answer: {
