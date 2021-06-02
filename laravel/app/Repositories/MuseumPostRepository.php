@@ -298,7 +298,7 @@ class MuseumPostRepository extends CoreRepository
         $date = null;
 
         if ($period == 'week') {
-            $date = Carbon::today()->subDays(7);
+            $date = Carbon::now()->subDays(7)->toDateTimeString();
         }
 
         if ($period == 'month') {
@@ -306,7 +306,7 @@ class MuseumPostRepository extends CoreRepository
         }
 
         $posts = $this->startConditions()::select($this->getBaseColumns())
-            ->where('created_at', '>=', $date)
+            ->where('updated_at', '>=', $date)
             ->where('is_published', '=', 1)
             ->orderBy('id', 'desc')
             ->with([
@@ -340,6 +340,7 @@ class MuseumPostRepository extends CoreRepository
             'is_published',
             'published_at',
             'created_at',
+            'updated_at',
             'user_id',
             'category_id',
 
@@ -364,6 +365,7 @@ class MuseumPostRepository extends CoreRepository
             'id',
             'is_published',
             'published_at',
+            'updated_at',
             'user_id',
             'category_id',
 

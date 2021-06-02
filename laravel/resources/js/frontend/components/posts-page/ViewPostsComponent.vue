@@ -26,7 +26,7 @@
                                         <a :href="'/posts/' + item.id">Подробнее</a>
                                     </div>
                                 </div>
-                                <small class="text-muted" title="Дата публикации">{{ item.published_at }}</small>
+                                <small class="text-muted" title="Дата публикации">{{ item.updated_at }}</small>
                             </div>
                         </div>
                     </div>

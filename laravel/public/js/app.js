@@ -64524,7 +64524,7 @@ var render = function() {
                         staticClass: "text-muted",
                         attrs: { title: "Дата публикации" }
                       },
-                      [_vm._v(_vm._s(item.published_at))]
+                      [_vm._v(_vm._s(item.updated_at))]
                     )
                   ])
                 ]

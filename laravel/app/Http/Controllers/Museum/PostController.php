@@ -70,7 +70,6 @@ class PostController extends BaseController
 
     public function viewPosts()
     {
-
         $popularPosts = $this->museumPostRepository->getPopularPost();
         $postsList = $this->museumPostRepository->getPostsWithPagination();
 
@@ -79,7 +78,6 @@ class PostController extends BaseController
 
     public function fetchPosts()
     {
-
         $posts = $this->museumPostRepository->getPostsWithPagination();
 
         if ($posts) {
@@ -91,7 +89,6 @@ class PostController extends BaseController
 
     public function fetchPostsForPeriod($period)
     {
-
         $posts = $this->museumPostRepository->getPostsOfPeriod($period);
 
         if ($posts) {

@@ -14,30 +14,41 @@
 
 Auth::routes();
 
-
-Route::post('/news/comments/set/{newsId}/{newsInfoId}/{replyId?}','Museum\NewsController@addComment')->name('museum.news.comment.set')->middleware('auth:web'); // оставить комментарий
-
-// писок для чтения
-Route::post('/user/favorite/news/{newsId}','Museum\UserController@addToReadingNews')->name('museum.user.set.reading');
-Route::get('/news/reading','Museum\UserController@getMoreNews')->name('museum.news.get.batch');
-Route::delete('/user/favorite/news/delete/{id}','Museum\UserController@removeFromReadingList')->name('museum.user.set.reading');
-Route::post('/user/news/like/{id}','Museum\NewsController@likeNews')->name('museum.news.like');
-
-
+// ---------------------------------------- Общие маршруты ---------------------------------------- //
 Route::get('/','Museum\WelcomeController@index')->name('museum.welcome'); // главная
-Route::get('/news/{id}','Museum\NewsController@show')->name('museum.news.show'); // раздел
+Route::get('/news/{id}','Museum\NewsController@show')->name('museum.news.show'); // новость
 
 Route::get('/categories','Museum\CategoryController@index')->name('museum.category'); // раздел
 Route::get('/contacts','Museum\ContactController@index')->name('museum.contacts'); // контакты
-Route::get('/posts/search/{barcode}/{determination}/{russian_name}/{collection_date}/{label_text}/{accuracy}/{adopted_name}/{environmental_status}',
-    'Museum\PostController@index')->name('museum.posts.search'); // поиск
+
 Route::get('/posts/{id}','Museum\PostController@show')->name('museum.posts.show'); // Информация о экспонате
 Route::get('/posts-view','Museum\PostController@viewPosts')->name('museum.posts.view'); // Страница со всеми экспонатами
 
+
+
+
+// ---------------------------------------- Маршруты для авторизованных пользователей ---------------------------------------- //
+
 Route::get('/home', 'HomeController@index')->name('home'); // профиль
-Route::patch('/home/user-profile-save/{id}', 'HomeController@update')->name('user.profile.save');
+Route::patch('/home/user-profile-save/{id}', 'HomeController@update')->name('user.profile.save'); // сохранить информацию о профиле
 
+$groupBaseRoutes = [
+    'namespace' => 'Museum',
+    'middleware' => 'auth:web'
+];
 
+Route::group($groupBaseRoutes, function () {
+    Route::post('/user/favorite/news/{newsId}','UserController@addToReadingNews')->name('museum.user.set.reading'); // добавить в список для чтения
+    Route::get('/news/reading','UserController@getMoreNews')->name('museum.news.get.batch'); // Загрузить ещё в список для чтения
+    Route::delete('/user/favorite/news/delete/{id}','UserController@removeFromReadingList')->name('museum.user.delete.news'); // удалить из избранного
+    Route::post('/user/news/like/{id}','NewsController@likeNews')->name('museum.news.like');
+
+    Route::post('/news/comments/set/{newsId}/{newsInfoId}/{replyId?}','NewsController@addComment')->name('museum.news.comment.set'); // оставить комментарий
+
+    Route::get('/posts/search/{barcode}/{determination}/{russian_name}/{collection_date}/{label_text}/{accuracy}/{adopted_name}/{environmental_status}',
+        'Museum\PostController@index')->name('museum.posts.search'); // поиск
+
+});
 
 
 Route::group(['namespace' => 'Museum', 'prefix' => 'museum'], function () {
@@ -46,7 +57,7 @@ Route::group(['namespace' => 'Museum', 'prefix' => 'museum'], function () {
 
 
 
-//Admin dashboard controller
+// ---------------------------------------- Маршруты для администратора ---------------------------------------- //
 $groupDataAdminDashboard = [
     'namespace' => 'Museum',
     'prefix' => 'museum',
@@ -107,5 +118,3 @@ Route::group($groupDataAdmin, function () {
     Route::delete('/news/delete/{id}','NewsController@destroy')->name('museum.admin.news.destroy');
 
 });
-
-//Route::get('/categories_admin', 'Museum\Admin\CategoryController@getAllCategories');
