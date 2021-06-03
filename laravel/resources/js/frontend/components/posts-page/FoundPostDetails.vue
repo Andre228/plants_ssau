@@ -81,6 +81,7 @@
                 <div id="mapContainer"></div>
             </div>
             <div class="post-interactive">
+                <span v-if="coords && coords.hasOwnProperty('lat')" @click="copyCoords()" title="Копировать координаты" class="favorite"><i class="fas fa-map-marker"></i></span>
                 <span v-if="isLoggedIn() && !isFavorite()" @click="toFavotites" title="Добавить в избранное" class="favorite"><i class="far fa-star"></i></span>
                 <span v-if="isLoggedIn() && isFavorite()" @click="deleteFromFavotites" title="Убрать из избранного" class="favorite"><i class="fas fa-star"></i></span>
                 <span title="Количество просмотров"><i class="far fa-eye"></i> {{ post.count_views }}</span>
@@ -113,7 +114,8 @@
                 loaderService: new LoaderService(),
                 response: {},
                 mapService: new MapService(),
-                rest: new RequestService()
+                rest: new RequestService(),
+                coords: {}
             }
         },
 
@@ -132,6 +134,7 @@
             this.autosize('determination');
             this.initListeners();
             this.$store.state.post.postObject = this.post;
+            this.coords = this.$store.state.post.postObject.coordinates;
             this.setMap();
             this.setCountViews();
             this.addToHistory();
@@ -334,6 +337,27 @@
                     this.rest.post(url, null, null).then(res => res);
                 }
 
+            },
+
+            copyCoords(event) {
+                let textarea = document.createElement("textarea");
+                if (window.clipboardData && window.clipboardData.setData) {
+                    return clipboardData.setData("Text", this.coords.lat + ' ' + this.coords.lng);
+                } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+                    textarea.textContent = this.coords.lat + ' ' + this.coords.lng;
+                    textarea.style.position = "fixed";
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        this.notifyService.info('Успешно скопировано');
+                        return document.execCommand("copy");
+                    } catch (ex) {
+                        console.warn("Copy to clipboard failed.", ex);
+                        return false;
+                    } finally {
+                        document.body.removeChild(textarea);
+                    }
+                }
             }
         },
 

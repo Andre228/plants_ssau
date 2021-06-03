@@ -7,6 +7,9 @@
         <div class="col-md-5">
             <side-left-component :posts="postsList"></side-left-component>
         </div>
+
+
+
     </div>
 
 </template>

@@ -4883,6 +4883,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -5023,7 +5026,129 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   mounted: function mounted() {
-    this.hasNext = this.news.hasNext;
+    this.hasNext = this.news.hasNext; // GO HERE => https://github.com/mrdoob/three.js/blob/master/examples/canvas_particles_waves.html
+
+    var SEPARATION = 100,
+        AMOUNTX = 50,
+        AMOUNTY = 50;
+    var container, stats;
+    var camera, scene, renderer;
+    var particles,
+        particle,
+        count = 0;
+    var mouseX = 0,
+        mouseY = 0;
+    var windowHalfX = window.innerWidth / 2;
+    var windowHalfY = window.innerHeight / 2;
+
+    function init() {
+      container = document.createElement('div');
+      document.body.appendChild(container);
+      camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+      camera.position.z = 1000; // Good var to change
+
+      scene = new THREE.Scene();
+      particles = new Array();
+      var PI2 = Math.PI * 2;
+      var geometry = new THREE.Geometry();
+      var material = new THREE.SpriteCanvasMaterial({
+        color: 0xffffff,
+        program: function program(context) {
+          context.beginPath();
+          context.arc(0, 0, 0.4, 0, PI2, true);
+          context.fill();
+        }
+      });
+      var i = 0;
+
+      for (var ix = 0; ix < AMOUNTX; ix++) {
+        for (var iy = 0; iy < AMOUNTY; iy++) {
+          particle = particles[i++] = new THREE.Sprite(material);
+          particle.position.x = ix * SEPARATION - AMOUNTX * SEPARATION / 2;
+          particle.position.z = iy * SEPARATION - AMOUNTY * SEPARATION / 2;
+          scene.add(particle);
+
+          if (i > 0) {
+            geometry.vertices.push(particle.position);
+          }
+        }
+      } // var line = new THREE.Line(geometry, new THREE.LineBasicMaterial({
+      //   color: 0xffffff,
+      //   opacity: 0.5,
+      //   linewidth: 4
+      // }));
+      // scene.add( line );
+
+
+      renderer = new THREE.CanvasRenderer();
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
+      stats = new Stats();
+      container.appendChild(stats.dom);
+      document.addEventListener('mousemove', onDocumentMouseMove, false);
+      document.addEventListener('touchstart', onDocumentTouchStart, false);
+      document.addEventListener('touchmove', onDocumentTouchMove, false); //
+
+      window.addEventListener('resize', onWindowResize, false);
+    }
+
+    function onWindowResize() {
+      windowHalfX = window.innerWidth / 2;
+      windowHalfY = window.innerHeight / 2;
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function onDocumentMouseMove(event) {
+      mouseX = event.clientX - windowHalfX;
+      mouseY = event.clientY - windowHalfY;
+    }
+
+    function onDocumentTouchStart(event) {
+      if (event.touches.length === 1) {
+        event.preventDefault();
+        mouseX = event.touches[0].pageX - windowHalfX;
+        mouseY = event.touches[0].pageY - windowHalfY;
+      }
+    }
+
+    function onDocumentTouchMove(event) {
+      if (event.touches.length === 1) {
+        event.preventDefault();
+        mouseX = event.touches[0].pageX - windowHalfX;
+        mouseY = event.touches[0].pageY - windowHalfY;
+      }
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      render();
+      stats.update();
+    }
+
+    function render() {
+      renderer.setClearColor(0x07074e, 1);
+      camera.position.x += (mouseX - camera.position.x) * .05;
+      camera.position.y += (-mouseY - camera.position.y) * .05;
+      camera.lookAt(scene.position);
+      var i = 0;
+
+      for (var ix = 0; ix < AMOUNTX; ix++) {
+        for (var iy = 0; iy < AMOUNTY; iy++) {
+          particle = particles[i++];
+          particle.position.y = Math.sin((ix + count) * 0.3) * 50 + Math.sin((iy + count) * 0.5) * 50;
+          particle.scale.x = particle.scale.y = (Math.sin((ix + count) * 0.3) + 1) * 4 + (Math.sin((iy + count) * 0.5) + 1) * 4;
+        }
+      }
+
+      renderer.render(scene, camera);
+      count += 0.1;
+    }
+
+    init();
+    animate();
   },
   computed: {},
   methods: {
@@ -5675,6 +5800,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -5699,7 +5825,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       loaderService: new _services_loader_service__WEBPACK_IMPORTED_MODULE_2__["LoaderService"](),
       response: {},
       mapService: new _admin_posts_services_map_service__WEBPACK_IMPORTED_MODULE_6__["MapService"](),
-      rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_8__["RequestService"]()
+      rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_8__["RequestService"](),
+      coords: {}
     };
   },
   beforeMount: function beforeMount() {},
@@ -5711,6 +5838,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.autosize('determination');
     this.initListeners();
     this.$store.state.post.postObject = this.post;
+    this.coords = this.$store.state.post.postObject.coordinates;
     this.setMap();
     this.setCountViews();
     this.addToHistory();
@@ -5958,6 +6086,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.rest.post(url, null, null).then(function (res) {
           return res;
         });
+      }
+    },
+    copyCoords: function copyCoords(event) {
+      var textarea = document.createElement("textarea");
+
+      if (window.clipboardData && window.clipboardData.setData) {
+        return clipboardData.setData("Text", this.coords.lat + ' ' + this.coords.lng);
+      } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+        textarea.textContent = this.coords.lat + ' ' + this.coords.lng;
+        textarea.style.position = "fixed";
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+          this.notifyService.info('Успешно скопировано');
+          return document.execCommand("copy");
+        } catch (ex) {
+          console.warn("Copy to clipboard failed.", ex);
+          return false;
+        } finally {
+          document.body.removeChild(textarea);
+        }
       }
     }
   },
@@ -12311,7 +12461,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.btn-fetch-more[data-v-7a73d1f8] {\n    color: #686868 !important;\n}\n.btn-fetch-more[data-v-7a73d1f8]:hover {\n    color: black;\n}\n.interactive[data-v-7a73d1f8] {\n    margin-left: 17%;\n    cursor: pointer;\n    font-size: 22px;\n    color: #c8cbcf;\n}\ni[data-v-7a73d1f8] {\n    transition: .3s all;\n}\ni[data-v-7a73d1f8]:hover {\n    color: #0d6efd;\n}\na[data-v-7a73d1f8] {\n    text-decoration: none;\n    color: #0d6efd !important;\n    cursor: pointer;\n}\na[data-v-7a73d1f8]:hover {\n    text-decoration: underline !important;\n    color: #0056b3 !important;\n}\n\n\n", ""]);
+exports.push([module.i, "\n.btn-fetch-more[data-v-7a73d1f8] {\n    color: #686868 !important;\n}\n.btn-fetch-more[data-v-7a73d1f8]:hover {\n    color: black;\n}\n.interactive[data-v-7a73d1f8] {\n    margin-left: 17%;\n    cursor: pointer;\n    font-size: 22px;\n    color: #c8cbcf;\n}\ni[data-v-7a73d1f8] {\n    transition: .3s all;\n}\ni[data-v-7a73d1f8]:hover {\n    color: #0d6efd;\n}\na[data-v-7a73d1f8] {\n    text-decoration: none;\n    color: #0d6efd !important;\n    cursor: pointer;\n}\na[data-v-7a73d1f8]:hover {\n    text-decoration: underline !important;\n    color: #0056b3 !important;\n}\n\n", ""]);
 
 // exports
 
@@ -64448,6 +64598,22 @@ var render = function() {
       _vm._m(0),
       _vm._v(" "),
       _c("div", { staticClass: "post-interactive" }, [
+        _vm.coords && _vm.coords.hasOwnProperty("lat")
+          ? _c(
+              "span",
+              {
+                staticClass: "favorite",
+                attrs: { title: "Копировать координаты" },
+                on: {
+                  click: function($event) {
+                    return _vm.copyCoords()
+                  }
+                }
+              },
+              [_c("i", { staticClass: "fas fa-map-marker" })]
+            )
+          : _vm._e(),
+        _vm._v(" "),
         _vm.isLoggedIn() && !_vm.isFavorite()
           ? _c(
               "span",
