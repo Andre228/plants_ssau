@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Museum;
 
-use App\Http\Controllers\Controller;
-use App\Models\MuseumPost;
 use App\Repositories\MuseumImageRepository;
 use App\Repositories\MuseumPostRepository;
 use App\Repositories\MuseumUserRepository;

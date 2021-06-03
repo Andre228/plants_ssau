@@ -39,14 +39,14 @@ $groupBaseRoutes = [
 
 Route::group($groupBaseRoutes, function () {
     Route::post('/user/favorite/news/{newsId}','UserController@addToReadingNews')->name('museum.user.set.reading'); // добавить в список для чтения
-    Route::get('/news/reading','UserController@getMoreNews')->name('museum.news.get.batch'); // Загрузить ещё в список для чтения
+    Route::get('/news/reading/batch','UserController@getMoreNews')->name('museum.news.get.batch'); // Загрузить ещё в список для чтения
     Route::delete('/user/favorite/news/delete/{id}','UserController@removeFromReadingList')->name('museum.user.delete.news'); // удалить из избранного
     Route::post('/user/news/like/{id}','NewsController@likeNews')->name('museum.news.like');
 
     Route::post('/news/comments/set/{newsId}/{newsInfoId}/{replyId?}','NewsController@addComment')->name('museum.news.comment.set'); // оставить комментарий
 
     Route::get('/posts/search/{barcode}/{determination}/{russian_name}/{collection_date}/{label_text}/{accuracy}/{adopted_name}/{environmental_status}',
-        'Museum\PostController@index')->name('museum.posts.search'); // поиск
+        'PostController@index')->name('museum.posts.search'); // поиск
 
 });
 

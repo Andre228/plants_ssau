@@ -33,6 +33,7 @@
                                     <label class="form-check-label" for="publishCheck">Опубликовано</label>
                                 </div>
                             </li>
+                            <li><a :href="'/posts/' + postInfo.id">Перейти</a></li>
                         </ul>
                     </div>
                 </div>
@@ -87,7 +88,6 @@
             },
 
             changePublishedAt(event) {
-                console.log(this.$store.state.post.postObject);
                 if (!this.$store.state.post.postObject.is_published)
                     this.$store.state.post.postObject.published_at = this.dateTimeParser.getCurrentDateTime();
                 else this.$store.state.post.postObject.published_at = null;
@@ -98,5 +98,16 @@
 </script>
 
 <style scoped>
+
+    a:not(.btn) {
+        color: #0d6efd;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    a:hover:not(.btn) {
+        text-decoration: underline;
+        color: #0056b3;
+    }
 
 </style>

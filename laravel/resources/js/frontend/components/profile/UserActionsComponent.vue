@@ -150,7 +150,7 @@
                     event.stopPropagation();
                     this.loader.runLoader();
                     this.pageNews++;
-                    const url = `/news/reading/?page=${this.pageNews}`;
+                    const url = `/news/reading/batch/?page=${this.pageNews}`;
                     this.rest.get(url).then(response => {
                         if (response && response.data.status === 'OK') {
                             if (response.data.details && response.data.details.posts) {
@@ -168,7 +168,6 @@
             getLastActions() {
                 if (this.hasFavorites() && this.hasHistories() && this.hasNews()) {
                     const histories = this.historiesList.map(item => item.post);
-                    console.log(this.newsList.posts);
                     const userActionsArray = this.favoritesList.posts.concat(histories).concat(this.newsList.posts);
                     this.lastActionDate = userActionsArray.sort(function(a,b){
                         return new Date(b.updated_at) - new Date(a.updated_at);

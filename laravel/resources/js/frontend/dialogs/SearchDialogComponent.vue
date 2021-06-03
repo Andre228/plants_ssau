@@ -146,7 +146,6 @@
                     displayText: '',
                     displayMatch: 'any',
                     type: 'date'
-                    // tooltipText: 'Обратите внимание, что параметры, которые равны пустому полю'
                 },
                 label_text: {
                     match: 'any',
@@ -196,6 +195,9 @@
                 if (data.method === 'search') {
                     this.search();
                 }
+                if (data.method === 'clearSearchParams') {
+                    this.clearSearchParams();
+                }
             });
 
             this.paramsArray = [
@@ -211,17 +213,6 @@
         methods: {
             search() {
                 this.convertToSqlParams(this.paramsArray);
-
-                // const params = {
-                //     barcode: this.paramsArray[0],
-                //     determination: this.paramsArray[1],
-                //     russian_name: this.paramsArray[2],
-                //     collection_date: this.paramsArray[3],
-                //     label_text: this.paramsArray[4],
-                //     accuracy: this.paramsArray[5],
-                //     adopted_name: this.paramsArray[6],
-                //     environmental_status: this.paramsArray[7]
-                // };
 
                 let url = `/posts/search/${encodeURI(JSON.stringify(this.paramsArray[0]))}/
                 ${encodeURI(JSON.stringify(this.paramsArray[1]))}/
@@ -299,6 +290,81 @@
                 }
 
                 return array;
+            },
+
+            clearSearchParams() {
+
+                this.barcode = {
+                    match: 'any',
+                    value: null,
+                    displayText: '',
+                    displayMatch: 'any',
+                    type: 'number'
+                };
+
+                this.determination = {
+                    match: 'any',
+                    value: null,
+                    displayText: '',
+                    displayMatch: 'any',
+                    type: 'string'
+                };
+
+                this.russian_name = {
+                    match: 'any',
+                    value: null,
+                    displayText: '',
+                    displayMatch: 'any',
+                    type: 'string'
+                };
+
+                this.collection_date = {
+                    match: 'any',
+                    value: null,
+                    displayText: '',
+                    displayMatch: 'any',
+                    type: 'date'
+                };
+
+                this.label_text = {
+                    match: 'any',
+                    value: null,
+                    displayText: '',
+                    displayMatch: 'any',
+                    type: 'string'
+                };
+
+                this.accuracy = {
+                    match: 'any',
+                    value: null,
+                    displayText: '',
+                    displayMatch: 'any',
+                    type: 'number'
+                };
+
+                this.adopted_name = {
+                    match: 'any',
+                    value: null,
+                    displayText: '',
+                    displayMatch: 'any',
+                    type: 'string'
+                };
+
+                this.environmental_status = {
+                    match: 'any',
+                    value: null,
+                    displayText: '',
+                    displayMatch: 'any',
+                    type: 'number'
+                };
+
+                this.paramsArray = [
+                    this.barcode, this.determination, this.russian_name, this.collection_date,
+                    this.label_text, this.accuracy, this.adopted_name, this.environmental_status,
+                ];
+
+                this.$modal.next(this.isDisabledSubmit());
+
             },
 
             isDisabledSubmit() {

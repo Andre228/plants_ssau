@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-            <div v-if="listPosts && listPosts.length > 0" class="col" v-for="post of listPosts">
+        <div v-if="!isEmpty" class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+            <div class="col" v-for="post of listPosts">
                 <a :href="'/posts/' + post.id" style="text-decoration: none">
                     <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow found-card-info" :style="getBackgroundImage(post)">
                         <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
@@ -25,13 +25,18 @@
                     </div>
                 </a>
             </div>
-
-
+        </div>
+        <div v-else class="text-md-center">
+            <h3>
+                По данному запросу образцов не найдено
+            </h3>
         </div>
     </div>
 </template>
 
 <script>
+    import {NotifyService} from "../../services/notify-service";
+
     export default {
         name: "FoundPostsComponent",
         props: ['posts'],
@@ -39,13 +44,20 @@
         data() {
             return {
                 listPosts: this.posts,
-                postStyle: {
+                isEmpty: false,
+                notify: new NotifyService()
+            }
+        },
 
-                }
+        created() {
+            if (!(this.listPosts && this.listPosts.length > 0)) {
+                this.isEmpty = true;
+                this.notify.info('По вашему запросу ничего не нашлось, попробуйте указать другие параметры');
             }
         },
 
         mounted() {
+
         },
 
 

@@ -22,7 +22,8 @@
                 </div>
                 <div class="pull-left" v-else-if="inputs">
                     <button :disabled="buttonDisabled" @click="search" class="btn btn-outline-primary">Найти</button>
-                    <span v-if="buttonDisabled" :title="tooltipText" style="margin-left: 5%; cursor: pointer"><i class="fas fa-question-circle"></i></span>
+                    <button @click="clearSearchParams" class="btn btn-outline-primary ml-2" title="Очистить поиск"><i class="fas fa-broom"></i></button>
+                    <span class="ml-2" v-if="buttonDisabled" :title="tooltipText" style="cursor: pointer"><i class="fas fa-question-circle"></i></span>
                 </div>
                 <div class="pull-left" style="width: 100%" v-else-if="options && options.readonly">
                     <a @click="openFullImage" class="simple-link">Открыть полное изображение</a>
@@ -136,6 +137,12 @@
                 }
             },
 
+            clearSearchParams() {
+                if (this.currentComponent.name === 'SearchDialogComponent') {
+                    this.$root.$emit('SearchDialogComponent', { method: 'clearSearchParams' });
+                }
+            },
+
             openFullImage() {
                 if (this.currentComponent.name === 'AdminImagesDialogComponent') {
                     this.$root.$emit('AdminImagesDialogComponent', { method: 'fullImage', index: this.$modal.getSettings() });
@@ -179,7 +186,7 @@
     }
 
     .modal-actions .pull-left {
-        width: 15%;
+        width: 18%;
         display: flex;
         align-items: center;
     }

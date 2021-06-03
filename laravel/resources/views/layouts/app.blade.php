@@ -109,6 +109,7 @@
         </nav>
 
         <global-search-component></global-search-component>
+        <page-up-component></page-up-component>
 
         <div class="container main-content">
             <main class="py-4">
@@ -116,16 +117,41 @@
             </main>
         </div>
 
-        <footer class="text-muted py-5 container footer-container" style="background-color: white">
+        <footer class="text-muted py-5 container footer-container mb-2" style="background-color: white">
             <div class="container">
                 <p class="float-end mb-1">
                     <a href="#">Наверх</a>
                 </p>
-                <p class="mb-1">Album example is © Bootstrap, but please download and customize it for yourself!</p>
-                <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="/docs/5.0/getting-started/introduction/">getting started guide</a>.</p>
+                <h2 style="border-bottom: 2px solid #0d6efd">
+                    Контакты
+                </h2>
+                <div class="row justify-content-lg-around col-lg-12">
+                    <div class="mb-1 col-lg-8">Адрес: 443028, Самара, Московское шоссе, 28, 22 корпус, 614 кабинет.</div>
+                    <div class="mb-1 col-lg-4"><i class="fas fa-phone"></i><span class="ml-2">Тел. 8 (846) 334-54-43</span></div>
+                </div>
+
+                <div class="mt-2">
+                    <h2 style="border-bottom: 2px solid #0d6efd">
+                        Кураторы гербария:
+                    </h2>
+
+                    <div class="mb-1 col-lg-12">
+                        <span style="border-bottom: 1px solid #f88b80">Богданова Я. А. (мохоборазные),</span>
+                        <br>
+                        <span style="border-bottom: 1px solid #f8d997">Корчиков Е. С. (лишайники),</span>
+                        <br>
+                        <span style="border-bottom: 1px solid #88e792">Корчикова Т. А., Кузовенко О. А.,  Макарова Ю. В., Плаксина Т. И.,Шаронова И. В. (сосудистые растения).</span>
+                    </div>
+                </div>
             </div>
         </footer>
     </div>
 
 </body>
 </html>
+<script>
+    import PageUpComponent from "../../js/frontend/widgets/PageUpComponent";
+    export default {
+        components: {PageUpComponent}
+    }
+</script>

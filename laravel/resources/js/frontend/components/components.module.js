@@ -13,8 +13,10 @@ import FoundPostDetails from './posts-page/FoundPostDetails';
 import ViewPostsComponent from './posts-page/ViewPostsComponent';
 import ContactComponent from './contacts-page/ContactComponent';
 import ShowNewsComponent from "./news-page/ShowNewsComponent";
+import PageUpComponent from '../widgets/PageUpComponent';
 
 export const componentsModule = {
+    PageUpComponent,
     AdminCategoriesComponent,
     ButtonComponent,
     TableItemComponent,

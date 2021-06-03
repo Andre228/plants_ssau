@@ -2,7 +2,6 @@
     --mainColor: #ff9800;
 }
 
-
 .app-body {
     background: whitesmoke;
     font-family: 'Fjalla One', sans-serif;
@@ -55,4 +54,15 @@
 
 .nav-login-link {
     text-decoration: none;
+}
+
+footer a {
+    color: #0d6efd !important;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline !important;
+    color: #0056b3 !important;
 }
