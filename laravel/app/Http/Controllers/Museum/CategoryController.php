@@ -22,8 +22,9 @@ class CategoryController extends BaseController
     public function index()
     {
         $categoriesList = $this->museumCategoryRepository->getCategoriesBaseInfo();
+        $categoriesTree = json_encode($this->museumCategoryRepository->getCategoriesTree());
 
-        return view('museum.category.index', compact('categoriesList'));
+        return view('museum.category.index', compact('categoriesList', 'categoriesTree'));
     }
 
     public function getPosts($id, $state)

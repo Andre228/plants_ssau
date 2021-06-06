@@ -4541,6 +4541,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _request_services_request_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../request-services/request-service */ "./resources/js/frontend/request-services/request-service.js");
 /* harmony import */ var _services_notify_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/notify-service */ "./resources/js/frontend/services/notify-service.js");
 /* harmony import */ var _services_loader_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/loader-service */ "./resources/js/frontend/services/loader-service.js");
+/* harmony import */ var _widgets_TreeComponent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../widgets/TreeComponent */ "./resources/js/frontend/widgets/TreeComponent.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -4619,15 +4620,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CategoryComponent",
-  props: ['categories'],
+  components: {
+    TreeComponent: _widgets_TreeComponent__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
+  props: ['categories', 'tree'],
   data: function data() {
     return {
       posts: [],
+      categoriesTree: this.tree,
       selectedCategory: '',
       orderState: 'new',
       rest: new _request_services_request_service__WEBPACK_IMPORTED_MODULE_1__["RequestService"](),
@@ -4637,11 +4651,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   mounted: function mounted() {
+    var _this = this;
+
     if (this.categories.length > 0) this.getPosts(this.categories[0].id, this.orderState);
+    this.$root.$on('CategoryComponent', function (data) {
+      if (data.method === 'get' && data.item) {
+        _this.getPosts(data.item.id);
+      }
+    });
   },
   methods: {
     getPosts: function getPosts(categoryId) {
-      var _this = this;
+      var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         var url;
@@ -4649,42 +4670,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!(_this.selectedCategory.id !== categoryId)) {
+                if (!(_this2.selectedCategory.id !== categoryId)) {
                   _context.next = 6;
                   break;
                 }
 
-                _this.loaderService.runLoader();
+                _this2.loaderService.runLoader();
 
-                url = "api/categories/".concat(categoryId, "/").concat(_this.orderState);
+                url = "/categories/".concat(categoryId, "/").concat(_this2.orderState);
                 _context.next = 5;
-                return _this.rest.get(url).then(function (response) {
+                return _this2.rest.get(url).then(function (response) {
                   if (response.data.status == 'OK') {
-                    _this.posts = response.data.posts;
-                    _this.selectedCategory = _this.categories.find(function (item) {
+                    _this2.posts = response.data.posts;
+                    _this2.selectedCategory = _this2.categories.find(function (item) {
                       return item.id === categoryId;
                     });
 
-                    if (_this.posts.length === 0) {
-                      _this.notifyService.info('Здесь ещё нет никаких экземпляров');
+                    if (_this2.posts.length === 0) {
+                      _this2.notifyService.info('Здесь ещё нет никаких экземпляров');
                     }
                   }
 
                   if (response.data.status == 'ERROR') {
-                    _this.response = {
+                    _this2.response = {
                       type: 'error',
                       text: response.data.message
                     };
                   }
                 })["catch"](function (error) {
-                  _this.response = {
+                  _this2.response = {
                     type: 'error',
                     text: error
                   };
                 });
 
               case 5:
-                _this.afterRequest();
+                _this2.afterRequest();
 
               case 6:
               case "end":
@@ -7502,14 +7523,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "TreeComponent",
   props: {
-    item: Object
+    item: Object,
+    userPage: false
   },
   data: function data() {
     return {
-      isOpen: false
+      isOpen: false,
+      isUserPage: this.userPage
     };
   },
   computed: {
@@ -7522,6 +7546,12 @@ __webpack_require__.r(__webpack_exports__);
       if (this.isFolder) {
         this.isOpen = !this.isOpen;
       }
+    },
+    clickOnItem: function clickOnItem(item) {
+      this.$root.$emit('CategoryComponent', {
+        method: 'get',
+        item: item
+      });
     }
   }
 });
@@ -63472,38 +63502,55 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticStyle: { height: "350px", "overflow-y": "scroll" } },
+            {
+              staticClass: "mt-4",
+              staticStyle: { height: "50vh", "overflow-y": "auto" }
+            },
             [
-              _c("table", { staticClass: "table table-hover" }, [
+              _c("table", { staticClass: "table table-hover mt-3" }, [
                 _vm._m(2),
                 _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.categories, function(item, index) {
-                    return _c(
-                      "tr",
-                      {
-                        staticStyle: { cursor: "pointer" },
-                        on: {
-                          click: function($event) {
-                            return _vm.getPosts(item.id)
-                          }
-                        }
-                      },
-                      [
-                        _c("th", { attrs: { scope: "row" } }, [
-                          _vm._v(_vm._s(index + 1))
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(item.title))])
-                      ]
+                _vm.categoriesTree
+                  ? _c(
+                      "tbody",
+                      _vm._l(_vm.categoriesTree, function(category, index) {
+                        return _c("tr", [
+                          _c("td", [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(index + 1) +
+                                "\n                            "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "td",
+                            [
+                              _c("tree-component", {
+                                staticStyle: { cursor: "pointer" },
+                                attrs: { userPage: true, item: category }
+                              })
+                            ],
+                            1
+                          )
+                        ])
+                      }),
+                      0
                     )
-                  }),
-                  0
-                )
+                  : _vm._e()
               ])
             ]
-          )
+          ),
+          _vm._v(" "),
+          _vm.selectedCategory
+            ? _c("div", { staticClass: "mt-3 col-lg-12" }, [
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(_vm.selectedCategory.description) +
+                    "\n                "
+                )
+              ])
+            : _vm._e()
         ])
       ])
     ])
@@ -63554,9 +63601,9 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("№")]),
+        _c("th", [_vm._v("№")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Наименование")])
+        _c("th", [_vm._v("Категория")])
       ])
     ])
   }
@@ -66957,17 +67004,31 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("span", { class: { bold: _vm.isFolder }, on: { click: _vm.toggle } }, [
-      _c(
-        "a",
-        {
-          attrs: { href: "/admin/museum/categories/" + _vm.item.id + "/edit" }
-        },
-        [
-          _vm._v(
-            "\n                " + _vm._s(_vm.item.title) + "\n            "
+      !_vm.isUserPage
+        ? _c(
+            "a",
+            {
+              attrs: {
+                href: "/admin/museum/categories/" + _vm.item.id + "/edit"
+              }
+            },
+            [
+              _vm._v(
+                "\n                " + _vm._s(_vm.item.title) + "\n            "
+              )
+            ]
           )
-        ]
-      ),
+        : _c(
+            "a",
+            {
+              on: {
+                click: function($event) {
+                  return _vm.clickOnItem(_vm.item)
+                }
+              }
+            },
+            [_vm._v(_vm._s(_vm.item.title))]
+          ),
       _vm._v(" "),
       _vm.isFolder
         ? _c("span", [_vm._v("[" + _vm._s(_vm.isOpen ? "-" : "+") + "]")])
@@ -66991,7 +67052,7 @@ var render = function() {
             return _c("tree-component", {
               key: index,
               staticClass: "item",
-              attrs: { item: child }
+              attrs: { userPage: _vm.userPage, item: child }
             })
           }),
           1

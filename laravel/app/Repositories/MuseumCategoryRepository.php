@@ -107,7 +107,8 @@ class MuseumCategoryRepository extends CoreRepository
         $columns = [
             'id',
             'title',
-            'updated_at'
+            'updated_at',
+            'description'
         ];
 
         $categoryList = $this->startConditions()

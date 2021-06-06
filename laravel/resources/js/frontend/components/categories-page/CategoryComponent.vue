@@ -46,25 +46,33 @@
                         </div>
                     </div>
                     <p>Выбрано: <span style="text-decoration: underline">{{ selectedCategory.title }}</span> <span style="margin-left: 2%">Найдено всего в разделе: {{ posts && posts.length ? posts.length : 0 }}</span></p>
-                    <div style="height: 350px; overflow-y: scroll">
-                        <table class="table table-hover">
+                    <div class="mt-4" style="height: 50vh; overflow-y: auto">
+                        <table class="table table-hover mt-3">
                             <thead>
-                                <tr>
-                                    <th scope="col">№</th>
-                                    <th scope="col">Наименование</th>
-                                </tr>
+                            <tr>
+                                <th>№</th>
+                                <th>Категория</th>
+                            </tr>
                             </thead>
+                            <tbody v-if="categoriesTree">
+                            <tr v-for="(category, index) of categoriesTree">
 
-                                <tbody>
-                                    <tr v-for="(item, index) in categories" style="cursor: pointer" @click="getPosts(item.id)">
-                                        <th scope="row">{{ index + 1}}</th>
-                                        <td>{{ item.title }}</td>
-                                    </tr>
-                                </tbody>
+                                <td>
+                                    {{ index + 1 }}
+                                </td>
+
+                                <td>
+                                    <tree-component style="cursor: pointer;" :userPage="true" :item="category"></tree-component>
+                                </td>
+
+                            </tr>
+                            </tbody>
                         </table>
                     </div>
+                    <div v-if="selectedCategory" class="mt-3 col-lg-12">
+                        {{ selectedCategory.description }}
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -74,14 +82,17 @@
     import {RequestService} from "../../request-services/request-service";
     import {NotifyService} from "../../services/notify-service";
     import {LoaderService} from "../../services/loader-service";
+    import TreeComponent from "../../widgets/TreeComponent";
 
     export default {
         name: "CategoryComponent",
-        props: ['categories'],
+        components: {TreeComponent},
+        props: ['categories', 'tree'],
 
         data() {
             return {
                 posts: [],
+                categoriesTree: this.tree,
                 selectedCategory: '',
                 orderState: 'new',
                 rest: new RequestService(),
@@ -94,13 +105,18 @@
         mounted() {
             if (this.categories.length > 0)
             this.getPosts(this.categories[0].id, this.orderState);
+            this.$root.$on('CategoryComponent', (data) => {
+                if (data.method === 'get' && data.item) {
+                    this.getPosts(data.item.id);
+                }
+            })
         },
 
         methods: {
             async getPosts(categoryId) {
                 if (this.selectedCategory.id !== categoryId) {
                     this.loaderService.runLoader();
-                    const url = `api/categories/${categoryId}/${this.orderState}`;
+                    const url = `/categories/${categoryId}/${this.orderState}`;
                     await this.rest.get(url).then(response => {
                         if (response.data.status == 'OK') {
                             this.posts = response.data.posts;

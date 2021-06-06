@@ -29,8 +29,8 @@ Route::get('/posts-view','Museum\PostController@viewPosts')->name('museum.posts.
 
 // ---------------------------------------- Маршруты для авторизованных пользователей ---------------------------------------- //
 
-Route::get('/home', 'HomeController@index')->name('home'); // профиль
-Route::patch('/home/user-profile-save/{id}', 'HomeController@update')->name('user.profile.save'); // сохранить информацию о профиле
+Route::get('/home', 'HomeController@index')->name('home')->middleware('auth'); // профиль
+Route::patch('/home/user-profile-save/{id}', 'HomeController@update')->name('user.profile.save')->middleware('auth'); // сохранить информацию о профиле
 
 $groupBaseRoutes = [
     'namespace' => 'Museum',
@@ -44,6 +44,8 @@ Route::group($groupBaseRoutes, function () {
     Route::post('/user/news/like/{id}','NewsController@likeNews')->name('museum.news.like');
 
     Route::post('/news/comments/set/{newsId}/{newsInfoId}/{replyId?}','NewsController@addComment')->name('museum.news.comment.set'); // оставить комментарий
+
+    Route::get('/categories/{id}/{state}','CategoryController@getPosts')->name('api.museum.category.get.posts');
 
     Route::get('/posts/search/{barcode}/{determination}/{russian_name}/{collection_date}/{label_text}/{accuracy}/{adopted_name}/{environmental_status}',
         'PostController@index')->name('museum.posts.search'); // поиск

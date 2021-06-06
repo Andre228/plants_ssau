@@ -217,20 +217,4 @@ class CategoryController extends BaseAdminController
         return view('museum.admin.category.index', compact('categoryList', 'search'));
     }
 
-    public function showAll($how) {
-
-//        if($how == 'per-page') {
-//
-//            $categoryList = MuseumCategory::paginate(5);
-//
-//            return view('museum.admin.category.index', compact('categoryList'));
-//        }
-//
-//        if($how == 'all') {
-//
-//            $categoryList = MuseumCategory::all();
-//
-//            return view('museum.admin.category.index', compact('categoryList'));
-//        }
-    }
 }

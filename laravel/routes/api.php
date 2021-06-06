@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/news/batch','Museum\WelcomeController@fetchNewsMore')->name('api.museum.news.batch');
-Route::get('/categories/{id}/{state}','Museum\CategoryController@getPosts')->name('api.museum.category.get.posts');
+
 Route::post('/posts/views/{id}','Museum\PostController@incrementCountViews')->name('api.museum.post.set.views');
 Route::post('/user/favorite/{userId}/{postId}','Museum\UserController@addToFavorites')->name('api.museum.user.set.favorite');
 Route::delete('/user/delete/favorite/{id}','Museum\UserController@removeFromFavorites')->name('api.museum.user.delete.favorite');

@@ -1,15 +1,16 @@
 <template>
     <div>
 
-            <span  :class="{bold: isFolder}"
-                  @click="toggle">
-                <a :href="'/admin/museum/categories/' + item.id + '/edit'" >
+            <span :class="{bold: isFolder}" @click="toggle">
+                <a v-if="!isUserPage" :href="'/admin/museum/categories/' + item.id + '/edit'" >
                     {{ item.title }}
                 </a>
+                <a v-else @click="clickOnItem(item)">{{ item.title }}</a>
                 <span v-if="isFolder">[{{ isOpen ? '-' : '+' }}]</span>
             </span>
             <ul v-show="isOpen" v-if="isFolder">
                 <tree-component
+                        :userPage="userPage"
                         class="item"
                         v-for="(child, index) in item.children"
                         :key="index"
@@ -24,12 +25,14 @@
     export default {
         name: "TreeComponent",
         props: {
-            item: Object
+            item: Object,
+            userPage: false
         },
 
         data: function() {
             return {
-                isOpen: false
+                isOpen: false,
+                isUserPage: this.userPage,
             };
         },
         computed: {
@@ -42,6 +45,10 @@
                 if (this.isFolder) {
                     this.isOpen = !this.isOpen;
                 }
+            },
+
+            clickOnItem(item) {
+                this.$root.$emit('CategoryComponent', { method: 'get', item: item });
             }
         }
     }
