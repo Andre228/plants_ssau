@@ -60,6 +60,9 @@
                             <li class="nav-item">
                                 <a class="nav-link nav-link-hover" href="{{ route('museum.admin.categories.index', 'all') }}">Вывести все</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-hover" href="{{ route('museum.admin.categories.tree') }}">Иерархия</a>
+                            </li>
                         </ul>
                         <form method="GET" action="{{route('museum.admin.categories.search')}}" class="form-inline my-2 my-lg-0">
                             @csrf

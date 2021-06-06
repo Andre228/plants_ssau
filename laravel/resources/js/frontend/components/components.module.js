@@ -1,5 +1,4 @@
-import AdminCategoriesComponent from '../admin/categories/AdminCategoriesComponent';
-import ButtonComponent from './ButtonComponent';
+import TreeComponent from '../widgets/TreeComponent';
 import TableItemComponent from './TableItemComponent';
 import ProfileComponent from './profile/ProfileComponent';
 import LoginTitleComponent from './LoginTitleComponent'
@@ -16,9 +15,8 @@ import ShowNewsComponent from "./news-page/ShowNewsComponent";
 import PageUpComponent from '../widgets/PageUpComponent';
 
 export const componentsModule = {
+    TreeComponent,
     PageUpComponent,
-    AdminCategoriesComponent,
-    ButtonComponent,
     TableItemComponent,
     ProfileComponent,
     LoginTitleComponent,

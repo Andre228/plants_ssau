@@ -149,9 +149,3 @@
 
 </body>
 </html>
-<script>
-    import PageUpComponent from "../../js/frontend/widgets/PageUpComponent";
-    export default {
-        components: {PageUpComponent}
-    }
-</script>

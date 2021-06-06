@@ -201,6 +201,19 @@ class MuseumPostRepository extends CoreRepository
         return $posts;
     }
 
+    public function getPostIdsByCategories($categoryIds)
+    {
+        $columns = ['id'];
+
+        $posts = $this->startConditions()
+            ->select($columns)
+            ->whereIn('category_id', $categoryIds)
+            ->get()
+            ->toArray();
+
+        return $posts;
+    }
+
     public function search($params)
     {
         $query = $this->startConditions()::select($this->getLotOfColumns())

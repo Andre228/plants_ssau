@@ -45,6 +45,15 @@ class CategoryController extends BaseAdminController
 
     }
 
+    public function indexTree()
+    {
+        $categoryList = $this->museumCategoryRepository->getCategoriesTree();
+        $categoryList = json_encode($categoryList);
+
+        return view('museum.admin.category.tree', compact('categoryList'));
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -165,18 +174,26 @@ class CategoryController extends BaseAdminController
      */
     public function destroy($id)
     {
+        $childrenIds = [];
+        $childrenOfCategory = $this->museumCategoryRepository->getChildrenCategories($id);
 
-        $category = MuseumCategory::find($id);
+        if (!empty($childrenOfCategory)) {
+            foreach ($childrenOfCategory as $item) {
+                array_push($childrenIds, $item->id);
+            }
+        }
 
-        $postIds = $this->museumPostRepository->getPostsIdsByCategoryIdAll($category->id, true);
+        array_push($childrenIds, $id);
+        $childrenIds = array_map('strval', $childrenIds);
+
+        $postIds = $this->museumPostRepository->getPostIdsByCategories($childrenIds);
         $isDeletedImages = $this->museumImageRepository->deleteMoreImagesFromFileSystem($postIds);
-
-        $result = $category->forceDelete();
+        $result = $this->museumCategoryRepository->deleteListCategories($childrenIds);
 
 
         if ($result && $isDeletedImages) {
             return redirect()->route('museum.admin.categories.index', 'all')
-                ->with(['success' => 'Запись успешно удалена']);
+                ->with(['success' => 'Категория успешно удалена']);
         } else {
             return back()->withErrors(['msg' => 'Ошибка удаления'])
                 ->withInput();

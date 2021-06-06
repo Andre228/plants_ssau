@@ -58,6 +58,34 @@ class MuseumCategoryRepository extends CoreRepository
 
     }
 
+    public function getCategoriesTree()
+    {
+        $categoryList = null;
+        $tree = null;
+
+        $categoryList = Model::select(['id', 'parent_id', 'title', 'updated_at'])->get();
+        $tree = $this->buildTree($categoryList->toArray());
+
+        return $tree;
+
+    }
+
+    private function buildTree(array $elements, $parentId = 0) {
+        $branch = array();
+
+        foreach ($elements as $element) {
+            if ($element['parent_id'] == $parentId) {
+                $children = $this->buildTree($elements, $element['id']);
+                if ($children) {
+                    $element['children'] = $children;
+                }
+                $branch[] = $element;
+            }
+        }
+
+        return $branch;
+    }
+
     public function getSearchingCategories($query)
     {
         $categoryList = null;
@@ -94,6 +122,29 @@ class MuseumCategoryRepository extends CoreRepository
     {
         $category = Model::where('title', $name)->get()->toArray();
         return $category ? $category : null;
+    }
+
+    public function getChildrenCategories($id)
+    {
+
+        $query = "select * from (select * from museum_categories order by parent_id, id) museum_categories, 
+                  (select @pv := $id) initialisation where find_in_set(parent_id, @pv) > 0 and @pv := concat(@pv, ',', id)";
+
+        $childrenOfCategory = DB::select($query);
+
+        return $childrenOfCategory;
+    }
+
+    public function deleteListCategories($ids)
+    {
+        $result = false;
+
+        if (!empty($ids)) {
+            $result = $this->startConditions()->whereIn('id', $ids)->forceDelete();
+        }
+
+        return $result;
+
     }
 
 }

@@ -87,7 +87,8 @@ Route::group($groupDataAdmin, function () {
     Route::patch('/categories/{id}','CategoryController@update')->name('museum.admin.categories.update');
     Route::delete('/categories/{id}','CategoryController@destroy')->name('museum.admin.categories.destroy');
     Route::get('/categories/search','CategoryController@search')->name('museum.admin.categories.search');
-    Route::get('/categories/{how}','CategoryController@index')->name('museum.admin.categories.index');
+    Route::get('/categories/list/{how}','CategoryController@index')->name('museum.admin.categories.index');
+    Route::get('/categories/tree','CategoryController@indexTree')->name('museum.admin.categories.tree');
 
 
     Route::get('/posts/create','PostController@create')->name('museum.admin.posts.create');

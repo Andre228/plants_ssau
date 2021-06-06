@@ -1,3 +1,5 @@
+import CategoriesComponent from './frontend/admin/categories/CategoriesComponent';
+
 import PostsComponent from "./frontend/admin/posts/PostsComponent";
 import PostDetailsComponent from "./frontend/admin/posts/PostDetailsComponent";
 import PostCardComponent from "./frontend/admin/posts/PostCardComponent";
@@ -15,6 +17,8 @@ import {componentsModule} from "./frontend/components/components.module";
 
 export const componentsProvider = {
     ...componentsModule,
+
+    CategoriesComponent,
 
     PostsComponent,
     PostDetailsComponent,
