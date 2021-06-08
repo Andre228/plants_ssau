@@ -8,8 +8,7 @@
                 </a>
             </header>
 
-            <div class="container" style="height: 300px; overflow-y: scroll">
-
+            <div v-if="posts && posts.length > 0" class="container" style="height: 300px; overflow-y: scroll">
 
                 <div class="row justify-content-between">
 
@@ -51,7 +50,7 @@
                             <thead>
                             <tr>
                                 <th>№</th>
-                                <th>Категория</th>
+                                <th>Категории</th>
                             </tr>
                             </thead>
                             <tbody v-if="categoriesTree">
@@ -69,8 +68,11 @@
                             </tbody>
                         </table>
                     </div>
-                    <div v-if="selectedCategory" class="mt-3 col-lg-12">
-                        {{ selectedCategory.description }}
+                    <div v-if="selectedCategory.description" class="mt-3 col-lg-12">
+                        <h3>Описание: </h3>
+                        <div>
+                            {{ selectedCategory.description }}
+                        </div>
                     </div>
                 </div>
             </div>

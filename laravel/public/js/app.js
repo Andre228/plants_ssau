@@ -4628,6 +4628,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 
@@ -63011,6 +63013,7 @@ var render = function() {
                     ],
                     staticClass: "form-control",
                     attrs: {
+                      disabled: "",
                       input: function(e) {
                         return (_vm.$store.state.userEdit.userEditObject.name =
                           e.target.value)
@@ -63049,6 +63052,7 @@ var render = function() {
                     ],
                     staticClass: "form-control",
                     attrs: {
+                      disabled: "",
                       input: function(e) {
                         return (_vm.$store.state.userEdit.userEditObject.email =
                           e.target.value)
@@ -63361,46 +63365,50 @@ var render = function() {
     _c("div", { staticClass: "col-lg-12 mx-auto p-3 py-md-5" }, [
       _vm._m(0),
       _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "container",
-          staticStyle: { height: "300px", "overflow-y": "scroll" }
-        },
-        [
-          _c(
+      _vm.posts && _vm.posts.length > 0
+        ? _c(
             "div",
-            { staticClass: "row justify-content-between" },
-            _vm._l(_vm.posts, function(item) {
-              return _c(
+            {
+              staticClass: "container",
+              staticStyle: { height: "300px", "overflow-y": "scroll" }
+            },
+            [
+              _c(
                 "div",
-                {
-                  staticClass: "card mt-3 category-card",
-                  class: [item.is_published ? "published" : "no-published"],
-                  staticStyle: { width: "18rem" },
-                  on: {
-                    click: function($event) {
-                      return _vm.goToPost($event, item.id)
-                    }
-                  }
-                },
-                [
-                  _c("div", { staticClass: "card-body" }, [
-                    _c("h5", { staticClass: "card-title" }, [
-                      _vm._v(_vm._s(item.russian_name || item.adopted_name))
-                    ]),
-                    _vm._v(" "),
-                    _c("h6", { staticClass: "card-subtitle mb-2 text-muted" }, [
-                      _vm._v("Опубликовано: " + _vm._s(item.published_at))
-                    ])
-                  ])
-                ]
+                { staticClass: "row justify-content-between" },
+                _vm._l(_vm.posts, function(item) {
+                  return _c(
+                    "div",
+                    {
+                      staticClass: "card mt-3 category-card",
+                      class: [item.is_published ? "published" : "no-published"],
+                      staticStyle: { width: "18rem" },
+                      on: {
+                        click: function($event) {
+                          return _vm.goToPost($event, item.id)
+                        }
+                      }
+                    },
+                    [
+                      _c("div", { staticClass: "card-body" }, [
+                        _c("h5", { staticClass: "card-title" }, [
+                          _vm._v(_vm._s(item.russian_name || item.adopted_name))
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "h6",
+                          { staticClass: "card-subtitle mb-2 text-muted" },
+                          [_vm._v("Опубликовано: " + _vm._s(item.published_at))]
+                        )
+                      ])
+                    ]
+                  )
+                }),
+                0
               )
-            }),
-            0
+            ]
           )
-        ]
-      ),
+        : _vm._e(),
       _vm._v(" "),
       _c("hr", { staticClass: "col-11 col-md-11 mb-5" }),
       _vm._v(" "),
@@ -63542,13 +63550,17 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _vm.selectedCategory
+          _vm.selectedCategory.description
             ? _c("div", { staticClass: "mt-3 col-lg-12" }, [
-                _vm._v(
-                  "\n                    " +
-                    _vm._s(_vm.selectedCategory.description) +
-                    "\n                "
-                )
+                _c("h3", [_vm._v("Описание: ")]),
+                _vm._v(" "),
+                _c("div", [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.selectedCategory.description) +
+                      "\n                    "
+                  )
+                ])
               ])
             : _vm._e()
         ])
@@ -63603,7 +63615,7 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("№")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Категория")])
+        _c("th", [_vm._v("Категории")])
       ])
     ])
   }

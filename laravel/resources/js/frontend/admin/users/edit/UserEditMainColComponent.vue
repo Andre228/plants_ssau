@@ -16,12 +16,12 @@
                         <div class="tab-pane active" id="maindata" role="tabpanel">
                             <div class="form-group">
                                 <label for="name">Логин</label>
-                                <input :input="e => $store.state.userEdit.userEditObject.name = e.target.value" name="name" id="name" type="text" v-model="userInfo.name"
+                                <input disabled :input="e => $store.state.userEdit.userEditObject.name = e.target.value" name="name" id="name" type="text" v-model="userInfo.name"
                                        class="form-control" minlength="3" required/>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email адрес</label>
-                                <input :input="e => $store.state.userEdit.userEditObject.email = e.target.value" name="email" id="email" v-model="userInfo.email"
+                                <input disabled :input="e => $store.state.userEdit.userEditObject.email = e.target.value" name="email" id="email" v-model="userInfo.email"
                                           class="form-control" type="email"/>
                             </div>
 

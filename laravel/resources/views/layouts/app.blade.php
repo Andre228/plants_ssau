@@ -67,11 +67,13 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Войти') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">
+                                    <i class="fas fa-sign-in-alt" style="font-size: 18px; margin-right: 8px;"></i>{{ __('Войти') }}</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Зарегистрироваться') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">
+                                        <i class="fas fa-user-plus" style="font-size: 18px; margin-right: 8px;"></i>{{ __('Регистрация') }}</a>
                                 </li>
                             @endif
                         @else
@@ -108,7 +110,10 @@
             </div>
         </nav>
 
-        <global-search-component></global-search-component>
+        @if (Auth::user())
+            <global-search-component></global-search-component>
+        @endif
+
         <page-up-component></page-up-component>
 
         <div class="container main-content">

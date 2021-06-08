@@ -12,7 +12,7 @@
 */
 
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 // ---------------------------------------- Общие маршруты ---------------------------------------- //
 Route::get('/','Museum\WelcomeController@index')->name('museum.welcome'); // главная
@@ -25,16 +25,21 @@ Route::get('/posts/{id}','Museum\PostController@show')->name('museum.posts.show'
 Route::get('/posts-view','Museum\PostController@viewPosts')->name('museum.posts.view'); // Страница со всеми экспонатами
 
 
+// ---------------------------------------- Маршруты для получения ajax данных ---------------------------------------- //
+
+Route::get('/categories/{id}/{state}','Museum\CategoryController@getPosts')->name('api.museum.category.get.posts');
+
+
 
 
 // ---------------------------------------- Маршруты для авторизованных пользователей ---------------------------------------- //
 
-Route::get('/home', 'HomeController@index')->name('home')->middleware('auth'); // профиль
-Route::patch('/home/user-profile-save/{id}', 'HomeController@update')->name('user.profile.save')->middleware('auth'); // сохранить информацию о профиле
+Route::get('/home', 'HomeController@index')->name('home')->middleware('auth')->middleware('verified'); // профиль
+Route::patch('/home/user-profile-save/{id}', 'HomeController@update')->name('user.profile.save')->middleware('auth')->middleware('verified'); // сохранить информацию о профиле
 
 $groupBaseRoutes = [
     'namespace' => 'Museum',
-    'middleware' => 'auth:web'
+    'middleware' => ['auth', 'web', 'verified']
 ];
 
 Route::group($groupBaseRoutes, function () {
@@ -44,8 +49,6 @@ Route::group($groupBaseRoutes, function () {
     Route::post('/user/news/like/{id}','NewsController@likeNews')->name('museum.news.like');
 
     Route::post('/news/comments/set/{newsId}/{newsInfoId}/{replyId?}','NewsController@addComment')->name('museum.news.comment.set'); // оставить комментарий
-
-    Route::get('/categories/{id}/{state}','CategoryController@getPosts')->name('api.museum.category.get.posts');
 
     Route::get('/posts/search/{barcode}/{determination}/{russian_name}/{collection_date}/{label_text}/{accuracy}/{adopted_name}/{environmental_status}',
         'PostController@index')->name('museum.posts.search'); // поиск
