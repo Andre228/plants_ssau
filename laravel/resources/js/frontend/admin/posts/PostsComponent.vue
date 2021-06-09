@@ -235,12 +235,10 @@
                 }
                 this.loaderService.runLoader();
                 this.page++;
-                const url = `/api/batch/posts/admin?page=${this.page}`;
+                const url = `/admin/museum/batch/posts/?page=${this.page}`;
                 this.rest.get(url).then(response => {
                     if (response && response.data.status === 'OK') {
-
                         const details = JSON.parse(response.data.details);
-                        console.log(details);
                         if (response.data.details && details.posts) {
                             this.computedPosts = this.fposts = this.computedPosts.concat(details.posts);
                         }
@@ -253,7 +251,7 @@
             search(event) {
                 if (event.keyCode === 13 && this.searchingPost.trim() !== '') {
                     this.loaderService.runLoader();
-                    const url = `/api/admin/posts/search`;
+                    const url = `/admin/museum/search/posts`;
                     this.rest.post(url, { params: this.searchingPost }).then(response => {
                         if (response && response.data.status === 'OK' && response.data.details) {
                             this.computedPosts = this.fposts = response.data.details;

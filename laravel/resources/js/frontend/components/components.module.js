@@ -12,11 +12,11 @@ import FoundPostDetails from './posts-page/FoundPostDetails';
 import ViewPostsComponent from './posts-page/ViewPostsComponent';
 import ContactComponent from './contacts-page/ContactComponent';
 import ShowNewsComponent from "./news-page/ShowNewsComponent";
-import PageUpComponent from '../widgets/PageUpComponent';
+import PageScrollComponent from '../widgets/PageScrollComponent';
 
 export const componentsModule = {
     TreeComponent,
-    PageUpComponent,
+    PageScrollComponent,
     TableItemComponent,
     ProfileComponent,
     LoginTitleComponent,

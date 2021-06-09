@@ -10,6 +10,8 @@ namespace App\Repositories;
 
 use App\Models\MuseumImage;
 use App\Models\MuseumPost as Model;
+use App\Models\UserFavorites;
+use App\Models\UserHistory;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use phpDocumentor\Reflection\Types\This;
@@ -26,6 +28,11 @@ class MuseumPostRepository extends CoreRepository
     public function getEdit($id)
     {
         return $this->startConditions()->find($id);
+    }
+
+    public function getPublishedPost($id)
+    {
+        return $this->startConditions()->where('id', '=', $id)->where('is_published', '=', 1)->get();
     }
 
     public function getForComboBox()
@@ -101,6 +108,8 @@ class MuseumPostRepository extends CoreRepository
 
         if (!empty($ids)) {
             $result = $this->startConditions()->whereIn('id', $ids)->forceDelete();
+             UserHistory::whereIn('post_id', $ids)->forceDelete();
+             UserFavorites::whereIn('post_id', $ids)->forceDelete();
         }
 
         return $result;

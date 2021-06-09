@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\MuseumNews;
 use App\Models\MuseumNewsInfo;
+use App\Models\UserReadingNews;
 
 class NewsObserver
 {
@@ -70,6 +71,8 @@ class NewsObserver
      */
     public function forceDeleted(MuseumNews $museumNews)
     {
-        //
+        if (!empty($museumNews->id)) {
+            UserReadingNews::where('news_id', $museumNews->id)->forceDelete();
+        }
     }
 }

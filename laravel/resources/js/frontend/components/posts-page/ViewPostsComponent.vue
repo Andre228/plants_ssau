@@ -98,7 +98,7 @@
                         this.postsList.posts = [];
                     }
                     this.page++;
-                    const url = `api/posts/view/?page=${this.page}`;
+                    const url = `/posts/fetch/view/?page=${this.page}`;
                     this.rest.get(url).then(response => {
                         if (response && response.data.status === 'OK') {
                             const details = JSON.parse(response.data.details);
@@ -114,7 +114,7 @@
 
             getForPeriod(period) {
                 this.loader.runLoader();
-                let url = `api/posts/view/`;
+                let url = `/posts/view/`;
                 if (period === 'week') {
                     url += 'week';
                 }

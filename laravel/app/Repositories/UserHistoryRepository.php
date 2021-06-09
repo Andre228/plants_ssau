@@ -29,8 +29,6 @@ class UserHistoryRepository extends CoreRepository
     {
         $result = null;
 
-
-
         $data [] = [
             'user_id' => $userId,
             'post_id' => $postId
@@ -87,10 +85,12 @@ class UserHistoryRepository extends CoreRepository
 
             foreach ($postIds as $id) {
                 $post = MuseumPost::select(['id', 'russian_name', 'updated_at', 'collectors'])->where('id', '=', $id['post_id'])->get()->toArray();
-                $posts [] = [
-                    'post' => array_merge(...$post),
-                    'seen_date' => $id['seen_date'],
-                ];
+                if (!empty($post)) {
+                    $posts [] = [
+                        'post' => array_merge(...$post),
+                        'seen_date' => $id['seen_date'],
+                    ];
+                }
             }
         }
 

@@ -114,7 +114,7 @@
             <global-search-component></global-search-component>
         @endif
 
-        <page-up-component></page-up-component>
+        <page-scroll-component></page-scroll-component>
 
         <div class="container main-content">
             <main class="py-4">
@@ -154,3 +154,9 @@
 
 </body>
 </html>
+<script>
+    import PageScrollComponent from "../../js/frontend/widgets/PageScrollComponent";
+    export default {
+        components: {PageScrollComponent}
+    }
+</script>

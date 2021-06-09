@@ -1,5 +1,5 @@
 <template>
-    <div v-if="hasHistories() || hasFavorites()">
+    <div v-if="hasHistories() || hasFavorites() || hasNews()">
         <div class="card">
             <div class="card-header">Действия</div>
 
@@ -121,7 +121,6 @@
             this.hasNext = this.favoritesList.hasNext;
             this.hasNextNews = this.newsList.hasNext;
             this.getLastActions();
-            console.log(this.newsList);
         },
 
         methods: {
@@ -130,7 +129,7 @@
                     event.stopPropagation();
                     this.loader.runLoader();
                     this.page++;
-                    const url = `api/posts/favorites/${this.user.id}?page=${this.page}`;
+                    const url = `/posts/favorites/${this.user.id}?page=${this.page}`;
                     this.rest.get(url).then(response => {
                         if (response && response.data.status === 'OK') {
                             if (response.data.details && response.data.details.posts) {
@@ -166,7 +165,7 @@
             },
 
             getLastActions() {
-                if (this.hasFavorites() && this.hasHistories() && this.hasNews()) {
+                if (this.hasFavorites() || this.hasHistories() || this.hasNews()) {
                     const histories = this.historiesList.map(item => item.post);
                     const userActionsArray = this.favoritesList.posts.concat(histories).concat(this.newsList.posts);
                     this.lastActionDate = userActionsArray.sort(function(a,b){

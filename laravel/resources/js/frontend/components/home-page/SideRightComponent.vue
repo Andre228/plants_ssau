@@ -62,7 +62,7 @@
                 if (this.hasNext) {
                     this.loader.runLoader();
                     this.page++;
-                    const url = `api/news/batch/?page=${this.page}`;
+                    const url = `/news/fetch/more/?page=${this.page}`;
                     this.rest.get(url).then(response => {
                         if (response && response.data.status === 'OK') {
                             const details = JSON.parse(response.data.details);

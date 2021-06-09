@@ -43,7 +43,20 @@ $groupBaseRoutes = [
 ];
 
 Route::group($groupBaseRoutes, function () {
+    Route::get('/news/fetch/more','WelcomeController@fetchNewsMore')->name('web.museum.news.fetch'); // загрузить ещё новости в профиле
+    Route::post('/posts/views/{id}','PostController@incrementCountViews')->name('web.museum.post.set.views'); // обновить количество просмотров
+
     Route::post('/user/favorite/news/{newsId}','UserController@addToReadingNews')->name('museum.user.set.reading'); // добавить в список для чтения
+    Route::post('/user/favorite/{userId}/{postId}','UserController@addToFavorites')->name('web.museum.user.set.favorite'); // добавить в избранное
+    Route::delete('/user/delete/favorite/{id}','UserController@removeFromFavorites')->name('web.museum.user.delete.favorite'); // Удалить из избранного
+    Route::get('/posts/favorites/{userId}','UserController@getMoreFavorites')->name('web.museum.post.get.favorites'); // Загрузить ещё из избранного
+
+    Route::post('/posts/history/create/{userId}/{postId}','PostController@updateHistory')->name('web.museum.post.create.history'); // Обновить историю посещения
+    Route::get('/posts/fetch/view','PostController@fetchPosts')->name('web.museum.post.get.view');
+    Route::get('/posts/view/{period}','PostController@fetchPostsForPeriod')->name('web.museum.post.get.view.period');
+
+
+
     Route::get('/news/reading/batch','UserController@getMoreNews')->name('museum.news.get.batch'); // Загрузить ещё в список для чтения
     Route::delete('/user/favorite/news/delete/{id}','UserController@removeFromReadingList')->name('museum.user.delete.news'); // удалить из избранного
     Route::post('/user/news/like/{id}','NewsController@likeNews')->name('museum.news.like');
@@ -108,12 +121,14 @@ Route::group($groupDataAdmin, function () {
     Route::post('/posts/import','PostController@import')->name('museum.admin.posts.import');
     Route::delete('/posts/delete/{count}','PostController@deletePosts')->name('museum.admin.posts.delete.more');
 
+    Route::get('/batch/posts/','PostController@fetchMorePosts')->name('web.museum.admin.posts.batch.get');
+    Route::post('/search/posts','PostController@search')->name('web.museum.admin.posts.search');
+
 
     Route::patch('/users/save/{id}','UserController@update')->name('museum.admin.users.update');
     Route::get('/users','UserController@index')->name('museum.admin.users.index');
     Route::get('/users/search','UserController@search')->name('museum.admin.users.search');
     Route::get('/users/{id}/edit','UserController@edit')->name('museum.admin.users.edit');
-   // Route::get('/getusers/per-page','UserController@getUsersOnPage')->name('museum.admin.users.on-page');
 
 
     Route::get('/news','NewsController@index')->name('museum.admin.news.index');

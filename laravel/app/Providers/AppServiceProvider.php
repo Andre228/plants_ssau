@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\MuseumNews;
+use App\Models\MuseumPost;
 use App\Observers\NewsObserver;
+use App\Observers\PostsObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         MuseumNews::observe(NewsObserver::class);
+        MuseumPost::observe(PostsObserver::class);
     }
 }

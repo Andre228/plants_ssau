@@ -256,7 +256,7 @@
 
             setCountViews() {
                 if (this.isLoggedIn() && this.post) {
-                    const url = `/api/posts/views/${this.post.id}`;
+                    const url = `/posts/views/${this.post.id}`;
                     this.rest.post(url, null, null).then(res => res);
                 }
             },
@@ -264,7 +264,7 @@
             async toFavotites() {
                 this.loaderService.runLoader();
                 if (this.post && this.userInfo) {
-                    const url = `/api/user/favorite/${this.userInfo.id}/${this.post.id}`;
+                    const url = `/user/favorite/${this.userInfo.id}/${this.post.id}`;
                     await this.rest.post(url, null, null) .then(response => {
                         if (response.data.status == 'OK') {
                             this.response = {
@@ -297,7 +297,7 @@
                 const favorite = this.userInfo.user_favorites.find(item => item.post_id === this.post.id);
                 this.loaderService.runLoader();
                 if (favorite && favorite.id) {
-                    const url = `/api/user/delete/favorite/${favorite.id}`;
+                    const url = `/user/delete/favorite/${favorite.id}`;
                     await this.rest.destroy(url).then(response => {
                         if (response.data.status == 'OK') {
                             this.response = {
@@ -333,7 +333,7 @@
 
             addToHistory() {
                 if (this.userInfo && this.post) {
-                    const url = `/api/posts/history/create/${this.userInfo.id}/${this.post.id}`;
+                    const url = `/posts/history/create/${this.userInfo.id}/${this.post.id}`;
                     this.rest.post(url, null, null).then(res => res);
                 }
 
