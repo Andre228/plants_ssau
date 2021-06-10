@@ -79,7 +79,7 @@ Route::group(['namespace' => 'Museum', 'prefix' => 'museum'], function () {
 $groupDataAdminDashboard = [
     'namespace' => 'Museum',
     'prefix' => 'museum',
-    'middleware' => 'auth'
+    'middleware' => ['auth', 'verified', 'admin']
 ];
 Route::group($groupDataAdminDashboard, function (){
 
@@ -94,7 +94,7 @@ Route::group($groupDataAdminDashboard, function (){
 $groupDataAdmin = [
     'namespace' => 'Museum\Admin',
     'prefix' => '/admin/museum',
-    'middleware' => 'auth'
+    'middleware' => ['auth', 'verified', 'admin']
 ];
 Route::group($groupDataAdmin, function () {
 

@@ -42,7 +42,10 @@ class NewsController extends BaseController
         if (!empty($userId)) {
             $isLoggedIn = "true";
             $readingNews = $this->museumUserRepository->isReadingNews($id, $userId);
-            $like = in_array($id, $this->museumUserRepository->getEdit($userId)->likes);
+            $l = $this->museumUserRepository->getEdit($userId)->likes;
+            if (!empty($l)) {
+                $like = in_array($id, $this->museumUserRepository->getEdit($userId)->likes);
+            }
         } else {
             $isLoggedIn = "false";
         }

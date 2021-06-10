@@ -125,7 +125,7 @@ class PostController extends BaseController
      */
     public function show($id)
     {
-        $item = $this->museumPostRepository->getPublishedPost($id);
+        $item = $this->museumPostRepository->getPublishedPost($id)->toBase()[0];
         $images = null;
         $userInfo = Auth::user();
         if (empty($userInfo)) {
@@ -137,7 +137,7 @@ class PostController extends BaseController
             $userInfo = json_encode($this->museumUserRepository->getUserBaseInfo($userInfo->id)[0]);
         }
 
-        if (!empty($item) && count($item) > 0) {
+        if (!empty($item)) {
             $item->collection_date = Carbon::parse($item->collection_date)->format('Y-m-d');
             $images = $this->museumImageRepository->getAllImagesByPostId($id);
         } else {

@@ -5286,6 +5286,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   mounted: function mounted() {
     this.isReading = this.read && this.read.id ? true : false;
+    console.log(this.news);
   },
   computed: {
     isDisabled: function isDisabled() {
@@ -5306,6 +5307,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                console.log(_this.newsId);
+                console.log(_this.newsInfoId);
                 url = '';
 
                 if (_this.answer.data) {
@@ -5315,7 +5318,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
 
                 if (!_this.answer.text.trim()) {
-                  _context.next = 8;
+                  _context.next = 10;
                   break;
                 }
 
@@ -5324,7 +5327,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 body = {
                   comment: _this.answer.text.trim()
                 };
-                _context.next = 7;
+                _context.next = 9;
                 return _this.rest.post(url, body).then(function (response) {
                   if (response && response.data.status == 'OK') {
                     var details = JSON.parse(response.data.details);
@@ -5352,10 +5355,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   };
                 });
 
-              case 7:
+              case 9:
                 _this.afterRequest();
 
-              case 8:
+              case 10:
               case "end":
                 return _context.stop();
             }

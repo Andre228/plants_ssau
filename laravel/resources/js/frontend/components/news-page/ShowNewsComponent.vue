@@ -101,6 +101,8 @@
 
         mounted() {
             this.isReading = this.read && this.read.id ? true : false;
+
+            console.log(this.news);
         },
 
         computed: {
@@ -116,6 +118,8 @@
             },
 
             async sendAnswer(event) {
+                console.log(this.newsId);
+                console.log(this.newsInfoId);
                 let url = '';
                 if (this.answer.data) {
                     url = `/news/comments/set/${this.newsId}/${this.newsInfoId}/${this.answer.data.id}`;
