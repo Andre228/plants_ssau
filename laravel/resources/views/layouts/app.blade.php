@@ -154,9 +154,3 @@
 
 </body>
 </html>
-<script>
-    import PageScrollComponent from "../../js/frontend/widgets/PageScrollComponent";
-    export default {
-        components: {PageScrollComponent}
-    }
-</script>

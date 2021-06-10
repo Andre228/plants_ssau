@@ -36,6 +36,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+//        $target = '/home/virtualm/sites/virtualmuseum/laravel/storage/app/public';
+//        $shortcut = '/home/virtualm/sites/virtualmuseum/laravel/public/storage';
+//
+//        symlink($target, $shortcut);
+
         $user = \Auth::user();
         $userFavorites = json_encode($this->userFavoritesRepository->getUserFavorites($user->id));
         $userHistories = json_encode($this->userHistoryRepository->getHistories($user->id));

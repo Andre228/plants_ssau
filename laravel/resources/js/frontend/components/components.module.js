@@ -1,5 +1,4 @@
 import TreeComponent from '../widgets/TreeComponent';
-import TableItemComponent from './TableItemComponent';
 import ProfileComponent from './profile/ProfileComponent';
 import LoginTitleComponent from './LoginTitleComponent'
 import ImageUploadComponent from './ImageUploadComponent';
@@ -17,7 +16,6 @@ import PageScrollComponent from '../widgets/PageScrollComponent';
 export const componentsModule = {
     TreeComponent,
     PageScrollComponent,
-    TableItemComponent,
     ProfileComponent,
     LoginTitleComponent,
     CarouselComponent,

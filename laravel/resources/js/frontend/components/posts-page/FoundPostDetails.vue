@@ -238,20 +238,33 @@
             },
 
             setMap() {
-                DeviceHelper.geo().then(item => {
-                    let lat = null;
-                    let lng = null;
-                    if (item && item.coords && item.coords.latitude && item.coords.longitude) {
-                        lat = item.coords.latitude;
-                        lng = item.coords.longitude;
-                    }
-                    const postCoord = this.$store.state.post.postObject.coordinates;
-                    if (!postCoord.lat && !postCoord.lng) {
-                        this.map = this.mapService.buildMap('mapContainer', this.$store, true, lat, lng);
-                    } else {
-                        this.map = this.mapService.buildMap('mapContainer', this.$store, true);
-                    }
-                });
+
+                const postCoord = this.$store.state.post.postObject.coordinates;
+                if (postCoord.lat && postCoord.lng) {
+                    this.map = this.mapService.buildMap('mapContainer', this.$store, true);
+                } else {
+
+                    const lat = 53.22413963169249;
+                    const lng = 50.19511509411164;
+
+                    this.map = this.mapService.buildMap('mapContainer', this.$store, true, lat, lng);
+                    // DeviceHelper.geo().then(item => {
+                    //     let lat = null;
+                    //     let lng = null;
+                    //     if (item && item.coords && item.coords.latitude && item.coords.longitude) {
+                    //         lat = item.coords.latitude;
+                    //         lng = item.coords.longitude;
+                    //     }
+                    //     const postCoord = this.$store.state.post.postObject.coordinates;
+                    //     if (!postCoord.lat && !postCoord.lng) {
+                    //         this.map = this.mapService.buildMap('mapContainer', this.$store, true, lat, lng);
+                    //     } else {
+                    //         this.map = this.mapService.buildMap('mapContainer', this.$store, true);
+                    //     }
+                    // });
+                }
+
+
             },
 
             setCountViews() {
@@ -332,11 +345,10 @@
             },
 
             addToHistory() {
-                if (this.userInfo && this.post) {
+                if (this.isLoggedIn() && this.userInfo && this.post) {
                     const url = `/posts/history/create/${this.userInfo.id}/${this.post.id}`;
                     this.rest.post(url, null, null).then(res => res);
                 }
-
             },
 
             copyCoords(event) {
